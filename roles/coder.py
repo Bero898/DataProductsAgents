@@ -1,5 +1,5 @@
 from metagpt.roles.role import Role,RoleReactMode
-from actions.simple_code import SimpleWriteCode
+from actions.read_product import SimpleDataProductReader
 from actions.simple_run import SimpleRunCode
 from metagpt.schema import Message
 from metagpt.logs import logger
@@ -7,12 +7,12 @@ from metagpt.logs import logger
 
 class RunnableCoder(Role):
     name: str = "Alice"
-    profile: str = "RunnableCoder"
+    profile: str = "Data Product Reader"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_actions([SimpleWriteCode, SimpleRunCode])
-        self._set_react_mode(react_mode=RoleReactMode.BY_ORDER.value)
+        self.set_actions([SimpleDataProductReader])
+        # self._set_react_mode(react_mode=RoleReactMode.BY_ORDER.value)
 
     async def _act(self) -> Message:
         logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")

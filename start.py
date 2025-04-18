@@ -1,9 +1,18 @@
 import asyncio
 import fire
+import yaml
 
 from metagpt.context import Context
 from roles.coder import RunnableCoder
 from metagpt.logs import logger
+
+
+with open(".\Data Products\example-DPs\Data Contract Playground - Pflooky\data-contract-specification.yaml") as stream:
+    try:
+        print("YAML file loaded successfully.")
+        dataproduct = str(yaml.safe_load(stream))
+    except yaml.YAMLError as exc:
+        print(exc)
 
 
 
@@ -11,7 +20,7 @@ import asyncio
 
 from metagpt.context import Context
 
-def main(msg="write a function that calculates the product of a list and run it"):
+def main(msg=dataproduct):
     # role = SimpleCoder()
     role = RunnableCoder()
     logger.info(msg)
