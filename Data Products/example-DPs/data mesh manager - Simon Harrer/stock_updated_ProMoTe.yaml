@@ -1,0 +1,66 @@
+@prefix : <https://github.com/Stefan-Driessen/ProMoTe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+:StockUpdatedDataProduct 
+  rdf:type :class-data-product ;
+  dct:identifier "stock_updated" ;
+  dct:title "Stock Updates" ;
+  dct:description "Raw event data from stock_updated confluent kafka topic." ;
+  :property-data-provider :FulfillmentTeam ;
+  dcat:keyword "kafka", "confluent", "athena", "glue", "s3" .
+
+:FulfillmentTeam
+  rdf:type <http://www.w3.org/ns/prov#Agent> ;
+  rdfs:label "Fulfillment Team" .
+
+:FulfillmentDomain
+  rdf:type :class-domain ;
+  rdfs:label "Fulfillment Domain" .
+
+# Input Ports
+:KafkaInputPort
+  rdf:type :class-input-port ;
+  dct:identifier "kafka_stock_topic" ;
+  dct:title "Kafka Stock Topic" ;
+  dct:description "Kafka Topic with Stock updates" ;
+  :resource-property-source-system :StockService .
+
+:StockService
+  rdf:type owl:NamedIndividual ;
+  rdfs:label "Stock Service" ;
+  dct:identifier "stock-service" .
+
+# Output Ports
+:GlueCatalogOutputPort
+  rdf:type :class-output-port ;
+  dct:identifier "glue_catalog_database_stock_updated_v1" ;
+  dct:title "Glue Catalog Database: Stock Updates (v1)" ;
+  dct:description "All stock updates represented as a Glue Catalog table" ;
+  :property-exposes-data-product :StockUpdatedDataProduct ;
+  :property-data-contract :GlueCatalogDataContract ;
+  :endpointURI <arn:aws:glue:eu-central-1:528115139298:table/fulfillment-stock-updated/stock_updated> .
+
+:S3OutputPort
+  rdf:type :class-output-port ;
+  dct:identifier "s3_bucket_stock_updated_v1" ;
+  dct:title "S3 Bucket: Stock Updates (v1)" ;
+  dct:description "All stock updates represented as a S3 bucket" ;
+  :property-exposes-data-product :StockUpdatedDataProduct ;
+  :property-data-contract :S3DataContract ;
+  :endpointURI <arn:aws:s3:::fulfillment-stock-updated> .
+
+# Data Contracts
+:GlueCatalogDataContract
+  rdf:type :class-data-contract ;
+  dct:identifier "glue_catalog_data_contract" ;
+  :appliesToPort :GlueCatalogOutputPort ;
+  :pmt:providerPromise "The data will be available with 99.9% uptime" .
+
+:S3DataContract
+  rdf:type :class-data-contract ;
+  dct:identifier "s3_data_contract" ;
+  :appliesToPort :S3OutputPort ;
+  :pmt:providerPromise "The data will be updated daily" .
