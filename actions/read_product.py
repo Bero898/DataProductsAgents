@@ -14,16 +14,5 @@ class SimpleDataProductReader(Action):
 
     async def run(self, product: str):
         prompt = self.PROMPT_TEMPLATE.format(product=product)
-
         rsp = await self._aask(prompt)
-
-        product_description = SimpleDataProductReader(rsp)
-
-        return product_description
-
-    # @staticmethod
-    # def parse_code(rsp):
-    #     pattern = r"```python(.*)```"
-    #     match = re.search(pattern, rsp, re.DOTALL)
-    #     code_text = match.group(1) if match else rsp
-    #     return code_text
+        return rsp
