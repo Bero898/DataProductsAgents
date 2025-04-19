@@ -1,19 +1,20 @@
 from metagpt.roles.role import Role,RoleReactMode
 from actions.read_product import SimpleDataProductReader
-from actions.simple_run import SimpleRunCode
+from actions.assess_compatibility import SimpleDataProductComposer
+from actions.analyze_mismatch import MismatchIdentifier
 from metagpt.schema import Message
 from metagpt.logs import logger
 
 
-class RunnableCoder(Role):
+class DPOwner(Role):
     name: str = "Alice"
     profile: str = "Data Product Reader"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set_actions([SimpleDataProductReader])
+        self.set_actions([SimpleDataProductReader,SimpleDataProductComposer,MismatchIdentifier])
         # self._set_react_mode(react_mode=RoleReactMode.BY_ORDER.value)
-
+        self._set_react_mode(react_mode = RoleReactMode.PLAN_AND_ACT.value)
     async def _act(self) -> Message:
         logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
         # By choosing the Action by order under the hood

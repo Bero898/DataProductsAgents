@@ -3,7 +3,7 @@ import fire
 import yaml
 
 from metagpt.context import Context
-from roles.coder import RunnableCoder
+from roles.DP_owner import DPOwner
 from metagpt.logs import logger
 
 
@@ -22,7 +22,7 @@ from metagpt.context import Context
 
 def main(msg=dataproduct):
     # role = SimpleCoder()
-    role = RunnableCoder()
+    role = DPOwner()
     logger.info(msg)
     result = asyncio.run(role.run(msg))
     logger.info(result)

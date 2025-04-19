@@ -17,7 +17,7 @@ class SimpleDataProductReader(Action):
 
         rsp = await self._aask(prompt)
 
-        product_description = SimpleDataProductReader.parse_code(rsp)
+        product_description = SimpleDataProductReader(rsp)
 
         return product_description
 
