@@ -8,7 +8,8 @@ from metagpt.context import Context
 from metagpt.logs import logger
 from metagpt.team import Team
 from roles.DP_owner import DPOwner
-
+from metagpt.schema import Message
+from metagpt.actions import UserRequirement
 
 def load_data_product(file_path):
     with open(file_path) as stream:
@@ -35,8 +36,30 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     team.hire([alice, bob])
     team.invest(investment)
     
-    # Start with reading data products
-    team.run_project("Read and analyze data products", send_to="All")
+    # Start with direct messages to each agent to initiate their first actions
+    # from metagpt.actions import UserRequirement
+    # from metagpt.schema import Message
+    
+    # Create initial messages for each agent
+    alice_msg = Message(
+        content="Analyze your data product and share its description with the team",
+        role="Human",
+        cause_by=UserRequirement,
+        sent_from="Human",
+        send_to=["Alice"]
+    )
+    
+    bob_msg = Message(
+        content="Analyze your data product and share its description with the team",
+        role="Human",
+        cause_by=UserRequirement,
+        sent_from="Human",
+        send_to=["Bob"]
+    )
+    
+    # Send messages to the environment
+    team.env.publish_message(alice_msg)
+    team.env.publish_message(bob_msg)
     
     # Run the interaction
     await team.run(n_round=n_round)

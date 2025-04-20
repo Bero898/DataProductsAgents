@@ -23,13 +23,24 @@ class DPOwner(Role):
     
     async def _observe(self) -> int:
         await super()._observe()
-        # Accept messages sent to self
-        self.rc.news = [msg for msg in self.rc.news if msg.send_to == {self.name} or msg.send_to == "All"]
+        # Accept messages sent to self or to All
+        self.rc.news = [msg for msg in self.rc.news if self.name in msg.send_to or "All" in msg.send_to]
         return len(self.rc.news)
     
-    async def _act(self) -> Message:
-        logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
-        todo = self.rc.todo
+async def _act(self) -> Message:
+    logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
+    todo = self.rc.todo
+
+    if isinstance(todo, SimpleDataProductReader):
+        # Read own data product
+        result = await todo.run(self.data_product)
+        msg = Message(
+            content=result,
+            role=self.profile,
+            cause_by=type(todo),
+            sent_from=self.name,
+            send_to=["All"]  # Changed from "All" to ["All"] - message recipients should be a list
+        )
 
         if isinstance(todo, SimpleDataProductReader):
             # Read own data product
