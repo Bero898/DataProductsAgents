@@ -68,7 +68,7 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
 def main(dp1_path: str = "./Data Products/example-DPs/Data Contract Playground - Pflooky/data-contract-specification.yaml", 
          dp2_path: str = "./Data Products/example-DPs/Data Contract Playground - Pflooky/data-contract-specification.yaml", 
          investment: float = 3.0, 
-         n_round: int = 3):
+         n_round: int = 10):
     """
     Run data product compatibility assessment.
     
