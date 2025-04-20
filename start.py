@@ -22,61 +22,54 @@ def load_data_product(file_path):
 
 
 async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3):
-    """Run a team of data product owners to assess compatibility between their products."""
-    # Load data products
     dp1 = load_data_product(dp1_path)
     dp2 = load_data_product(dp2_path)
-    
-    # Create data product owners
+
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
+
+    employees = [alice, bob]
     
-    # Create team
     team = Team()
     team.hire([alice, bob])
     team.invest(investment)
-    
-    # Start with direct messages to each agent to initiate their first actions
-    # from metagpt.actions import UserRequirement
-    # from metagpt.schema import Message
-    
-    # Create initial messages for each agent
-    alice_msg = Message(
+
+    # Send initial messages
+    team.env.publish_message(Message(
         content="Analyze your data product and share its description with the team",
         role="Human",
         cause_by=UserRequirement,
         sent_from="Human",
         send_to=["Alice"]
-    )
-    
-    bob_msg = Message(
+    ))
+    team.env.publish_message(Message(
         content="Analyze your data product and share its description with the team",
         role="Human",
         cause_by=UserRequirement,
         sent_from="Human",
         send_to=["Bob"]
-    )
-    
-    # Send messages to the environment
-    team.env.publish_message(alice_msg)
-    team.env.publish_message(bob_msg)
-    
-    # Run the interaction
-    await team.run(n_round=n_round)
+    ))
+
+    # Force both agents to act each round
+    for i in range(n_round):
+        logger.debug(f"Round {i+1}/{n_round}")
+        for agent in employees:
+            await agent.run()
+
 
 
 def main(dp1_path: str = "./Data Products/example-DPs/Data Contract Playground - Pflooky/data-contract-specification.yaml", 
          dp2_path: str = "./Data Products/example-DPs/Data Contract Playground - Pflooky/data-contract-specification.yaml", 
          investment: float = 3.0, 
          n_round: int = 10):
-    """
-    Run data product compatibility assessment.
     
-    :param dp1_path: Path to the first data product YAML file
-    :param dp2_path: Path to the second data product YAML file
-    :param investment: Contribution amount for team
-    :param n_round: Maximum number of interaction rounds
-    """
+    # Run data product compatibility assessment.
+    
+    # :param dp1_path: Path to the first data product YAML file
+    # :param dp2_path: Path to the second data product YAML file
+    # :param investment: Contribution amount for team
+    # :param n_round: Maximum number of interaction rounds
+   
     if platform.system() == "Windows":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     

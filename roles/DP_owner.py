@@ -25,14 +25,14 @@ class DPOwner(Role):
         # Process messages sent directly to this agent or broadcast messages
         self.rc.news = [
             msg for msg in self.rc.news 
-            if self.name in msg.send_to or  # Message sent directly to this agent
-               "All" in msg.send_to or      # Message sent to "All"
-               msg.send_to == "All"         # Handle both formats for "All"
+            if self.name in msg.send_to or  
+                "All" in (msg.send_to if isinstance(msg.send_to, list) else [msg.send_to])
         ]
+
         return len(self.rc.news)
     
     async def react(self) -> Message:
-        """Override the default react method to handle specific actions without planning"""
+        # Override the default react method to handle specific actions without planning
         if not self.rc.news:
             # If there's no news, use SimpleDataProductReader as default first action
             self.rc.todo = SimpleDataProductReader()
