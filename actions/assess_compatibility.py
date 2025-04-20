@@ -20,9 +20,5 @@ class SimpleDataProductComposer(Action):
 
     async def run(self, productA: str, productB: str):
         prompt = self.PROMPT_TEMPLATE.format(productA=productA, productB=productB)
-
         rsp = await self._aask(prompt)
-
-        product_description = SimpleDataProductComposer(rsp)
-
-        return product_description
+        return rsp

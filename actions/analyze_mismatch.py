@@ -19,9 +19,5 @@ class MismatchIdentifier(Action):
 
     async def run(self, assessment: str):
         prompt = self.PROMPT_TEMPLATE.format(assessment=assessment)
-
         rsp = await self._aask(prompt)
-
-        product_description = MismatchIdentifier(rsp)
-
-        return product_description
+        return rsp
