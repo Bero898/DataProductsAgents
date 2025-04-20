@@ -4,9 +4,12 @@ from actions.assess_compatibility import SimpleDataProductComposer
 from actions.analyze_mismatch import MismatchIdentifier
 from metagpt.schema import Message
 from metagpt.logs import logger
+from actions.read_product import ContextAwareProductReader
+from actions.assess_compatibility import DiscourseAwareComposer
 
 
 class DPOwner(Role):
+    current_round: int = 1  # Default to 1
     name: str = "Alice"
     profile: str = "Data Product Owner"
     data_product: str = ""
@@ -19,6 +22,8 @@ class DPOwner(Role):
         self.opponent_name = opponent_name
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
+        self.current_round = 1  # Default round
+
     
     async def _observe(self) -> int:
         await super()._observe()
@@ -42,12 +47,17 @@ class DPOwner(Role):
             
             # Check what action to take based on conversation state
             if "Analyze your data product" in latest_msg.content:
-                # Initial instruction - read data product
-                self.rc.todo = SimpleDataProductReader()
+                if self.current_round > 1:
+                    
+                    self.rc.todo = ContextAwareProductReader()
+                else:
+                    self.rc.todo = SimpleDataProductReader()
             
             elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
-                # After a data product is read, assess compatibility
-                self.rc.todo = SimpleDataProductComposer()
+                if self.current_round > 1:
+                    self.rc.todo = DiscourseAwareComposer()
+                else:
+                    self.rc.todo = SimpleDataProductComposer()
             
             elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
                 # After compatibility assessment, identify mismatches
@@ -137,6 +147,58 @@ class DPOwner(Role):
                     sent_from=self.name,
                     send_to=[self.opponent_name]
                 )
+        elif isinstance(todo, ContextAwareProductReader):
+            # Read own data product with context
+            memories = self.get_memories()
+            compatibility = ""
+            mismatches = ""
+            
+            for memory in memories:
+                if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
+                    compatibility = memory.content
+                elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.name:
+                    mismatches = memory.content
+            
+            result = await todo.run(self.data_product, compatibility, mismatches)
+            msg = Message(
+                content=result,
+                role=self.profile,
+                cause_by="actions.read_product.ContextAwareProductReader",
+                sent_from=self.name,
+                send_to=[self.opponent_name]
+            )
+        
+        elif isinstance(todo, DiscourseAwareComposer):
+            # Get own product description and opponent's product description
+            memories = self.get_memories()
+            own_desc = ""
+            opponent_desc = ""
+            
+            # Search for product descriptions in messages
+            for memory in memories:
+                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+                    if memory.sent_from == self.name:
+                        own_desc = memory.content
+                    elif memory.sent_from == self.opponent_name:
+                        opponent_desc = memory.content
+            
+            if own_desc and opponent_desc:
+                result = await todo.run(own_desc, opponent_desc, compatibility, mismatches)
+                msg = Message(
+                    content=result,
+                    role=self.profile,
+                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                    sent_from=self.name,
+                    send_to=[self.opponent_name]
+                )
+            else:
+                msg = Message(
+                    content=f"I'm still waiting for product descriptions. I have my own: {bool(own_desc)}, opponent's: {bool(opponent_desc)}",
+                    role=self.profile,
+                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                    sent_from=self.name,
+                    send_to=[self.opponent_name]
+            )
         
         else:
             msg = Message(

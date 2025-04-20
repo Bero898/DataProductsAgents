@@ -22,3 +22,27 @@ class SimpleDataProductComposer(Action):
         prompt = self.PROMPT_TEMPLATE.format(productA=productA, productB=productB)
         rsp = await self._aask(prompt)
         return rsp
+    
+class DiscourseAwareComposer(SimpleDataProductComposer):
+    PROMPT_TEMPLATE: str = """
+    Here are the descriptions of two data products. These descriptions contain information specific to 
+    each product. Consider negotiable and non-negotiable factors like data formats, schemas, compatibility constraints, etc.
+
+    Data product A:
+    {productA}
+
+    Data product B:
+    {productB}
+
+    Contextual Notes:
+    - Compatibility analysis: {compatibility}
+    - Notable mismatches: {mismatches}
+
+    Based on the above, please assess the compatibility of the two data products, and explain your reasoning.
+    Your assessment:
+    """
+
+    async def run(self, productA: str, productB: str, compatibilityA: str, mismatchesA: str,  compatibilityB: str, mismatchesB: str):
+        prompt = self.PROMPT_TEMPLATE.format(productA=productA, productB=productB, compatibilityA=compatibilityA, compatibilityB=compatibilityB, mismatchesA=mismatchesA, mismatchesB=mismatchesB)
+        rsp = await self._aask(prompt)
+        return rsp
