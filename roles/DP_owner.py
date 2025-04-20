@@ -18,7 +18,6 @@ class DPOwner(Role):
         self.data_product = data_product
         self.opponent_name = opponent_name
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
-        self._set_react_mode(react_mode=RoleReactMode.PLAN_AND_ACT.value)
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
     
     async def _observe(self) -> int:
@@ -27,20 +26,41 @@ class DPOwner(Role):
         self.rc.news = [msg for msg in self.rc.news if self.name in msg.send_to or "All" in msg.send_to]
         return len(self.rc.news)
     
-async def _act(self) -> Message:
-    logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
-    todo = self.rc.todo
-
-    if isinstance(todo, SimpleDataProductReader):
-        # Read own data product
-        result = await todo.run(self.data_product)
-        msg = Message(
-            content=result,
-            role=self.profile,
-            cause_by=type(todo),
-            sent_from=self.name,
-            send_to=["All"]  # Changed from "All" to ["All"] - message recipients should be a list
-        )
+    async def react(self) -> Message:
+        """Override the default react method to handle specific actions without planning"""
+        if not self.rc.news:
+            # If there's no news, use SimpleDataProductReader as default first action
+            self.rc.todo = SimpleDataProductReader()
+        else:
+            # Process the latest message
+            latest_msg = self.rc.news[-1]
+            
+            # Check what action to take based on conversation state
+            if "Analyze your data product" in latest_msg.content:
+                # Initial instruction - read data product
+                self.rc.todo = SimpleDataProductReader()
+            
+            elif isinstance(latest_msg.cause_by(), SimpleDataProductReader):
+                # After a data product is read, assess compatibility
+                self.rc.todo = SimpleDataProductComposer()
+            
+            elif isinstance(latest_msg.cause_by(), SimpleDataProductComposer):
+                # After compatibility assessment, identify mismatches
+                self.rc.todo = MismatchIdentifier()
+            
+            else:
+                # Default to reading the data product
+                self.rc.todo = SimpleDataProductReader()
+        
+        # Log the selected action
+        logger.info(f"{self.name} selected action: {self.rc.todo.name}")
+        
+        # Execute the action using _act
+        return await self._act()
+    
+    async def _act(self) -> Message:
+        logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
+        todo = self.rc.todo
 
         if isinstance(todo, SimpleDataProductReader):
             # Read own data product
@@ -50,16 +70,16 @@ async def _act(self) -> Message:
                 role=self.profile,
                 cause_by=type(todo),
                 sent_from=self.name,
-                send_to="All"  # Share description with all
+                send_to=["All"]  # Using list format for recipients
             )
         
         elif isinstance(todo, SimpleDataProductComposer):
             # Get own product description and opponent's product description
             memories = self.get_memories()
             own_desc = next((msg.content for msg in memories 
-                         if msg.sent_from == self.name and isinstance(msg.cause_by(), SimpleDataProductReader)), "")
+                        if msg.sent_from == self.name and isinstance(msg.cause_by(), SimpleDataProductReader)), "")
             opponent_desc = next((msg.content for msg in memories 
-                               if msg.sent_from == self.opponent_name and isinstance(msg.cause_by(), SimpleDataProductReader)), "")
+                            if msg.sent_from == self.opponent_name and isinstance(msg.cause_by(), SimpleDataProductReader)), "")
             
             if own_desc and opponent_desc:
                 result = await todo.run(own_desc, opponent_desc)
@@ -68,7 +88,7 @@ async def _act(self) -> Message:
                     role=self.profile,
                     cause_by=type(todo),
                     sent_from=self.name,
-                    send_to="All"  # Share assessment with all
+                    send_to=["All"]
                 )
             else:
                 msg = Message(
@@ -76,14 +96,14 @@ async def _act(self) -> Message:
                     role=self.profile,
                     cause_by=type(todo),
                     sent_from=self.name,
-                    send_to="All"
+                    send_to=["All"]
                 )
         
         elif isinstance(todo, MismatchIdentifier):
             # Get compatibility assessment
             memories = self.get_memories()
             assessment = next((msg.content for msg in memories 
-                           if msg.sent_from == self.name and isinstance(msg.cause_by(), SimpleDataProductComposer)), "")
+                        if msg.sent_from == self.name and isinstance(msg.cause_by(), SimpleDataProductComposer)), "")
             
             if assessment:
                 result = await todo.run(assessment)
@@ -92,7 +112,7 @@ async def _act(self) -> Message:
                     role=self.profile,
                     cause_by=type(todo),
                     sent_from=self.name,
-                    send_to=self.opponent_name
+                    send_to=[self.opponent_name]
                 )
             else:
                 msg = Message(
@@ -100,7 +120,7 @@ async def _act(self) -> Message:
                     role=self.profile,
                     cause_by=type(todo),
                     sent_from=self.name,
-                    send_to=self.opponent_name
+                    send_to=[self.opponent_name]
                 )
         
         else:
@@ -112,7 +132,7 @@ async def _act(self) -> Message:
                 role=self.profile, 
                 cause_by=type(todo),
                 sent_from=self.name,
-                send_to="All"
+                send_to=["All"]
             )
         
         self.rc.memory.add(msg)
