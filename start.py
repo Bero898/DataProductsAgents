@@ -55,9 +55,9 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
         round_number = i + 1
         logger.debug(f"Round {round_number}/{n_round}")
     
-    for agent in employees:
-        agent.current_round = round_number  # Pass current round to agent
-        await agent.run()
+        for agent in employees:
+            agent.current_round = round_number  # Pass current round to agent
+            await agent.run()
 
 
 

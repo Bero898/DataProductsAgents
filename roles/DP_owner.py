@@ -88,37 +88,84 @@ class DPOwner(Role):
                 send_to=[self.opponent_name]  # Send directly to opponent instead of "All"
             )
         
-        elif isinstance(todo, SimpleDataProductComposer):
-            # Get own product description and opponent's product description
-            memories = self.get_memories()
-            own_desc = ""
-            opponent_desc = ""
-            
-            # Search for product descriptions in messages
-            for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
-                    if memory.sent_from == self.name:
-                        own_desc = memory.content
-                    elif memory.sent_from == self.opponent_name:
-                        opponent_desc = memory.content
-            
-            if own_desc and opponent_desc:
-                result = await todo.run(own_desc, opponent_desc)
-                msg = Message(
-                    content=result,
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.SimpleDataProductComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
+        elif isinstance(todo, SimpleDataProductComposer) or isinstance(todo, DiscourseAwareComposer):
+            if isinstance(todo, DiscourseAwareComposer):
+                # Get product descriptions and memory context
+                memories = self.get_memories()
+                own_desc = ""
+                opponent_desc = ""
+                compatibilityA = ""
+                mismatchesA = ""
+                compatibilityB = ""
+                mismatchesB = ""
+
+                for memory in memories:
+                    if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+                        if memory.sent_from == self.name:
+                            own_desc = memory.content
+                        elif memory.sent_from == self.opponent_name:
+                            opponent_desc = memory.content
+
+                    elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
+                        if memory.sent_from == self.name:
+                            compatibilityA = memory.content
+                        elif memory.sent_from == self.opponent_name:
+                            compatibilityB = memory.content
+
+                    elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+                        if memory.sent_from == self.name:
+                            mismatchesA = memory.content
+                        elif memory.sent_from == self.opponent_name:
+                            mismatchesB = memory.content
+
+                if all([own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB]):
+                    result = await todo.run(own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB)
+                    msg = Message(
+                        content=result,
+                        role=self.profile,
+                        cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                        sent_from=self.name,
+                        send_to=[self.opponent_name]
+                    )
+                else:
+                    msg = Message(
+                        content="Waiting for complete context: missing compatibility or mismatches.",
+                        role=self.profile,
+                        cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                        sent_from=self.name,
+                        send_to=[self.opponent_name]
+                    )
             else:
-                msg = Message(
-                    content=f"I'm still waiting for product descriptions. I have my own: {bool(own_desc)}, opponent's: {bool(opponent_desc)}",
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.SimpleDataProductComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
+                # Get own product description and opponent's product description
+                memories = self.get_memories()
+                own_desc = ""
+                opponent_desc = ""
+                
+                # Search for product descriptions in messages
+                for memory in memories:
+                    if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+                        if memory.sent_from == self.name:
+                            own_desc = memory.content
+                        elif memory.sent_from == self.opponent_name:
+                            opponent_desc = memory.content
+                
+                if own_desc and opponent_desc:
+                    result = await todo.run(own_desc, opponent_desc)
+                    msg = Message(
+                        content=result,
+                        role=self.profile,
+                        cause_by="actions.assess_compatibility.SimpleDataProductComposer",
+                        sent_from=self.name,
+                        send_to=[self.opponent_name]
+                    )
+                else:
+                    msg = Message(
+                        content=f"I'm still waiting for product descriptions. I have my own: {bool(own_desc)}, opponent's: {bool(opponent_desc)}",
+                        role=self.profile,
+                        cause_by="actions.assess_compatibility.SimpleDataProductComposer",
+                        sent_from=self.name,
+                        send_to=[self.opponent_name]
+                    )
         
         elif isinstance(todo, MismatchIdentifier):
             # Get compatibility assessment
@@ -168,46 +215,61 @@ class DPOwner(Role):
                 send_to=[self.opponent_name]
             )
         
-        elif isinstance(todo, DiscourseAwareComposer):
-            # Get own product description and opponent's product description
-            memories = self.get_memories()
-            own_desc = ""
-            opponent_desc = ""
-            
-            # Search for product descriptions in messages
-            for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
-                    if memory.sent_from == self.name:
-                        own_desc = memory.content
-                    elif memory.sent_from == self.opponent_name:
-                        opponent_desc = memory.content
-            
-            if own_desc and opponent_desc:
-                result = await todo.run(own_desc, opponent_desc, compatibility, mismatches)
-                msg = Message(
-                    content=result,
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-            else:
-                msg = Message(
-                    content=f"I'm still waiting for product descriptions. I have my own: {bool(own_desc)}, opponent's: {bool(opponent_desc)}",
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-            )
-        
-        else:
-            msg = Message(
-                content="I don't know how to handle this action.", 
-                role=self.profile, 
-                cause_by=str(type(todo)),
-                sent_from=self.name,
-                send_to=[self.opponent_name]
-            )
+        # elif isinstance(todo, DiscourseAwareComposer):
+        #     # Get product descriptions and memory context
+        #     memories = self.get_memories()
+        #     own_desc = ""
+        #     opponent_desc = ""
+        #     compatibilityA = ""
+        #     mismatchesA = ""
+        #     compatibilityB = ""
+        #     mismatchesB = ""
+
+        #     for memory in memories:
+        #         if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+        #             if memory.sent_from == self.name:
+        #                 own_desc = memory.content
+        #             elif memory.sent_from == self.opponent_name:
+        #                 opponent_desc = memory.content
+
+        #         elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
+        #             if memory.sent_from == self.name:
+        #                 compatibilityA = memory.content
+        #             elif memory.sent_from == self.opponent_name:
+        #                 compatibilityB = memory.content
+
+        #         elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+        #             if memory.sent_from == self.name:
+        #                 mismatchesA = memory.content
+        #             elif memory.sent_from == self.opponent_name:
+        #                 mismatchesB = memory.content
+
+        #     if all([own_desc, opponent_desc, compatibilityA, compatibilityB, mismatchesA, mismatchesB]):
+        #         result = await todo.run(own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB)
+        #         msg = Message(
+        #             content=result,
+        #             role=self.profile,
+        #             cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+        #             sent_from=self.name,
+        #             send_to=[self.opponent_name]
+        #         )
+        #     else:
+        #         msg = Message(
+        #             content="Waiting for complete context: missing compatibility or mismatches.",
+        #             role=self.profile,
+        #             cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+        #             sent_from=self.name,
+        #             send_to=[self.opponent_name]
+        #         )
+
+        # else:
+        #     msg = Message(
+        #         content="I don't know how to handle this action.", 
+        #         role=self.profile, 
+        #         cause_by=str(type(todo)),
+        #         sent_from=self.name,
+        #         send_to=[self.opponent_name]
+        #     )
         
         self.rc.memory.add(msg)
         return msg

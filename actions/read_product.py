@@ -29,7 +29,7 @@ class ContextAwareProductReader(Action):
     {compatibility}
 
     Mismatch analysis:
-    {Mismatches}
+    {mismatches}
 
     give a brief description of the data product, including its purpose, structure, and any relevant details. 
     Try looking for elements that were not highlighted in the previous anaylsis if they could
