@@ -1,268 +1,135 @@
-from metagpt.roles.role import Role
-from actions.read_product import SimpleDataProductReader
-from actions.assess_compatibility import SimpleDataProductComposer
-from actions.analyze_mismatch import MismatchIdentifier
+# dp_owner.py
+from roles.phased_role import PhaseShiftMixin
+from metagpt.roles import Role
 from metagpt.schema import Message
 from metagpt.logs import logger
-from actions.read_product import ContextAwareProductReader
-from actions.assess_compatibility import DiscourseAwareComposer
+
+from actions.read_product import (
+    SimpleDataProductReader, ContextAwareProductReader
+)
+from actions.assess_compatibility import (
+    SimpleDataProductComposer, DiscourseAwareComposer
+)
+from actions.analyze_mismatch import MismatchIdentifier
 
 
-class DPOwner(Role):
-    current_round: int = 1  # Default to 1
+class DPOwner(PhaseShiftMixin, Role):
+    """
+    • Round‑1 runs all six actions in order.
+    • Later rounds restart at ContextAwareProductReader (index‑6 ⇢ phase_start=6).
+    """
     name: str = "Alice"
     profile: str = "Data Product Owner"
-    data_product: str = ""
-    opponent_name: str = ""
+    phase_start: int = 6                # 0‑based index of ContextAwareProductReader
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", **kwargs):
-        super().__init__(name=name, **kwargs)
-        self.name = name
+    def __init__(self, data_product: str = "", opponent_name: str = "", **kw):
+        super().__init__(**kw)
         self.data_product = data_product
         self.opponent_name = opponent_name
-        self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
-        self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
-        self.current_round = 1  # Default round
 
-    
-    async def _observe(self) -> int:
-        await super()._observe()
-        # Process messages sent directly to this agent or broadcast messages
-        self.rc.news = [
-            msg for msg in self.rc.news 
-            if self.name in msg.send_to or  
-                "All" in (msg.send_to if isinstance(msg.send_to, list) else [msg.send_to])
-        ]
+        self.set_actions([                     # indices shown for clarity
+            SimpleDataProductReader,           # 0
+            SimpleDataProductReader,           # 1  (opponent’s turn is handled by Team scheduling)
+            SimpleDataProductComposer,         # 2
+            SimpleDataProductComposer,         # 3
+            MismatchIdentifier,                # 4
+            MismatchIdentifier,                # 5
+            ContextAwareProductReader,         # 6   ← phase restart
+            ContextAwareProductReader,         # 7
+            DiscourseAwareComposer,            # 8
+            DiscourseAwareComposer,            # 9
+            MismatchIdentifier,                # 10
+            MismatchIdentifier,                # 11
+        ])
 
-        return len(self.rc.news)
-    
-    async def react(self) -> Message:
-        # Override the default react method to handle specific actions without planning
-        if not self.rc.news:
-            # If there's no news, use SimpleDataProductReader as default first action
-            self.rc.todo = SimpleDataProductReader()
-        else:
-            # Process the latest message
-            latest_msg = self.rc.news[-1]
-            
-            # Check what action to take based on conversation state
-            if "Analyze your data product" in latest_msg.content:
-                if self.current_round > 3:
-                    
-                    self.rc.todo = ContextAwareProductReader()
-                else:
-                    self.rc.todo = SimpleDataProductReader()
-            
-            elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
-                if self.current_round > 4:
-                    # Check if all required inputs are available
-                    if self._has_required_inputs_for_discourse():
-                        self.rc.todo = DiscourseAwareComposer()
-                    else:
-                        self.rc.todo = SimpleDataProductComposer()
-                else:
-                    self.rc.todo = SimpleDataProductComposer()
-            
-            elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
-                # After compatibility assessment, identify mismatches
-                self.rc.todo = MismatchIdentifier()
-            
-            else:
-                # Default to reading the data product
-                self.rc.todo = SimpleDataProductReader()
-        
-        # Log the selected action
-        logger.info(f"{self.name} selected action: {self.rc.todo.name}")
-        
-        # Execute the action using _act
-        return await self._act()
-    
-    def _has_required_inputs_for_discourse(self) -> bool:
-        memories = self.get_memories()
-        required_inputs = ["compatibilityA", "mismatchesA", "compatibilityB", "mismatchesB"]
-        available_inputs = {key: False for key in required_inputs}
+        self._set_react_mode("by_order")       # MetaGPT will call our custom _act_by_order
+        self._watch(self.states)               # store every action’s messages
 
-        for memory in memories:
-            if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
-                if memory.sent_from == self.name:
-                    available_inputs["compatibilityA"] = True
-                elif memory.sent_from == self.opponent_name:
-                    available_inputs["compatibilityB"] = True
-            elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
-                if memory.sent_from == self.name:
-                    available_inputs["mismatchesA"] = True
-                elif memory.sent_from == self.opponent_name:
-                    available_inputs["mismatchesB"] = True
-
-        return all(available_inputs.values())
-    
+    # ── the only code that is still custom: how to really execute one action ──
     async def _act(self) -> Message:
-        logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
         todo = self.rc.todo
+        logger.info(f"{self.name}: executing {todo.name}")
 
-        if isinstance(todo, SimpleDataProductReader):
-            # Read own data product
-            result = await todo.run(self.data_product)
-            msg = Message(
-                content=result,
-                role=self.profile,
-                cause_by="actions.read_product.SimpleDataProductReader",
-                sent_from=self.name,
-                send_to=[self.opponent_name]  # Send directly to opponent instead of "All"
-            )
-        
-        elif isinstance(todo, SimpleDataProductComposer):
-            
-            # Get own product description and opponent's product description
-            memories = self.get_memories()
-            own_desc = ""
-            opponent_desc = ""
-            
-            # Search for product descriptions in messages
-            for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
-                    if memory.sent_from == self.name:
-                        own_desc = memory.content
-                    elif memory.sent_from == self.opponent_name:
-                        opponent_desc = memory.content
-            
-            if own_desc and opponent_desc:
-                result = await todo.run(own_desc, opponent_desc)
-                msg = Message(
-                    content=result,
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.SimpleDataProductComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-            else:
-                msg = Message(
-                    content=f"I'm still waiting for product descriptions. I have my own: {bool(own_desc)}, opponent's: {bool(opponent_desc)}",
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.SimpleDataProductComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-        
-        elif isinstance(todo, MismatchIdentifier):
-            # Get compatibility assessment
-            memories = self.get_memories()
-            assessment = ""
-            
-            for memory in memories:
-                if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
-                    assessment = memory.content
+        # Dispatch table keeps this method short
+        handler = {
+            SimpleDataProductReader: self._do_read,
+            ContextAwareProductReader: self._do_ctx_read,
+            SimpleDataProductComposer: self._do_compose,
+            DiscourseAwareComposer:    self._do_discourse,
+            MismatchIdentifier:        self._do_mismatch,
+        }.get(type(todo), self._unknown)
+
+        return await handler(todo)
+
+    # ── tiny helpers, each < 15 lines ─────────────────────────────────────────
+
+    async def _do_read(self, todo):
+        result = await todo.run(self.data_product)
+        return self._mk_msg(result, todo)
+
+    async def _do_ctx_read(self, todo):
+        compat, mism = self._latest("Composer"), self._latest("Mismatch")
+        result = await todo.run(self.data_product, compat, mism)
+        return self._mk_msg(result, todo)
+
+    async def _do_compose(self, todo):
+        own, opp = self._latest_read(self.name), self._latest_read(self.opponent_name)
+        result = await todo.run(own, opp)
+        return self._mk_msg(result, todo)
+    
+    def _latest(self, cause_substr: str) -> dict[str, str]:
+        """Return newest message of each sender that matches `cause_substr`."""
+        seen = {}
+        for mem in reversed(self.get_memories()):
+            if cause_substr in mem.cause_by and mem.sent_from not in seen:
+                seen[mem.sent_from] = mem.content
+                if len(seen) == 2:          # we only need self & opponent
                     break
-            
-            if assessment:
-                result = await todo.run(assessment)
-                msg = Message(
-                    content=result,
-                    role=self.profile,
-                    cause_by="actions.analyze_mismatch.MismatchIdentifier",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-            else:
-                msg = Message(
-                    content="Waiting for compatibility assessment...",
-                    role=self.profile,
-                    cause_by="actions.analyze_mismatch.MismatchIdentifier",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-        elif isinstance(todo, ContextAwareProductReader):
-            # Read own data product with context
-            memories = self.get_memories()
-            compatibility = ""
-            mismatches = ""
-            
-            for memory in memories:
-                if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
-                    compatibility = memory.content
-                elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.name:
-                    mismatches = memory.content
-            
-            result = await todo.run(self.data_product, compatibility, mismatches)
-            msg = Message(
-                content=result,
-                role=self.profile,
-                cause_by="actions.read_product.ContextAwareProductReader",
-                sent_from=self.name,
-                send_to=[self.opponent_name]
-            )
+        return seen                       # {'Alice': '...', 'Bob': '...'}
+
+
+
+    async def _do_discourse(self, todo):
+        data = {k: self._latest(k) for k in
+                ("Reader", "Composer", "Mismatch")}
         
-        elif isinstance(todo, DiscourseAwareComposer):
-            memories = self.get_memories()
-            own_desc = ""
-            opponent_desc = ""
-            compatibilityA = ""
-            mismatchesA = ""
-            compatibilityB = ""
-            mismatchesB = ""
+        print(f"Data: {data}")
+        if not all(data.values()):
+            return self._mk_msg("Waiting for complete context.", todo)
+        own, opp = data["Reader"][self.name], data["Reader"][self.opponent_name]
+        compA, compB = data["Composer"][self.name], data["Composer"][self.opponent_name]
+        misA, misB = data["Mismatch"][self.name], data["Mismatch"][self.opponent_name]
+        result = await todo.run(own, opp, compA, misA, compB, misB)
+        return self._mk_msg(result, todo)
 
-            # Extract relevant information from memory
-            for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
-                    if memory.sent_from == self.name:
-                        own_desc = memory.content
-                    elif memory.sent_from == self.opponent_name:
-                        opponent_desc = memory.content
+    async def _do_mismatch(self, todo):
+        comp = self._latest("Composer", self.name)
+        result = await todo.run(comp)
+        return self._mk_msg(result, todo)
 
-                elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
-                    if memory.sent_from == self.name:
-                        compatibilityA = memory.content
-                    elif memory.sent_from == self.opponent_name:
-                        compatibilityB = memory.content
+    async def _unknown(self, todo):
+        return self._mk_msg("I don't know this action", todo)
 
-                elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
-                    if memory.sent_from == self.name:
-                        mismatchesA = memory.content
-                    elif memory.sent_from == self.opponent_name:
-                        mismatchesB = memory.content
+    # ── generic utilities ────────────────────────────────────────────────────
+    def _latest(self, cause_substr: str, sender: str | None = None):
+        for mem in reversed(self.get_memories()):
+            if cause_substr in mem.cause_by and (sender is None or mem.sent_from == sender):
+                return mem.content
+        return ""
 
-            # Check if all required inputs are available
-            if all([own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB]):
-                result = await todo.run(own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB)
-                msg = Message(
-                    content=result,
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-            else:
-                # Log missing inputs and defer execution
-                missing_inputs = []
-                if not own_desc:
-                    missing_inputs.append("own_desc")
-                if not opponent_desc:
-                    missing_inputs.append("opponent_desc")
-                if not compatibilityA:
-                    missing_inputs.append("compatibilityA")
-                if not mismatchesA:
-                    missing_inputs.append("mismatchesA")
-                if not compatibilityB:
-                    missing_inputs.append("compatibilityB")
-                if not mismatchesB:
-                    missing_inputs.append("mismatchesB")
-                logger.warning(f"{self.name} is waiting for complete context: missing {', '.join(missing_inputs)}.")
+    def _latest_read(self, sender):
+        for mem in reversed(self.get_memories()):
+            if mem.cause_by.endswith("SimpleDataProductReader") and mem.sent_from == sender:
+                return mem.content
+        return ""
 
-                msg = Message(
-                    content=f"Waiting for complete context: missing {', '.join(missing_inputs)}.",
-                    role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
-                    sent_from=self.name,
-                    send_to=[self.opponent_name]
-                )
-        else:
-            msg = Message(
-                content="I don't know how to handle this action.", 
-                role=self.profile, 
-                cause_by=str(type(todo)),
-                sent_from=self.name,
-                send_to=[self.opponent_name]
-            )
-        
+    def _mk_msg(self, content, todo):
+        msg = Message(
+            content=content,
+            role=self.profile,
+            cause_by=f"{todo.__module__}.{todo.__class__.__name__}",
+            sent_from=self.name,
+            send_to=[self.opponent_name],
+        )
         self.rc.memory.add(msg)
         return msg
