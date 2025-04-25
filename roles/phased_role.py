@@ -5,6 +5,7 @@ from metagpt.schema import Message
 
 class PhaseShiftMixin(Role):
     """After the first complete sweep, restart every later sweep at `phase_start`."""
+    
     phase_start: int = 0
     _first_round_done: bool = False
 

@@ -1,3 +1,4 @@
+#start.py
 import asyncio
 import fire
 import yaml
@@ -32,6 +33,9 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     
     team = Team()
     team.hire([alice, bob])
+
+
+
     team.invest(investment)
 
     # Send initial messages
@@ -58,6 +62,12 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
         for agent in employees:
             agent.current_round = round_number  # Pass current round to agent
             await agent.run()
+
+        # the code at the end here is causing an error:
+        # makes the agent run through the entire action space without having 
+        # to get the response from the other agent. (need a way to synchronize the 
+        # actions of the two agents). additionally trying to do: await team.run(n_round=n_round)
+        # doesn't work either. 
 
 
 

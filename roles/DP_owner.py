@@ -18,12 +18,13 @@ class DPOwner(PhaseShiftMixin, Role):
     • Round‑1 runs all six actions in order.
     • Later rounds restart at ContextAwareProductReader (index‑6 ⇢ phase_start=6).
     """
-    name: str = "Alice"
+    name: str = ""
     profile: str = "Data Product Owner"
-    phase_start: int = 6                # 0‑based index of ContextAwareProductReader
+                
 
-    def __init__(self, data_product: str = "", opponent_name: str = "", **kw):
-        super().__init__(**kw)
+    def __init__(self, name: str = "", data_product: str = "", opponent_name: str = "", **kw):
+        super().__init__(name=name, **kw)  # <- ensures Role sees it
+        self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
 
@@ -76,21 +77,10 @@ class DPOwner(PhaseShiftMixin, Role):
         own, opp = self._latest_read(self.name), self._latest_read(self.opponent_name)
         result = await todo.run(own, opp)
         return self._mk_msg(result, todo)
-    
-    def _latest(self, cause_substr: str) -> dict[str, str]:
-        """Return newest message of each sender that matches `cause_substr`."""
-        seen = {}
-        for mem in reversed(self.get_memories()):
-            if cause_substr in mem.cause_by and mem.sent_from not in seen:
-                seen[mem.sent_from] = mem.content
-                if len(seen) == 2:          # we only need self & opponent
-                    break
-        return seen                       # {'Alice': '...', 'Bob': '...'}
-
 
 
     async def _do_discourse(self, todo):
-        data = {k: self._latest(k) for k in
+        data = {k: self._latest_by_agent(k) for k in
                 ("Reader", "Composer", "Mismatch")}
         
         print(f"Data: {data}")
@@ -111,6 +101,8 @@ class DPOwner(PhaseShiftMixin, Role):
         return self._mk_msg("I don't know this action", todo)
 
     # ── generic utilities ────────────────────────────────────────────────────
+    #original ones
+    
     def _latest(self, cause_substr: str, sender: str | None = None):
         for mem in reversed(self.get_memories()):
             if cause_substr in mem.cause_by and (sender is None or mem.sent_from == sender):
@@ -122,6 +114,18 @@ class DPOwner(PhaseShiftMixin, Role):
             if mem.cause_by.endswith("SimpleDataProductReader") and mem.sent_from == sender:
                 return mem.content
         return ""
+    
+    #new ones
+    def _latest_by_agent(self, cause_substr: str) -> dict[str, str]:
+        """Return newest message of each sender that matches `cause_substr`."""
+        seen = {}
+        for mem in reversed(self.get_memories()):
+            if cause_substr in mem.cause_by and mem.sent_from not in seen:
+                seen[mem.sent_from] = mem.content
+                if len(seen) == 2:          # we only need self & opponent
+                    break
+        return seen                       # {'Alice': '...', 'Bob': '...'}
+
 
     def _mk_msg(self, content, todo):
         msg = Message(
