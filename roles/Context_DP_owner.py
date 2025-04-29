@@ -6,7 +6,7 @@ from metagpt.schema import Message
 from metagpt.logs import logger
 
 
-class DPOwner(Role):
+class ContextDPOwner(Role):
     name: str = "Alice"
     profile: str = "Data Product Owner"
     data_product: str = ""
