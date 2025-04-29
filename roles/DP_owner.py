@@ -28,22 +28,16 @@ class DPOwner(PhaseShiftMixin, Role):
         self.data_product = data_product
         self.opponent_name = opponent_name
 
-        self.set_actions([                     # indices shown for clarity
-            SimpleDataProductReader,           # 0
-            SimpleDataProductReader,           # 1  (opponent’s turn is handled by Team scheduling)
-            SimpleDataProductComposer,         # 2
-            SimpleDataProductComposer,         # 3
-            MismatchIdentifier,                # 4
-            MismatchIdentifier,                # 5
-            ContextAwareProductReader,         # 6   ← phase restart
-            ContextAwareProductReader,         # 7
-            DiscourseAwareComposer,            # 8
-            DiscourseAwareComposer,            # 9
-            MismatchIdentifier,                # 10
-            MismatchIdentifier,                # 11
+        self.set_actions([                     
+            SimpleDataProductReader,            
+            SimpleDataProductComposer,          
+            MismatchIdentifier,                
+            ContextAwareProductReader,         
+            DiscourseAwareComposer,            
+            MismatchIdentifier,                
         ])
 
-        self._set_react_mode("by_order")       # MetaGPT will call our custom _act_by_order
+        # self._set_react_mode("by_order")       # MetaGPT will call our custom _act_by_order
         self._watch(self.states)               # store every action’s messages
 
     # ── the only code that is still custom: how to really execute one action ──

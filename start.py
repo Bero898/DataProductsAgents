@@ -12,6 +12,14 @@ from roles.DP_owner import DPOwner
 from metagpt.schema import Message
 from metagpt.actions import UserRequirement
 
+from actions.read_product import (
+    SimpleDataProductReader, ContextAwareProductReader
+)
+from actions.assess_compatibility import (
+    SimpleDataProductComposer, DiscourseAwareComposer
+)
+from actions.analyze_mismatch import MismatchIdentifier
+
 def load_data_product(file_path):
     with open(file_path) as stream:
         try:
@@ -35,7 +43,6 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     team.hire([alice, bob])
 
 
-
     team.invest(investment)
 
     # Send initial messages
@@ -54,22 +61,22 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
         send_to=["Bob"]
     ))
 
-    # Force both agents to act each round
-    for i in range(n_round):
-        round_number = i + 1
-        logger.debug(f"Round {round_number}/{n_round}")
-    
+
+
+    # First round: run actions 0 to 2 (inclusive)
+    for action_index in range(3):  # SimpleReader, SimpleComposer, Mismatch
         for agent in employees:
-            agent.current_round = round_number  # Pass current round to agent
-            await agent.run()
+            agent.rc.todo = agent.actions[action_index]
+            await agent._observe()
+            await agent.react()
 
-        # the code at the end here is causing an error:
-        # makes the agent run through the entire action space without having 
-        # to get the response from the other agent. (need a way to synchronize the 
-        # actions of the two agents). additionally trying to do: await team.run(n_round=n_round)
-        # doesn't work either. 
-
-
+    # Remaining rounds: run actions 3 to 5
+    for round_num in range(n_round - 1):  # already did round 1
+        for action_index in range(3, 6):  # ContextReader, DiscourseComposer, Mismatch
+            for agent in employees:
+                agent.rc.todo = agent.actions[action_index]
+                await agent._observe()
+                await agent.react()
 
 def main(dp1_path: str = "./Data Products/example-DPs/Data Contract Playground - Pflooky/data-contract-specification.yaml", 
          dp2_path: str = "./Data Products/example-DPs/Data Contract Playground - Pflooky/data-contract-specification.yaml", 
