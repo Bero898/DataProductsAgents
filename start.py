@@ -8,6 +8,7 @@ from metagpt.context import Context
 from metagpt.logs import logger
 from metagpt.team import Team
 from roles.DP_owner import DPOwner
+from roles.Context_DP_owner import ContextDPOwner
 from metagpt.schema import Message
 from metagpt.actions import UserRequirement
 
@@ -28,7 +29,12 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
 
-    employees = [alice, bob]
+    alice2 = ContextDPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
+    bob2 = ContextDPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
+
+    round_3_agents = [alice, bob] #use these agents for the first 3 rounds
+
+    round_n_agents = [alice2, bob2] #use these agents for the rest of the rounds
     
     team = Team()
     team.hire([alice, bob])
@@ -50,11 +56,19 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
         send_to=["Bob"]
     ))
 
+    await alice.run()
+    await bob.run()
+
     # Force both agents to act each round
     for i in range(n_round):
         logger.debug(f"Round {i+1}/{n_round}")
-        for agent in employees:
-            await agent.run()
+        if i<4:
+            for agent in round_3_agents:
+                await agent.run()
+        else:
+            for agent in round_n_agents:
+                await agent.run()
+            
 
 
 
