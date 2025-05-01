@@ -29,15 +29,15 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
 
-    alice2 = ContextDPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
-    bob2 = ContextDPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
-
+    alice2 = ContextDPOwner(name="Alice2", data_product=dp1, opponent_name="Bob2")
+    bob2 = ContextDPOwner(name="Bob2", data_product=dp2, opponent_name="Alice2")
+    
     round_3_agents = [alice, bob] #use these agents for the first 3 rounds
 
     round_n_agents = [alice2, bob2] #use these agents for the rest of the rounds
     
     team = Team()
-    team.hire([alice, bob])
+    team.hire([alice, bob, alice2, bob2])
     team.invest(investment)
 
     # Send initial messages

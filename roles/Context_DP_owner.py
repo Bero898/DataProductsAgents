@@ -24,11 +24,11 @@ class ContextDPOwner(Role):
         await super()._observe()
         # Process messages sent directly to this agent or broadcast messages
         self.rc.news = [
-            msg for msg in self.rc.news 
-            if self.name in msg.send_to or  
-                "All" in (msg.send_to if isinstance(msg.send_to, list) else [msg.send_to])
+            msg for msg in self.rc.news
+            if self.name in msg.send_to or
+            (self.name == "Alice2" and msg.sent_from == "Alice") or
+            (self.name == "Bob2" and msg.sent_from == "Bob")
         ]
-
         return len(self.rc.news)
     
     async def react(self) -> Message:
@@ -68,25 +68,32 @@ class ContextDPOwner(Role):
         todo = self.rc.todo
 
         if isinstance(todo, ContextAwareProductReader):
-             # Read own data product with context
-             memories = self.get_memories()
-             compatibility = ""
-             mismatches = ""
-             
-             for memory in memories:
-                 if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
-                     compatibility = memory.content
-                 elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.name:
-                     mismatches = memory.content
-             
-             result = await todo.run(self.data_product, compatibility, mismatches)
-             msg = Message(
-                 content=result,
-                 role=self.profile,
-                 cause_by="actions.read_product.ContextAwareProductReader",
-                 sent_from=self.name,
-                 send_to=[self.opponent_name]
-             )
+            # Extract context from previous agents
+            memories = self.get_memories()
+            compatibility = ""
+            mismatches = ""
+
+            if self.name == "Alice2":
+                for memory in memories:
+                    if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == "Alice":
+                        compatibility = memory.content
+                    elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == "Alice":
+                        mismatches = memory.content
+            elif self.name == "Bob2":
+                for memory in memories:
+                    if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == "Bob":
+                        compatibility = memory.content
+                    elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == "Bob":
+                        mismatches = memory.content
+
+            result = await todo.run(self.data_product, compatibility, mismatches)
+            msg = Message(
+                content=result,
+                role=self.profile,
+                cause_by="actions.read_product.ContextAwareProductReader",
+                sent_from=self.name,
+                send_to=[self.opponent_name]
+            )
         
         elif isinstance(todo, DiscourseAwareComposer):
             memories = self.get_memories()
@@ -99,18 +106,16 @@ class ContextDPOwner(Role):
 
             # Extract relevant information from memory
             for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+                if memory.cause_by == "actions.read_product.ContextAwareProductReader":
                     if memory.sent_from == self.name:
                         own_desc = memory.content
                     elif memory.sent_from == self.opponent_name:
                         opponent_desc = memory.content
-
-                elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
+                elif memory.cause_by == "actions.assess_compatibility.DiscourseAwareComposer":
                     if memory.sent_from == self.name:
                         compatibilityA = memory.content
                     elif memory.sent_from == self.opponent_name:
                         compatibilityB = memory.content
-
                 elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
                     if memory.sent_from == self.name:
                         mismatchesA = memory.content
@@ -128,7 +133,6 @@ class ContextDPOwner(Role):
                     send_to=[self.opponent_name]
                 )
             else:
-                # Log missing inputs and defer execution
                 missing_inputs = []
                 if not own_desc:
                     missing_inputs.append("own_desc")
