@@ -163,7 +163,7 @@ class ContextDPOwner(Role):
             assessment = ""
             
             for memory in memories:
-                if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
+                if memory.cause_by == "actions.assess_compatibility.DiscourseAwareComposer" and memory.sent_from == self.name:
                     assessment = memory.content
                     break
             
