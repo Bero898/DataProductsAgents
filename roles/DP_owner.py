@@ -20,7 +20,7 @@ class DPOwner(Role):
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
-        self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
+        self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, DiscourseAwareComposer, ContextAwareProductReader, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self.current_round = 1  # Default round
 
@@ -36,46 +36,46 @@ class DPOwner(Role):
 
         return len(self.rc.news)
     
-    async def react(self) -> Message:
-        # Override the default react method to handle specific actions without planning
-        if not self.rc.news:
-            # If there's no news, use SimpleDataProductReader as default first action
-            self.rc.todo = SimpleDataProductReader()
-        else:
-            # Process the latest message
-            latest_msg = self.rc.news[-1]
+    # async def react(self) -> Message:
+    #     # Override the default react method to handle specific actions without planning
+    #     if not self.rc.news:
+    #         # If there's no news, use SimpleDataProductReader as default first action
+    #         self.rc.todo = SimpleDataProductReader()
+    #     else:
+    #         # Process the latest message
+    #         latest_msg = self.rc.news[-1]
             
-            # Check what action to take based on conversation state
-            if "Analyze your data product" in latest_msg.content:
-                if self.current_round > 3:
+    #         # Check what action to take based on conversation state
+    #         if "Analyze your data product" in latest_msg.content:
+    #             if self.current_round > 3:
                     
-                    self.rc.todo = ContextAwareProductReader()
-                else:
-                    self.rc.todo = SimpleDataProductReader()
+    #                 self.rc.todo = ContextAwareProductReader()
+    #             else:
+    #                 self.rc.todo = SimpleDataProductReader()
             
-            elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
-                if self.current_round > 4:
-                    # Check if all required inputs are available
-                    if self._has_required_inputs_for_discourse():
-                        self.rc.todo = DiscourseAwareComposer()
-                    else:
-                        self.rc.todo = SimpleDataProductComposer()
-                else:
-                    self.rc.todo = SimpleDataProductComposer()
+    #         elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
+    #             if self.current_round > 4:
+    #                 # Check if all required inputs are available
+    #                 if self._has_required_inputs_for_discourse():
+    #                     self.rc.todo = DiscourseAwareComposer()
+    #                 else:
+    #                     self.rc.todo = SimpleDataProductComposer()
+    #             else:
+    #                 self.rc.todo = SimpleDataProductComposer()
             
-            elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
-                # After compatibility assessment, identify mismatches
-                self.rc.todo = MismatchIdentifier()
+    #         elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
+    #             # After compatibility assessment, identify mismatches
+    #             self.rc.todo = MismatchIdentifier()
             
-            else:
-                # Default to reading the data product
-                self.rc.todo = SimpleDataProductReader()
+    #         else:
+    #             # Default to reading the data product
+    #             self.rc.todo = SimpleDataProductReader()
         
-        # Log the selected action
-        logger.info(f"{self.name} selected action: {self.rc.todo.name}")
+    #     # Log the selected action
+    #     logger.info(f"{self.name} selected action: {self.rc.todo.name}")
         
-        # Execute the action using _act
-        return await self._act()
+    #     # Execute the action using _act
+    #     return await self._act()
     
     def _has_required_inputs_for_discourse(self) -> bool:
         memories = self.get_memories()
