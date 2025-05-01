@@ -12,11 +12,12 @@ class DPOwner(Role):
     data_product: str = ""
     opponent_name: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", opponent_2_name: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
+        self.opponent_2_name = opponent_2_name
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
     
@@ -75,7 +76,7 @@ class DPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.SimpleDataProductReader",
                 sent_from=self.name,
-                send_to=[self.opponent_name]  # Send directly to opponent instead of "All"
+                send_to=[self.opponent_name, self.opponent_2_name]  # Send directly to opponent instead of "All"
             )
         
         elif isinstance(todo, SimpleDataProductComposer):
@@ -99,7 +100,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.opponent_2_name]  # Send directly to opponent instead of "All"
                 )
             else:
                 msg = Message(
@@ -107,7 +108,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.opponent_2_name]  # Send directly to opponent instead of "All"
                 )
         
         elif isinstance(todo, MismatchIdentifier):
@@ -127,7 +128,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.opponent_2_name]  # Send directly to opponent instead of "All"
                 )
             else:
                 msg = Message(
@@ -135,7 +136,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.opponent_2_name]
                 )
         
         else:
@@ -144,7 +145,7 @@ class DPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, self.opponent_2_name]  # Send directly to opponent instead of "All"
             )
         
         self.rc.memory.add(msg)

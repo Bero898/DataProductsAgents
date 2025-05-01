@@ -26,8 +26,8 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     dp1 = load_data_product(dp1_path)
     dp2 = load_data_product(dp2_path)
 
-    alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
-    bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
+    alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob", oppenent_2_name="Bob2")
+    bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice", oppenent_2_name="Alice2")
 
     alice2 = ContextDPOwner(name="Alice2", data_product=dp1, opponent_name="Bob2")
     bob2 = ContextDPOwner(name="Bob2", data_product=dp2, opponent_name="Alice2")
@@ -63,10 +63,12 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     for i in range(n_round):
         logger.debug(f"Round {i+1}/{n_round}")
         if i<4:
+            logger.debug("Round 1-3")
             for agent in round_3_agents:
                 await agent.run()
         else:
             for agent in round_n_agents:
+                logger.debug("Round 4-10")
                 await agent.run()
             
 
