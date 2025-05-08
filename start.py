@@ -3,11 +3,11 @@ import fire
 import yaml
 import platform
 from typing import Any
-
 from metagpt.context import Context
 from metagpt.logs import logger
 from metagpt.team import Team
 from roles.DP_owner import DPOwner
+from roles.DM_broker import DMBroker
 from roles.Context_DP_owner import ContextDPOwner
 from metagpt.schema import Message
 from metagpt.actions import UserRequirement
@@ -28,16 +28,21 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
 
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob", oppenent_2_name="Bob2")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice", oppenent_2_name="Alice2")
-
+    broker = DMBroker(name= "Connor", ownerA="Alice", ownerB="Bob")
     alice2 = ContextDPOwner(name="Alice2", data_product=dp1, opponent_name="Bob2")
     bob2 = ContextDPOwner(name="Bob2", data_product=dp2, opponent_name="Alice2")
     
-    round_3_agents = [alice, bob] #use these agents for the first 3 rounds
 
-    round_n_agents = [alice2, bob2] #use these agents for the rest of the rounds
+
+    round_3_agents = [alice, bob, broker] #use these agents for the first 3 rounds
+
+    round_n_agents = [alice2, bob2, broker] #use these agents for the rest of the rounds
+
+    
+
     
     team = Team()
-    team.hire([alice, bob, alice2, bob2])
+    team.hire([alice, bob, alice2, bob2, broker])
     team.invest(investment)
 
     # Send initial messages
