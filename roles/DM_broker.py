@@ -36,7 +36,7 @@ class DMBroker(Role):
             productB = ""
 
             for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+                if memory.cause_by == "actions.read_product.SimpleDataProductReader" or memory.cause_by == "actions.assess_compatibility.ContextAwareProductReader":
                     if memory.sent_from == self.ownerA:
                         productA = memory.content
                     elif memory.sent_from == self.ownerB:
