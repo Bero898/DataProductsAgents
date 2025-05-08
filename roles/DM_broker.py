@@ -11,11 +11,6 @@ class DMBroker(Role):
     current_round: int = 1  # Default to 1
     name: str = "Connor"
     profile: str = "Data Mesh Broker"
-    data_product: str = ""
-    ownerA: str = ""  # Owner of the first data product
-    ownerB: str = ""  # Owner of the second data product
-    ownerA_2: str = ""  # Owner of the first data product
-    ownerB_2: str = ""  # Owner of the second data product
     report_file: str = "compatibility_report.txt"  # File to store the report
 
     def __init__(self, name: str = "Connor", ownerA: str = "", ownerB: str = "", ownerA_2: str = "", ownerB_2: str = "", **kwargs):
@@ -24,7 +19,7 @@ class DMBroker(Role):
         self.ownerA = ownerA
         self.ownerB = ownerB
         self.ownerA_2 = ownerA_2
-        self.ownerB_2 = ownerB_2  
+        self.ownerB_2 = ownerB_2
         self.set_actions([PerformBrokerAnalysis, CreateCompatibilityReport])
         self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
         self.current_round = 1  # Default round
@@ -42,52 +37,40 @@ class DMBroker(Role):
         # Check what action to take based on conversation state
         if latest_msg.cause_by in [
             "actions.read_product.SimpleDataProductReader",
-            "actions.assess_compatibility.ContextAwareProductReader",
+            "actions.read_product.ContextAwareProductReader",
         ]:
-            # Check if both owners have completed their product readers
+            # Check if any two owners have completed their product readers
             memories = self.get_memories()
-            productA_done = any(
-                memory.cause_by in [
-                    "actions.read_product.SimpleDataProductReader",
-                    "actions.assess_compatibility.ContextAwareProductReader",
-                ]
-                and memory.sent_from in [self.ownerA, self.ownerA_2]
+            completed_readers = set(
+                memory.sent_from
                 for memory in memories
-            )
-            productB_done = any(
-                memory.cause_by in [
+                if memory.cause_by in [
                     "actions.read_product.SimpleDataProductReader",
-                    "actions.assess_compatibility.ContextAwareProductReader",
+                    "actions.read_product.ContextAwareProductReader",
                 ]
-                and memory.sent_from in [self.ownerB, self.ownerB_2]
-                for memory in memories
             )
 
-            if productA_done and productB_done:
+            if {self.ownerA, self.ownerB}.issubset(completed_readers) or \
+               {self.ownerA_2, self.ownerB_2}.issubset(completed_readers):
                 # Trigger PerformBrokerAnalysis
                 self.rc.todo = PerformBrokerAnalysis()
             else:
-                logger.debug(f"{self.name}: Waiting for both product readers to complete.")
+                logger.debug(f"{self.name}: Waiting for product readers from all owners.")
 
         elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
-            # Check if both owners have completed their mismatch identifiers
+            # Check if all owners have completed their mismatch identifiers
             memories = self.get_memories()
-            mismatchA_done = any(
-                memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier"
-                and memory.sent_from in [self.ownerA, self.ownerA_2]
+            completed_mismatches = set(
+                memory.sent_from
                 for memory in memories
-            )
-            mismatchB_done = any(
-                memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier"
-                and memory.sent_from in [self.ownerB, self.ownerB_2]
-                for memory in memories
+                if memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier"
             )
 
-            if mismatchA_done and mismatchB_done:
+            if {self.ownerA, self.ownerB, self.ownerA_2, self.ownerB_2}.issubset(completed_mismatches):
                 # Trigger CreateCompatibilityReport
                 self.rc.todo = CreateCompatibilityReport()
             else:
-                logger.debug(f"{self.name}: Waiting for both mismatch identifiers to complete.")
+                logger.debug(f"{self.name}: Waiting for mismatch identifiers from all owners.")
 
         else:
             # Default to waiting for relevant actions
@@ -113,7 +96,7 @@ class DMBroker(Role):
             for memory in memories:
                 if memory.cause_by in [
                     "actions.read_product.SimpleDataProductReader",
-                    "actions.assess_compatibility.ContextAwareProductReader",
+                    "actions.read_product.ContextAwareProductReader",
                 ]:
                     if memory.sent_from in [self.ownerA, self.ownerA_2]:
                         productA = memory.content
@@ -135,21 +118,17 @@ class DMBroker(Role):
                     role=self.profile,
                     cause_by="actions.perform_broker_analysis.PerformBrokerAnalysis",
                     sent_from=self.name,
-                    send_to=[self.ownerA, self.ownerB , self.ownerA_2, self.ownerB_2],
+                    send_to=[self.ownerA, self.ownerB, self.ownerA_2, self.ownerB_2],
                 )
 
         elif isinstance(todo, CreateCompatibilityReport):
             # Create or update the compatibility report
             memories = self.get_memories()
-            mismatchA = ""
-            mismatchB = ""
+            mismatches = {self.ownerA: "", self.ownerB: "", self.ownerA_2: "", self.ownerB_2: ""}
 
             for memory in memories:
                 if memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
-                    if memory.sent_from in [self.ownerA, self.ownerA_2]:
-                        mismatchA = memory.content
-                    elif memory.sent_from in [self.ownerB, self.ownerB_2]:
-                        mismatchB = memory.content
+                    mismatches[memory.sent_from] = memory.content
 
             # Read existing report content if the file exists
             report_content = ""
@@ -157,7 +136,12 @@ class DMBroker(Role):
                 with open(self.report_file, "r") as file:
                     report_content = file.read()
 
-            result = await todo.run(mismatchA, mismatchB, report_content)
+            result = await todo.run(
+                mismatches[self.ownerA],
+                mismatches[self.ownerB],
+                mismatches[self.ownerA_2] + "\n" + mismatches[self.ownerB_2],
+                report_content,
+            )
 
             # Write the updated report to the file
             with open(self.report_file, "w") as file:
@@ -168,7 +152,7 @@ class DMBroker(Role):
                 role=self.profile,
                 cause_by="actions.create_report.CreateCompatibilityReport",
                 sent_from=self.name,
-                send_to=[self.ownerA, self.ownerB],
+                send_to=[self.ownerA, self.ownerB, self.ownerA_2, self.ownerB_2],
             )
 
         else:
@@ -177,7 +161,7 @@ class DMBroker(Role):
                 role=self.profile,
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=[self.ownerA, self.ownerB],
+                send_to=[self.ownerA, self.ownerB, self.ownerA_2, self.ownerB_2],
             )
 
         self.rc.memory.add(msg)
