@@ -11,12 +11,14 @@ class ContextDPOwner(Role):
     profile: str = "Data Product Owner"
     data_product: str = ""
     opponent_name: str = ""
+    broker_name: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", broker_name: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
+        self.broker_name = broker_name
         self.set_actions([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
         self._watch([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
     
@@ -92,7 +94,7 @@ class ContextDPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.ContextAwareProductReader",
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, self.broker_name]
             )
         
         elif isinstance(todo, DiscourseAwareComposer):
@@ -130,7 +132,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.DiscourseAwareComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker_name]
                 )
             else:
                 missing_inputs = []
@@ -153,7 +155,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.DiscourseAwareComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker_name]
                 )
 
                 
@@ -174,7 +176,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker_name]
                 )
             else:
                 msg = Message(
@@ -182,7 +184,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker_name]
                 )
         
         else:
@@ -191,7 +193,7 @@ class ContextDPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, self.broker_name]
             )
         
         self.rc.memory.add(msg)
