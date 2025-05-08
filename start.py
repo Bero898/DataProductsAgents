@@ -8,6 +8,7 @@ from metagpt.context import Context
 from metagpt.logs import logger
 from metagpt.team import Team
 from roles.DP_owner import DPOwner
+from roles.DM_broker import DMBroker
 from metagpt.schema import Message
 from metagpt.actions import UserRequirement
 
@@ -27,11 +28,13 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
 
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
+    broker = DMBroker(name= "Connor", ownerA="Alice", ownerB="Bob")
 
-    employees = [alice, bob]
+
+    employees = [alice, bob, broker]
     
     team = Team()
-    team.hire([alice, bob])
+    team.hire([alice, bob, broker])
     team.invest(investment)
 
     # Send initial messages
