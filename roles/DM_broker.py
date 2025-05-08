@@ -2,6 +2,9 @@
 from metagpt.roles.role import Role
 from actions.perform_broker_analysis import PerformBrokerAnalysis
 from actions.create_report import CreateCompatibilityReport
+from actions.analyze_mismatch import MismatchIdentifier
+from actions.read_product import SimpleDataProductReader
+from actions.context_read import ContextAwareProductReader
 from metagpt.schema import Message
 from metagpt.logs import logger
 import os
@@ -21,7 +24,7 @@ class DMBroker(Role):
         self.ownerA_2 = ownerA_2
         self.ownerB_2 = ownerB_2
         self.set_actions([PerformBrokerAnalysis, CreateCompatibilityReport])
-        self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
+        self._watch([PerformBrokerAnalysis, CreateCompatibilityReport, MismatchIdentifier, SimpleDataProductReader, ContextAwareProductReader])
         self.current_round = 1  # Default round
 
     async def react(self) -> Message:
@@ -37,7 +40,7 @@ class DMBroker(Role):
         # Check what action to take based on conversation state
         if latest_msg.cause_by in [
             "actions.read_product.SimpleDataProductReader",
-            "actions.read_product.ContextAwareProductReader",
+            "actions.read_product.ContextAwareProductReader"
         ]:
             # Check if any two owners have completed their product readers
             memories = self.get_memories()
@@ -65,9 +68,11 @@ class DMBroker(Role):
                 for memory in memories
                 if memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier"
             )
-
-            if {self.ownerA, self.ownerB, self.ownerA_2, self.ownerB_2}.issubset(completed_mismatches):
+            logger.info (f"{self.name}: checking completion of mismatch tasks.")
+            if {self.ownerA, self.ownerB}.issubset(completed_readers) or \
+               {self.ownerA_2, self.ownerB_2}.issubset(completed_readers):
                 # Trigger CreateCompatibilityReport
+                logger.info (f"{self.name}: running compatibility.")
                 self.rc.todo = CreateCompatibilityReport()
             else:
                 logger.debug(f"{self.name}: Waiting for mismatch identifiers from all owners.")
@@ -135,13 +140,17 @@ class DMBroker(Role):
             if os.path.exists(self.report_file):
                 with open(self.report_file, "r") as file:
                     report_content = file.read()
-
-            result = await todo.run(
-                mismatches[self.ownerA],
-                mismatches[self.ownerB],
-                mismatches[self.ownerA_2] + "\n" + mismatches[self.ownerB_2],
-                report_content,
-            )
+                    # Check which owners have provided mismatches with non-empty strings
+                    if mismatches[self.ownerA_2] != "" and mismatches[self.ownerB_2] != "":
+                        result = await todo.run(
+                            mismatches[self.ownerA_2],
+                            mismatches[self.ownerB_2]
+                        )
+                    else:
+                        result = await todo.run(
+                            mismatches[self.ownerA],
+                            mismatches[self.ownerB]
+                        )
 
             # Write the updated report to the file
             with open(self.report_file, "w") as file:
