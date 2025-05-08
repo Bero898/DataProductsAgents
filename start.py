@@ -28,7 +28,7 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
 
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob", oppenent_2_name="Bob2")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice", oppenent_2_name="Alice2")
-    broker = DMBroker(name= "Connor", ownerA="Alice", ownerB="Bob")
+    broker = DMBroker(name= "Connor", ownerA="Alice", ownerB="Bob", ownerA_2="Alice2", ownerB_2="Bob2")
     alice2 = ContextDPOwner(name="Alice2", data_product=dp1, opponent_name="Bob2")
     bob2 = ContextDPOwner(name="Bob2", data_product=dp2, opponent_name="Alice2")
     
