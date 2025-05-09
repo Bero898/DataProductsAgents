@@ -4,6 +4,7 @@ import yaml
 import platform
 from typing import Any
 
+from roles.DM_broker import DMBroker
 from metagpt.context import Context
 from metagpt.logs import logger
 from metagpt.team import Team
@@ -31,13 +32,14 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
 
     alice2 = ContextDPOwner(name="Alice2", data_product=dp1, opponent_name="Bob2")
     bob2 = ContextDPOwner(name="Bob2", data_product=dp2, opponent_name="Alice2")
-    
-    round_3_agents = [alice, bob] #use these agents for the first 3 rounds
 
-    round_n_agents = [alice2, bob2] #use these agents for the rest of the rounds
-    
+    connor = DMBroker(name="Connor", ownerA="Alice", ownerB="Bob", ownerA_2="Alice2", ownerB_2="Bob2")
+
+    round_3_agents = [alice, bob, connor]  # Use these agents for the first 3 rounds
+    round_n_agents = [alice2, bob2, connor]  # Use these agents for the rest of the rounds
+
     team = Team()
-    team.hire([alice, bob, alice2, bob2])
+    team.hire([alice, bob, alice2, bob2, connor])
     team.invest(investment)
 
     # Send initial messages
@@ -56,21 +58,16 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
         send_to=["Bob"]
     ))
 
-    await alice.run()
-    await bob.run()
-
-    # Force both agents to act each round
     for i in range(n_round):
         logger.debug(f"Round {i+1}/{n_round}")
-        if i<4:
+        if i < 4:
             logger.debug("Round 1-3")
             for agent in round_3_agents:
                 await agent.run()
         else:
+            logger.debug("Round 4-10")
             for agent in round_n_agents:
-                logger.debug("Round 4-10")
                 await agent.run()
-            
 
 
 
