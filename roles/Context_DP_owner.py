@@ -32,34 +32,38 @@ class ContextDPOwner(Role):
         return len(self.rc.news)
     
     async def react(self) -> Message:
-        # Override the default react method to handle specific actions without planning
+        # Ensure the correct sequence of actions
         if not self.rc.news:
-            # If there's no news, use SimpleDataProductReader as default first action
+            # If there's no news, use ContextAwareProductReader as the default first action
             logger.error(f"{self.name} has no news, failed to collect context")
+            self.rc.todo = ContextAwareProductReader()
         else:
             # Process the latest message
             latest_msg = self.rc.news[-1]
-            
-            # Check what action to take based on conversation state
-            if latest_msg.cause_by == "actions.read_product.MismatchIdentifier":
-                # Initial instruction - read data product
-                self.rc.todo = ContextAwareProductReader()
 
+            # Check if ContextAwareProductReader has already been executed
+            memories = self.get_memories()
+            has_read_context = any(
+                memory.cause_by == "actions.read_product.ContextAwareProductReader" and memory.sent_from == self.name
+                for memory in memories
+            )
+
+            if not has_read_context:
+                # Ensure ContextAwareProductReader is executed first
+                self.rc.todo = ContextAwareProductReader()
             elif latest_msg.cause_by == "actions.read_product.ContextAwareProductReader":
-                # After a data product is read, assess compatibility
+                # After reading the context, assess compatibility
                 self.rc.todo = DiscourseAwareComposer()
-            
             elif latest_msg.cause_by == "actions.assess_compatibility.DiscourseAwareComposer":
                 # After compatibility assessment, identify mismatches
                 self.rc.todo = MismatchIdentifier()
-            
             else:
-                # Default to reading the data product
+                # Default to reading the context
                 self.rc.todo = ContextAwareProductReader()
-        
+
         # Log the selected action
         logger.info(f"{self.name} selected action: {self.rc.todo.name}")
-        
+
         # Execute the action using _act
         return await self._act()
     
