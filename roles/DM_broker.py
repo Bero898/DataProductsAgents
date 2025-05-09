@@ -86,21 +86,32 @@ class DMBroker(Role):
         logger.info(f"{self.name}: Executing {self.rc.todo.name}")
         todo = self.rc.todo
 
+        # Retrieve all memories
+        memories = self.get_memories()
+
+        # Get the most recent messages from each owner
+        latest_ownerA_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerA), None
+        )
+        latest_ownerB_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerB), None
+        )
+        latest_ownerA_2_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerA_2), None
+        )
+        latest_ownerB_2_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerB_2), None
+        )
+
         if isinstance(todo, PerformBrokerAnalysis):
             # Perform broker analysis between two data products
-            memories = self.get_memories()
-            current_round_memories = [
-                memory for memory in memories if memory.round == self.rc.round
-            ]
             productA_desc = ""
             productB_desc = ""
 
-            for memory in current_round_memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
-                    if memory.sent_from == self.ownerA:
-                        productA_desc = memory.content
-                    elif memory.sent_from == self.ownerB:
-                        productB_desc = memory.content
+            if latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.read_product.SimpleDataProductReader":
+                productA_desc = latest_ownerA_msg.content
+            if latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.read_product.SimpleDataProductReader":
+                productB_desc = latest_ownerB_msg.content
 
             if productA_desc and productB_desc:
                 result = await todo.run(productA_desc, productB_desc)
@@ -117,20 +128,14 @@ class DMBroker(Role):
 
         elif isinstance(todo, CreateCompatibilityReport):
             # Create or update the compatibility report
-            memories = self.get_memories()
-            current_round_memories = [
-                memory for memory in memories if memory.round == self.rc.round
-            ]
             mismatchA = ""
             mismatchB = ""
             existing_report = ""
 
-            for memory in current_round_memories:
-                if memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
-                    if memory.sent_from == self.ownerA:
-                        mismatchA = memory.content
-                    elif memory.sent_from == self.ownerB:
-                        mismatchB = memory.content
+            if latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+                mismatchA = latest_ownerA_msg.content
+            if latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+                mismatchB = latest_ownerB_msg.content
 
             if os.path.exists(self.report_file):
                 with open(self.report_file, "r") as file:
