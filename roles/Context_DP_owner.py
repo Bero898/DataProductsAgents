@@ -92,7 +92,7 @@ class ContextDPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.ContextAwareProductReader",
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, "Connor"]
             )
         
         elif isinstance(todo, DiscourseAwareComposer):
@@ -174,7 +174,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, "Connor"]
                 )
             else:
                 msg = Message(
@@ -182,7 +182,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, "Connor"]
                 )
         
         else:
@@ -191,7 +191,7 @@ class ContextDPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, "Connor"]
             )
         
         self.rc.memory.add(msg)
