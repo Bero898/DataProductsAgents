@@ -23,6 +23,58 @@ class DMBroker(Role):
         self.set_actions([PerformBrokerAnalysis, CreateCompatibilityReport])
         self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
 
+    async def react(self) -> Message:
+        # Ensure the broker reacts only to the most recent data from the current round
+        if not self.rc.news:
+            logger.debug(f"{self.name}: No news to process.")
+            return None
+
+        # Get the latest message
+        latest_msg = self.rc.news[-1]
+
+        # Check the current round's state
+        memories = self.get_memories()
+        current_round_memories = [
+            memory for memory in memories if memory.round == self.rc.round
+        ]
+
+        # Check if owners have completed the required actions for PerformBrokerAnalysis
+        completed_readers = set(
+            memory.sent_from
+            for memory in current_round_memories
+            if memory.cause_by in [
+                "actions.read_product.SimpleDataProductReader",
+                "actions.context_read.ContextAwareProductReader",
+            ]
+        )
+
+        if {self.ownerA, self.ownerB}.issubset(completed_readers) or \
+        {self.ownerA_2, self.ownerB_2}.issubset(completed_readers):
+            # Trigger PerformBrokerAnalysis if not already set
+            if not isinstance(self.rc.todo, PerformBrokerAnalysis):
+                logger.info(f"{self.name}: Triggering PerformBrokerAnalysis.")
+                self.rc.todo = PerformBrokerAnalysis()
+                return await self._act()
+
+        # Check if owners have completed the required actions for CreateCompatibilityReport
+        completed_mismatches = set(
+            memory.sent_from
+            for memory in current_round_memories
+            if memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier"
+        )
+
+        if {self.ownerA, self.ownerB}.issubset(completed_mismatches) or \
+        {self.ownerA_2, self.ownerB_2}.issubset(completed_mismatches):
+            # Trigger CreateCompatibilityReport if not already set
+            if not isinstance(self.rc.todo, CreateCompatibilityReport):
+                logger.info(f"{self.name}: Triggering CreateCompatibilityReport.")
+                self.rc.todo = CreateCompatibilityReport()
+                return await self._act()
+
+        # Default to waiting for relevant actions
+        logger.debug(f"{self.name}: Waiting for required actions to complete.")
+        return None
+
     async def _act(self) -> Message:
         logger.info(f"{self.name}: Executing {self.rc.todo.name}")
         todo = self.rc.todo
