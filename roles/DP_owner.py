@@ -57,6 +57,9 @@ class DPOwner(Role):
             elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
                 # After compatibility assessment, identify mismatches
                 self.rc.todo = MismatchIdentifier()
+            elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+                # After mismatch identification, read the data product again
+                self.rc.todo = MismatchIdentifier()
             else:
                 # Default to reading the data product
                 self.rc.todo = SimpleDataProductReader()
