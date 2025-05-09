@@ -24,7 +24,7 @@ class DMBroker(Role):
         self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
 
     async def react(self) -> Message:
-        # Ensure the broker reacts only to the most recent data from the current round
+        # Ensure the broker reacts only to the most recent data
         if not self.rc.news:
             logger.debug(f"{self.name}: No news to process.")
             return None
@@ -32,24 +32,27 @@ class DMBroker(Role):
         # Get the latest message
         latest_msg = self.rc.news[-1]
 
-        # Check the current round's state
+        # Check the current state of the owners
         memories = self.get_memories()
-        current_round_memories = [
-            memory for memory in memories if memory.round == self.rc.round
-        ]
 
-        # Check if owners have completed the required actions for PerformBrokerAnalysis
-        completed_readers = set(
-            memory.sent_from
-            for memory in current_round_memories
-            if memory.cause_by in [
-                "actions.read_product.SimpleDataProductReader",
-                "actions.context_read.ContextAwareProductReader",
-            ]
+        # Get the most recent messages from each owner
+        latest_ownerA_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerA), None
+        )
+        latest_ownerB_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerB), None
+        )
+        latest_ownerA_2_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerA_2), None
+        )
+        latest_ownerB_2_msg = next(
+            (memory for memory in reversed(memories) if memory.sent_from == self.ownerB_2), None
         )
 
-        if {self.ownerA, self.ownerB}.issubset(completed_readers) or \
-        {self.ownerA_2, self.ownerB_2}.issubset(completed_readers):
+        # Check if owners have completed the required actions for PerformBrokerAnalysis
+        if latest_ownerA_msg and latest_ownerB_msg and \
+        latest_ownerA_msg.cause_by == "actions.read_product.SimpleDataProductReader" and \
+        latest_ownerB_msg.cause_by == "actions.read_product.SimpleDataProductReader":
             # Trigger PerformBrokerAnalysis if not already set
             if not isinstance(self.rc.todo, PerformBrokerAnalysis):
                 logger.info(f"{self.name}: Triggering PerformBrokerAnalysis.")
@@ -57,24 +60,28 @@ class DMBroker(Role):
                 return await self._act()
 
         # Check if owners have completed the required actions for CreateCompatibilityReport
-        completed_mismatches = set(
-            memory.sent_from
-            for memory in current_round_memories
-            if memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier"
-        )
-
-        if {self.ownerA, self.ownerB}.issubset(completed_mismatches) or \
-        {self.ownerA_2, self.ownerB_2}.issubset(completed_mismatches):
+        if latest_ownerA_msg and latest_ownerB_msg and \
+        latest_ownerA_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and \
+        latest_ownerB_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
             # Trigger CreateCompatibilityReport if not already set
             if not isinstance(self.rc.todo, CreateCompatibilityReport):
                 logger.info(f"{self.name}: Triggering CreateCompatibilityReport.")
                 self.rc.todo = CreateCompatibilityReport()
                 return await self._act()
 
+        # Check if owners in the second round have completed the required actions
+        if latest_ownerA_2_msg and latest_ownerB_2_msg and \
+        latest_ownerA_2_msg.cause_by == "actions.context_read.ContextAwareProductReader" and \
+        latest_ownerB_2_msg.cause_by == "actions.context_read.ContextAwareProductReader":
+            # Trigger PerformBrokerAnalysis for the second round if not already set
+            if not isinstance(self.rc.todo, PerformBrokerAnalysis):
+                logger.info(f"{self.name}: Triggering PerformBrokerAnalysis for second round.")
+                self.rc.todo = PerformBrokerAnalysis()
+                return await self._act()
+
         # Default to waiting for relevant actions
         logger.debug(f"{self.name}: Waiting for required actions to complete.")
         return None
-
     async def _act(self) -> Message:
         logger.info(f"{self.name}: Executing {self.rc.todo.name}")
         todo = self.rc.todo
