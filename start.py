@@ -41,7 +41,7 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     team = Team()
     team.hire([alice, bob, alice2, bob2, connor])
     team.invest(investment)
-
+    logger.debug("Starting compatibility_assessment function.Alice")
     # Send initial messages
     team.env.publish_message(Message(
         content="Analyze your data product and share its description with the team",
@@ -50,6 +50,8 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
         sent_from="Human",
         send_to=["Alice"]
     ))
+    logger.debug("Starting compatibility_assessment function.Alice")
+
     team.env.publish_message(Message(
         content="Analyze your data product and share its description with the team",
         role="Human",
