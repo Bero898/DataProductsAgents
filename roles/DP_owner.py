@@ -76,7 +76,7 @@ class DPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.SimpleDataProductReader",
                 sent_from=self.name,
-                send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
             )
         
         elif isinstance(todo, SimpleDataProductComposer):
@@ -128,7 +128,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                    send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
                 )
             else:
                 msg = Message(
@@ -136,7 +136,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                    send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
                 )
         
         else:
@@ -145,7 +145,7 @@ class DPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
             )
         
         self.rc.memory.add(msg)
