@@ -108,10 +108,12 @@ class DMBroker(Role):
             productA_desc = ""
             productB_desc = ""
 
-            if latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.read_product.SimpleDataProductReader":
+            if (latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.read_product.SimpleDataProductReader") and (latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.read_product.SimpleDataProductReader"):
                 productA_desc = latest_ownerA_msg.content
-            if latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.read_product.SimpleDataProductReader":
                 productB_desc = latest_ownerB_msg.content
+            if (latest_ownerA_2_msg and latest_ownerA_2_msg.cause_by == "actions.read_product.SimpleDataProductReader") and (latest_ownerB_2_msg and latest_ownerB_2_msg.cause_by == "actions.read_product.SimpleDataProductReader"):
+                productA_desc = latest_ownerA_2_msg.content
+                productB_desc = latest_ownerB_2_msg.content
 
             if productA_desc and productB_desc:
                 result = await todo.run(productA_desc, productB_desc)
@@ -132,9 +134,9 @@ class DMBroker(Role):
             mismatchB = ""
             existing_report = ""
 
-            if latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+            if (latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier") and (latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier"):
                 mismatchA = latest_ownerA_msg.content
-            if latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+            if (latest_ownerA_2_msg and latest_ownerA_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier") and (latest_ownerB_2_msg and latest_ownerB_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier"):
                 mismatchB = latest_ownerB_msg.content
 
             if os.path.exists(self.report_file):
