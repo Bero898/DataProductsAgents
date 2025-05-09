@@ -78,10 +78,21 @@ class DMBroker(Role):
                 logger.info(f"{self.name}: Triggering PerformBrokerAnalysis for second round.")
                 self.rc.todo = PerformBrokerAnalysis()
                 return await self._act()
+        
+        if latest_ownerA_2_msg and latest_ownerB_2_msg and \
+        latest_ownerA_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and \
+        latest_ownerB_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+            # Trigger CreateCompatibilityReport if not already set
+            if not isinstance(self.rc.todo, CreateCompatibilityReport):
+                logger.info(f"{self.name}: Triggering CreateCompatibilityReport.")
+                self.rc.todo = CreateCompatibilityReport()
+                return await self._act()
 
         # Default to waiting for relevant actions
         logger.debug(f"{self.name}: Waiting for required actions to complete.")
         return None
+    
+
     async def _act(self) -> Message:
         logger.info(f"{self.name}: Executing {self.rc.todo.name}")
         todo = self.rc.todo
@@ -111,7 +122,7 @@ class DMBroker(Role):
             if (latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.read_product.SimpleDataProductReader") and (latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.read_product.SimpleDataProductReader"):
                 productA_desc = latest_ownerA_msg.content
                 productB_desc = latest_ownerB_msg.content
-            if (latest_ownerA_2_msg and latest_ownerA_2_msg.cause_by == "actions.read_product.SimpleDataProductReader") and (latest_ownerB_2_msg and latest_ownerB_2_msg.cause_by == "actions.read_product.SimpleDataProductReader"):
+            if (latest_ownerA_2_msg and latest_ownerA_2_msg.cause_by == "actions.context_read.ContextAwareProductReader") and (latest_ownerB_2_msg and latest_ownerB_2_msg.cause_by == "actions.context_read.ContextAwareProductReader"):
                 productA_desc = latest_ownerA_2_msg.content
                 productB_desc = latest_ownerB_2_msg.content
 
@@ -136,8 +147,10 @@ class DMBroker(Role):
 
             if (latest_ownerA_msg and latest_ownerA_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier") and (latest_ownerB_msg and latest_ownerB_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier"):
                 mismatchA = latest_ownerA_msg.content
-            if (latest_ownerA_2_msg and latest_ownerA_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier") and (latest_ownerB_2_msg and latest_ownerB_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier"):
                 mismatchB = latest_ownerB_msg.content
+            if (latest_ownerA_2_msg and latest_ownerA_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier") and (latest_ownerB_2_msg and latest_ownerB_2_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier"):
+                mismatchA = latest_ownerA_2_msg.content
+                mismatchB = latest_ownerB_2_msg.content
 
             if os.path.exists(self.report_file):
                 with open(self.report_file, "r") as file:
