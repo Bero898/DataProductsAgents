@@ -51,7 +51,7 @@ class ContextDPOwner(Role):
             if not has_read_context:
                 # Ensure ContextAwareProductReader is executed first
                 self.rc.todo = ContextAwareProductReader()
-            elif latest_msg.cause_by == "actions.read_product.ContextAwareProductReader":
+            elif latest_msg.cause_by == "actions.read_product.ContextAwareProductReader" or latest_msg.cause_by == "actions.perform_broker_analysis.PerformBrokerAnalysis":
                 # After reading the context, assess compatibility
                 self.rc.todo = DiscourseAwareComposer()
             elif latest_msg.cause_by == "actions.assess_compatibility.DiscourseAwareComposer":

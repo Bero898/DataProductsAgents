@@ -51,7 +51,7 @@ class DPOwner(Role):
             if not has_read_product:
                 # Ensure SimpleDataProductReader is executed first
                 self.rc.todo = SimpleDataProductReader()
-            elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
+            elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader" or latest_msg.cause_by == "actions.perform_broker_analysis.PerformBrokerAnalysis":
                 # After reading the data product, assess compatibility
                 self.rc.todo = SimpleDataProductComposer()
             elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
