@@ -12,14 +12,18 @@ class DPOwner(Role):
     data_product: str = ""
     opponent_name: str = ""
     requester: bool = True
-    opponent_2_name: str = ""
+    opponent_successor: str = ""
+    successor: str = ""
+    broker: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", opponent_2_name: str = "", requester: bool = True, **kwargs):
+    def __init__(self, name: str = "Alice", successor: str = "Alice2", data_product: str = "", opponent_name: str = "", opponent_successor: str = "", requester: bool = True, broker: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
-        self.opponent_2_name = opponent_2_name
+        self.opponent_successor = opponent_successor
+        self.successor = successor
+        self.broker = broker
         self.requester = requester #requester goes first, requested (i.e. when False) goes second
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
@@ -102,7 +106,7 @@ class DPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.SimpleDataProductReader",
                 sent_from=self.name,
-                send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
+                send_to=[self.opponent_name, self.successor, self.opponent_successor, self.broker]
             )
         
         elif isinstance(todo, SimpleDataProductComposer):
@@ -126,7 +130,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2", "Alice"] if self.name == "Alice" else ["Alice", "Alice2", "Bob", "Bob2"]  # Ensure both opponents receive the message
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor, self.name]
                 )
             else:
                 msg = Message(
@@ -134,7 +138,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2", "Alice"] if self.name == "Alice" else ["Alice", "Alice2", "Bob", "Bob2"]
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor, self.name]
                 )
         
         elif isinstance(todo, MismatchIdentifier):
@@ -154,7 +158,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor, self.broker]
                 )
             else:
                 msg = Message(
@@ -162,7 +166,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor, self.broker]
                 )
         
         else:
@@ -171,7 +175,7 @@ class DPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=["Bob", "Alice2", "Bob2", "Connor"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2", "Connor"]
+                send_to=[self.opponent_name, self.successor, self.opponent_successor, self.broker]
             )
         
         self.rc.memory.add(msg)
