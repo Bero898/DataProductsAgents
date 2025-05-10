@@ -134,7 +134,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                    send_to=["Bob", "Alice2", "Bob2", "Alice"] if self.name == "Alice" else ["Alice", "Alice2", "Bob", "Bob2"]
                 )
         
         elif isinstance(todo, MismatchIdentifier):
