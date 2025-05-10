@@ -14,14 +14,16 @@ class ContextDPOwner(Role):
     opponent_name: str = ""
     predecessor: str = ""
     opponent_predecessor: str = ""
+    broker: str = "Connor"
 
-    def __init__(self, name: str = "Alice", predecessor: str = "Alice", opponent_predecessor: str = "Bob", data_product: str = "", opponent_name: str = "", requester: bool = True, **kwargs):
+    def __init__(self, name: str = "Alice", predecessor: str = "Alice", opponent_predecessor: str = "Bob", data_product: str = "", opponent_name: str = "", broker: str = "", requester: bool = True, **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
         self.predecessor = predecessor
         self.opponent_predecessor = opponent_predecessor
+        self.broker = broker
         self.requester = requester #requester goes first, requested (i.e. when False) goes second
         self.set_actions([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
         self._watch([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
@@ -31,9 +33,7 @@ class ContextDPOwner(Role):
         # Process messages sent directly to this agent or broadcast messages
         self.rc.news = [
             msg for msg in self.rc.news
-            if self.name in msg.send_to or
-            (self.name == "Alice2" and msg.sent_from == "Alice") or
-            (self.name == "Bob2" and msg.sent_from == "Bob")
+            if self.name in msg.send_to
         ]
         return len(self.rc.news)
     
@@ -100,18 +100,11 @@ class ContextDPOwner(Role):
             compatibility = ""
             mismatches = ""
 
-            # if self.name == "Alice2":
             for memory in memories:
                 if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.predecessor:
                     compatibility = memory.content
                 elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.predecessor:
                     mismatches = memory.content
-            # elif self.name == "Bob2":
-            #     for memory in memories:
-            #         if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == "Bob":
-            #             compatibility = memory.content
-            #         elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == "Bob":
-            #             mismatches = memory.content
 
             result = await todo.run(self.data_product, compatibility, mismatches)
             msg = Message(
@@ -119,7 +112,7 @@ class ContextDPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.ContextAwareProductReader",
                 sent_from=self.name,
-                send_to=[self.opponent_name, "Connor"]
+                send_to=[self.opponent_name, self.broker]
             )
         
         elif isinstance(todo, DiscourseAwareComposer):
@@ -202,7 +195,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name, "Connor"]
+                    send_to=[self.opponent_name, self.broker]
                 )
             else:
                 msg = Message(
@@ -210,7 +203,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name, "Connor"]
+                    send_to=[self.opponent_name, self.broker]
                 )
         
         else:
@@ -219,7 +212,7 @@ class ContextDPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=[self.opponent_name, "Connor"]
+                send_to=[self.opponent_name, self.broker]
             )
         
         self.rc.memory.add(msg)
