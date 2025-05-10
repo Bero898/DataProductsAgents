@@ -11,13 +11,16 @@ class DPOwner(Role):
     profile: str = "Data Product Owner"
     data_product: str = ""
     opponent_name: str = ""
+    requester: bool = True
+    opponent_2_name: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", opponent_2_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", opponent_2_name: str = "", requester: bool = True, **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
         self.opponent_2_name = opponent_2_name
+        self.requester = requester #requester goes first, requested (i.e. when False) goes second
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
     
@@ -55,11 +58,29 @@ class DPOwner(Role):
                 # After reading the data product, assess compatibility
                 self.rc.todo = SimpleDataProductComposer()
             elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
-                # After compatibility assessment, identify mismatches
-                self.rc.todo = MismatchIdentifier()
+                if self.requester:
+                    # if the action before me was SimpleDataProductComposer and I'm the requester
+                    # I should perform the MismatchIdentifier action
+                    # After compatibility assessment, identify mismatches
+                    self.rc.todo = MismatchIdentifier()
+                else:
+                    # if the action before me was SimpleDataProductComposer and I'm the requested
+                    # I should perform the SimpleDataProductComposer action
+                    # After compatibility assessment, read the data product again
+                    self.rc.todo = SimpleDataProductComposer()
             elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
-                # After mismatch identification, read the data product again
-                self.rc.todo = MismatchIdentifier()
+                if self.requester:
+                    # if the action before me was MismatchIdentifier and I'm the requester
+                    # I should perform wait for the opponent to perform an action
+                    logger.debug(f"{self.name}: Waiting for required actions to complete.")
+                    return None
+
+                else:
+                    # if the action before me was MismatchIdentifier and I'm the requested
+                    # I should perform the MismatchIdentifier action
+                    # After mismatch identification, read the data product again
+                    self.rc.todo = MismatchIdentifier()
+
             else:
                 # Default to reading the data product
                 self.rc.todo = SimpleDataProductReader()
