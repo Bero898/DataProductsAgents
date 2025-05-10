@@ -66,7 +66,6 @@ class DPOwner(Role):
                 else:
                     # if the action before me was SimpleDataProductComposer and I'm the requested
                     # I should perform the SimpleDataProductComposer action
-                    # After compatibility assessment, read the data product again
                     self.rc.todo = SimpleDataProductComposer()
             elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
                 if self.requester:

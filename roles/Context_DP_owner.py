@@ -10,13 +10,15 @@ class ContextDPOwner(Role):
     name: str = "Alice"
     profile: str = "Data Product Owner"
     data_product: str = ""
+    requester: bool = True
     opponent_name: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", requester: bool = True, **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
+        self.requester = requester #requester goes first, requested (i.e. when False) goes second
         self.set_actions([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
         self._watch([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
     
@@ -55,8 +57,25 @@ class ContextDPOwner(Role):
                 # After reading the context, assess compatibility
                 self.rc.todo = DiscourseAwareComposer()
             elif latest_msg.cause_by == "actions.assess_compatibility.DiscourseAwareComposer":
-                # After compatibility assessment, identify mismatches
-                self.rc.todo = MismatchIdentifier()
+                if self.requester:
+                    # if the action before me was DiscourseAwareComposer and I'm the requester
+                    # I should perform the MismatchIdentifier action
+                    # After compatibility assessment, identify mismatches
+                    self.rc.todo = MismatchIdentifier()
+                else:
+                    # if the action before me was DiscourseAwareComposer and I'm the requester
+                    # I should perform the DiscourseAwareComposer action
+                    self.rc.todo = DiscourseAwareComposer()
+            elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+                if self.requester:
+                    logger.debug(f"{self.name}: Waiting for required actions to complete.")
+                    return None
+                else:
+                    # if the action before me was MismatchIdentifier and I'm the requested
+                    # I should perform the MismatchIdentifier action
+                    # After mismatch identification, read the data product again
+                    self.rc.todo = MismatchIdentifier()
+
             else:
                 # Default to reading the context
                 self.rc.todo = ContextAwareProductReader()
