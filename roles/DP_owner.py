@@ -126,7 +126,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name, self.opponent_2_name]  # Ensure both opponents receive the message
+                    send_to=["Bob", "Alice2", "Bob2", "Alice"] if self.name == "Alice" else ["Alice", "Alice2", "Bob", "Bob2"]  # Ensure both opponents receive the message
                 )
             else:
                 msg = Message(
