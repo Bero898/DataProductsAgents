@@ -24,6 +24,7 @@ class DMBroker(Role):
         self.set_actions([PerformBrokerAnalysis, CreateCompatibilityReport])
         self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
         self.current_round = 1  # Default round
+        self.goal = "First create a broker analysis when you have the descriptions of the two data products (provided by "+ self.ownerA +" and "+ self.ownerB +"). Then you should create a compatibility report when you have the mismatches of the two data products(provided by "+ self.ownerA +" and "+ self.ownerB +")."
 
     async def _act(self) -> Message:
         logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
@@ -36,7 +37,7 @@ class DMBroker(Role):
             productB = ""
 
             for memory in memories:
-                if memory.cause_by == "actions.read_product.SimpleDataProductReader":
+                if memory.cause_by == "actions.read_product.SimpleDataProductReader" or memory.cause_by == "actions.read_product.ContextAwareProductReader":
                     if memory.sent_from == self.ownerA:
                         productA = memory.content
                     elif memory.sent_from == self.ownerB:

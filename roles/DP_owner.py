@@ -14,8 +14,9 @@ class DPOwner(Role):
     profile: str = "Data Product Owner"
     data_product: str = ""
     opponent_name: str = ""
+    broker: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", broker: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
@@ -23,8 +24,10 @@ class DPOwner(Role):
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, DiscourseAwareComposer, ContextAwareProductReader, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self.current_round = 1  # Default round
+        self.goal = "First, Analyze your data product. Then, if your opponent has also analyzed their data product, assess compatibility. Finally, if your opponent has also assessed compatibility, identify mismatches in the data products."
+        self.broker = broker
+        
 
-    
     async def _observe(self) -> int:
         await super()._observe()
         # Process messages sent directly to this agent or broadcast messages
@@ -133,7 +136,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker]
                 )
             else:
                 msg = Message(
@@ -189,7 +192,7 @@ class DPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.ContextAwareProductReader",
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, self.broker]
             )
         
         elif isinstance(todo, DiscourseAwareComposer):
@@ -253,7 +256,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.DiscourseAwareComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker]
                 )
         else:
             msg = Message(
@@ -261,7 +264,7 @@ class DPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=[self.opponent_name]
+                send_to=[self.opponent_name, self.broker]
             )
         
         self.rc.memory.add(msg)
