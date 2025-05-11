@@ -38,9 +38,12 @@ class DMBroker(Role):
 
             for memory in memories:
                 if memory.cause_by == "actions.read_product.SimpleDataProductReader" or memory.cause_by == "actions.read_product.ContextAwareProductReader":
+                    logger.debug(f"reader memory identified")
                     if memory.sent_from == self.ownerA:
+                        logger.debug(f"reader memory identified for {self.ownerA}")
                         productA = memory.content
                     elif memory.sent_from == self.ownerB:
+                        logger.debug(f"reader memory identified for {self.ownerB}")
                         productB = memory.content
 
             if productA and productB:

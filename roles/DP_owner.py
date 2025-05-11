@@ -111,7 +111,7 @@ class DPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.SimpleDataProductReader",
                 sent_from=self.name,
-                send_to=[self.opponent_name]  # Send directly to opponent instead of "All"
+                send_to=[self.opponent_name, self.broker]  # Send directly to opponent instead of "All"
             )
         
         elif isinstance(todo, SimpleDataProductComposer):
@@ -144,7 +144,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker]
                 )
         
         elif isinstance(todo, MismatchIdentifier):
@@ -164,7 +164,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker]
                 )
             else:
                 msg = Message(
@@ -172,7 +172,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.broker]
                 )
         elif isinstance(todo, ContextAwareProductReader):
             # Read own data product with context
