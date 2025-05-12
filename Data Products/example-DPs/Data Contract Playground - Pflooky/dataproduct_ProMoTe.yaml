@@ -1,85 +1,102 @@
-@prefix : <https://github.com/Stefan-Driessen/ProMoTe#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix dcat: <http://www.w3.org/ns/dcat#> .
+ontology:
+  name: ShelfWarmersDataProduct
+  base: https://github.com/Stefan-Driessen/ProMoTe#
+  prefixes:
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+    dct: http://purl.org/dc/terms/
+    dcat: http://www.w3.org/ns/dcat#
+  annotations: []
 
-:ShelfWarmersDataProduct
-  rdf:type :class-data-product ;
-  dct:identifier "shelf_warmers" ;
-  dct:title "Shelf Warmers" ;
-  dct:description "Calculated shelfwarmers. Read about calculation in docs." ;
-  :property-data-provider :FulfillmentTeam ;
-  dcat:keyword "athena", "glue", "s3" ;
-  :Estimated_Value "Critically important for fulfillment operations" .
+  individuals:
+    - name: ShelfWarmersDataProduct
+      type:
+        - class-data-product
+      identifier: "shelf_warmers"
+      title: "Shelf Warmers"
+      description: "Calculated shelfwarmers. Read about calculation in docs."
+      data_provider: FulfillmentTeam
+      keywords:
+        - "athena"
+        - "glue"
+        - "s3"
+      estimated_value: "Critically important for fulfillment operations"
 
-:FulfillmentTeam
-  rdf:type <http://www.w3.org/ns/prov#Agent> ;
-  rdfs:label "Fulfillment Team" .
+    - name: FulfillmentTeam
+      type:
+        - http://www.w3.org/ns/prov#Agent
+      label: "Fulfillment Team"
 
-:FulfillmentDomain
-  rdf:type :class-domain ;
-  rdfs:label "Fulfillment Domain" .
+    - name: FulfillmentDomain
+      type:
+        - class-domain
+      label: "Fulfillment Domain"
 
-:ShelfWarmersDataset
-  rdf:type :class-dataset ;
-  dct:identifier "shelf_warmers_dataset" ;
-  dct:title "Shelf Warmers Dataset" ;
-  dct:description "Core dataset containing shelf warmers information" ;
-  :property-offered-in-data-product :ShelfWarmersDataProduct ;
-  :resource-property-source-system :FulfillmentSystem .
+    - name: ShelfWarmersDataset
+      type:
+        - class-dataset
+      identifier: "shelf_warmers_dataset"
+      title: "Shelf Warmers Dataset"
+      description: "Core dataset containing shelf warmers information"
+      offered_in_data_product: ShelfWarmersDataProduct
+      source_system: FulfillmentSystem
 
-:FulfillmentSystem
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Fulfillment System" .
+    - name: FulfillmentSystem
+      type:
+        - owl:NamedIndividual
+      label: "Fulfillment System"
 
-# Output Ports
-:GlueCatalogOutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "glue_catalog_database_shelf_warmers_v1" ;
-  dct:title "Glue Catalog Database: Shelf Warmers (v1)" ;
-  dct:description "All Shelf Warmers represented as a Glue Catalog table" ;
-  :property-exposes-data-product :ShelfWarmersDataProduct ;
-  :property-data-contract :GlueCatalogDataContract ;
-  :endpointURI <arn:aws:glue:eu-central-1:528115139298:table/fulfillment-shelf-warmers/shelf_warmers> ;
-  :pmt:accessManagement :GlueAccessManagement .
+    - name: GlueCatalogOutputPort
+      type:
+        - class-output-port
+      identifier: "glue_catalog_database_shelf_warmers_v1"
+      title: "Glue Catalog Database: Shelf Warmers (v1)"
+      description: "All Shelf Warmers represented as a Glue Catalog table"
+      exposes_data_product: ShelfWarmersDataProduct
+      data_contract: GlueCatalogDataContract
+      endpointURI: "arn:aws:glue:eu-central-1:528115139298:table/fulfillment-shelf-warmers/shelf_warmers"
+      access_management: GlueAccessManagement
 
-:S3OutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "s3_bucket_shelf_warmers_v1" ;
-  dct:title "S3 Bucket: Shelf Warmers (v1)" ;
-  dct:description "All Shelf Warmers represented as a Glue Catalog table" ;
-  :property-exposes-data-product :ShelfWarmersDataProduct ;
-  :property-data-contract :S3DataContract ;
-  :endpointURI <arn:aws:s3:::fulfillment-shelf-warmers> ;
-  :pmt:accessManagement :S3AccessManagement .
+    - name: S3OutputPort
+      type:
+        - class-output-port
+      identifier: "s3_bucket_shelf_warmers_v1"
+      title: "S3 Bucket: Shelf Warmers (v1)"
+      description: "All Shelf Warmers represented as a Glue Catalog table"
+      exposes_data_product: ShelfWarmersDataProduct
+      data_contract: S3DataContract
+      endpointURI: "arn:aws:s3:::fulfillment-shelf-warmers"
+      access_management: S3AccessManagement
 
-:GlueAccessManagement
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Glue Access Management" ;
-  rdfs:comment "Access managed through AWS IAM roles and policies" .
+    - name: GlueAccessManagement
+      type:
+        - owl:NamedIndividual
+      label: "Glue Access Management"
+      comment: "Access managed through AWS IAM roles and policies"
 
-:S3AccessManagement
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "S3 Access Management" ;
-  rdfs:comment "Access managed through AWS IAM roles and bucket policies" .
+    - name: S3AccessManagement
+      type:
+        - owl:NamedIndividual
+      label: "S3 Access Management"
+      comment: "Access managed through AWS IAM roles and bucket policies"
 
-# Data Contracts
-:GlueCatalogDataContract
-  rdf:type :class-data-contract ;
-  dct:identifier "glue_catalog_data_contract" ;
-  :appliesToPort :GlueCatalogOutputPort ;
-  :pmt:providerPromise "The data will be available with 99.9% uptime" .
+    - name: GlueCatalogDataContract
+      type:
+        - class-data-contract
+      identifier: "glue_catalog_data_contract"
+      applies_to_port: GlueCatalogOutputPort
+      provider_promise: "The data will be available with 99.9% uptime"
 
-:S3DataContract
-  rdf:type :class-data-contract ;
-  dct:identifier "s3_data_contract" ;
-  :appliesToPort :S3OutputPort ;
-  :pmt:providerPromise "The data will be updated daily" .
+    - name: S3DataContract
+      type:
+        - class-data-contract
+      identifier: "s3_data_contract"
+      applies_to_port: S3OutputPort
+      provider_promise: "The data will be updated daily"
 
-# Catalog Record
-:ShelfWarmersDataProductCatalogRecord
-  rdf:type <http://www.w3.org/ns/dcat#CatalogRecord> ;
-  <http://xmlns.com/foaf/0.1/primaryTopic> :ShelfWarmersDataProduct ;
-  dct:title "Shelf Warmers Data Product Catalog Record" ;
-  dct:description "Catalog record for the Shelf Warmers data product" .
+    - name: ShelfWarmersDataProductCatalogRecord
+      type:
+        - http://www.w3.org/ns/dcat#CatalogRecord
+      primary_topic: ShelfWarmersDataProduct
+      title: "Shelf Warmers Data Product Catalog Record"
+      description: "Catalog record for the Shelf Warmers data product"

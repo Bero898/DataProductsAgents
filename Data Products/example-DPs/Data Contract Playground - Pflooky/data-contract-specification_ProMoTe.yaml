@@ -1,71 +1,84 @@
-@prefix : <https://github.com/Stefan-Driessen/ProMoTe#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix dcat: <http://www.w3.org/ns/dcat#> .
+ontology:
+  name: CovidCasesDataContract
+  base: https://github.com/Stefan-Driessen/ProMoTe#
+  prefixes:
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+    dct: http://purl.org/dc/terms/
+    dcat: http://www.w3.org/ns/dcat#
+  annotations: []
 
-:CovidCasesDataContract
-  rdf:type :class-data-contract ;
-  dct:identifier "covid_cases" ;
-  dct:title "COVID-19 cases" ;
-  dct:description "Johns Hopkins University Consolidated data on COVID-19 cases, sourced from Enigma" ;
-  :appliesToPort :S3JsonOutputPort ;
-  :pmt:providerPromise "Data is updated daily" ;
-  :data-contract-property-policy :DataFreshnessPolicy .
+  individuals:
+    - name: CovidCasesDataContract
+      type:
+        - class-data-contract
+      identifier: "covid_cases"
+      title: "COVID-19 cases"
+      description: "Johns Hopkins University Consolidated data on COVID-19 cases, sourced from Enigma"
+      applies_to_port: S3JsonOutputPort
+      provider_promise: "Data is updated daily"
+      data_contract_property_policy: DataFreshnessPolicy
 
-:DataFreshnessPolicy
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Data Freshness Policy" ;
-  rdfs:comment "freshness(last_update::datetime) < 5000d - dataset is not updated anymore" .
+    - name: DataFreshnessPolicy
+      type:
+        - owl:NamedIndividual
+      label: "Data Freshness Policy"
+      comment: "freshness(last_update::datetime) < 5000d - dataset is not updated anymore"
 
-:DataVolumePolicy
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Data Volume Policy" ;
-  rdfs:comment "row_count > 1000" .
+    - name: DataVolumePolicy
+      type:
+        - owl:NamedIndividual
+      label: "Data Volume Policy"
+      comment: "row_count > 1000"
 
-:S3JsonOutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "s3-json" ;
-  dct:title "S3 JSON Output Port" ;
-  dct:description "S3 bucket containing COVID-19 case data in JSON format" ;
-  :endpointURI <s3://covid19-lake/enigma-jhu/json/*.json> ;
-  :pmt:consumeInstructions "Data can be accessed through S3 using AWS CLI or SDK" .
+    - name: S3JsonOutputPort
+      type:
+        - class-output-port
+      identifier: "s3-json"
+      title: "S3 JSON Output Port"
+      description: "S3 bucket containing COVID-19 case data in JSON format"
+      endpointURI: "s3://covid19-lake/enigma-jhu/json/*.json"
+      consume_instructions: "Data can be accessed through S3 using AWS CLI or SDK"
 
-:CovidCasesDistribution
-  rdf:type :class-distribution ;
-  dct:identifier "covid_cases_json" ;
-  dct:title "COVID-19 Cases JSON" ;
-  dct:description "COVID-19 cases dataset in JSON format" ;
-  :distribution-property-output-port :S3JsonOutputPort ;
-  :property-physical-schema :CovidCasesSchema .
+    - name: CovidCasesDistribution
+      type:
+        - class-distribution
+      identifier: "covid_cases_json"
+      title: "COVID-19 Cases JSON"
+      description: "COVID-19 cases dataset in JSON format"
+      distribution_property_output_port: S3JsonOutputPort
+      property_physical_schema: CovidCasesSchema
 
-:CovidCasesSchema
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "COVID-19 Cases Schema" ;
-  rdfs:comment """Fields:
-    - fips: state and county two digits code (string)
-    - admin2: county name (string)
-    - province_state: province name or state name (string)
-    - country_region: country name or region name (string)
-    - last_update: last update timestamp (timestamp_ntz)
-    - latitude: location latitude (double)
-    - longitude: location longitude (double)
-    - confirmed: number of confirmed cases (int)
-    - combined_key: county name+state name+country name (string)
-  """ .
+    - name: CovidCasesSchema
+      type:
+        - owl:NamedIndividual
+      label: "COVID-19 Cases Schema"
+      comment: |
+        Fields:
+          - fips: state and county two digits code (string)
+          - admin2: county name (string)
+          - province_state: province name or state name (string)
+          - country_region: country name or region name (string)
+          - last_update: last update timestamp (timestamp_ntz)
+          - latitude: location latitude (double)
+          - longitude: location longitude (double)
+          - confirmed: number of confirmed cases (int)
+          - combined_key: county name+state name+country name (string)
 
-:CovidCasesDataset
-  rdf:type :class-dataset ;
-  dct:identifier "covid_cases_dataset" ;
-  dct:title "COVID-19 Cases Dataset" ;
-  dct:description "The number of confirmed covid cases reported for a specified region, with location and county/province/country information" ;
-  :dataset-property-logical-schema :CovidCasesSchema ;
-  :property-offered-in-data-product :CovidCasesDataProduct .
+    - name: CovidCasesDataset
+      type:
+        - class-dataset
+      identifier: "covid_cases_dataset"
+      title: "COVID-19 Cases Dataset"
+      description: "The number of confirmed covid cases reported for a specified region, with location and county/province/country information"
+      dataset_property_logical_schema: CovidCasesSchema
+      property_offered_in_data_product: CovidCasesDataProduct
 
-:CovidCasesDataProduct
-  rdf:type :class-data-product ;
-  dct:identifier "covid_cases_data_product" ;
-  dct:title "COVID-19 Cases Data Product" ;
-  dct:description "Data product containing COVID-19 case information from Johns Hopkins University" ;
-  :property-dataset :CovidCasesDataset ;
-  :data-product-property-output-port :S3JsonOutputPort .
+    - name: CovidCasesDataProduct
+      type:
+        - class-data-product
+      identifier: "covid_cases_data_product"
+      title: "COVID-19 Cases Data Product"
+      description: "Data product containing COVID-19 case information from Johns Hopkins University"
+      property_dataset: CovidCasesDataset
+      data_product_property_output_port: S3JsonOutputPort
