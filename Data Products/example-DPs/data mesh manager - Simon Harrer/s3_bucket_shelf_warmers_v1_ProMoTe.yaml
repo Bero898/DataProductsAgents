@@ -1,60 +1,69 @@
-@prefix : <https://github.com/Stefan-Driessen/ProMoTe#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
+ontology:
+  name: S3BucketShelfWarmers
+  base: https://github.com/Stefan-Driessen/ProMoTe#
+  prefixes:
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+    dct: http://purl.org/dc/terms/
+  annotations: []
 
-:S3Distribution
-  rdf:type :class-distribution ;
-  dct:identifier "s3_bucket_shelf_warmers_v1" ;
-  dct:title "S3 Bucket: Shelf Warmers (v1)" ;
-  dct:description "All Shelf Warmers represented as a S3 bucket with JSON files" ;
-  :distribution-property-output-port :S3OutputPort ;
-  :property-physical-schema :ShelfWarmersJSONSchema .
+  individuals:
+    - name: S3Distribution
+      type:
+        - class-distribution
+      identifier: "s3_bucket_shelf_warmers_v1"
+      title: "S3 Bucket: Shelf Warmers (v1)"
+      description: "All Shelf Warmers represented as a S3 bucket with JSON files"
+      distribution_property_output_port: S3OutputPort
+      property_physical_schema: ShelfWarmersJSONSchema
 
-:ShelfWarmersJSONSchema
-  rdf:type owl:NamedIndividual ;
-  dct:description "JSON schema for shelf warmers data" ;
-  rdfs:comment """
-  [ {
-    "$id" : "https://example.com/fulfillment-stock-updated.schema.json",
-    "$schema" : "http://json-schema.org/draft-07/schema#",
-    "title" : "fulfillment-shelf-warmers",
-    "type" : "object",
-    "properties" : {
-      "sku" : {
-        "description" : "Stock Keeping Unit",
-        "type" : "string"
-      },
-      "location" : {
-        "description" : "The location (e.g. store) of the shelf warmers",
-        "type" : "string"
-      },
-      "available" : {
-        "description" : "Number of available shelf warmers in the specified location",
-        "type" : "integer"
-      },
-      "updated_at" : {
-        "description" : "Timestamp where this information were created",
-        "type" : "string",
-        "format" : "date-time"
-      }
-    }
-  } ]
-  """ .
+    - name: ShelfWarmersJSONSchema
+      type:
+        - owl:NamedIndividual
+      description: "JSON schema for shelf warmers data"
+      comment: |
+        [ {
+          "$id" : "https://example.com/fulfillment-stock-updated.schema.json",
+          "$schema" : "http://json-schema.org/draft-07/schema#",
+          "title" : "fulfillment-shelf-warmers",
+          "type" : "object",
+          "properties" : {
+            "sku" : {
+              "description" : "Stock Keeping Unit",
+              "type" : "string"
+            },
+            "location" : {
+              "description" : "The location (e.g. store) of the shelf warmers",
+              "type" : "string"
+            },
+            "available" : {
+              "description" : "Number of available shelf warmers in the specified location",
+              "type" : "integer"
+            },
+            "updated_at" : {
+              "description" : "Timestamp where this information were created",
+              "type" : "string",
+              "format" : "date-time"
+            }
+          }
+        } ]
 
-:ShelfWarmersDataAsset
-  rdf:type :class-dataset ;
-  dct:identifier "shelf_warmers_dataset" ;
-  dct:title "Shelf Warmers Dataset" ;
-  dct:description "Dataset containing shelf warmers information" ;
-  :property-offered-in-data-product :ShelfWarmersDataProduct .
+    - name: ShelfWarmersDataAsset
+      type:
+        - class-dataset
+      identifier: "shelf_warmers_dataset"
+      title: "Shelf Warmers Dataset"
+      description: "Dataset containing shelf warmers information"
+      property_offered_in_data_product: ShelfWarmersDataProduct
 
-:ShelfWarmersDataProduct
-  rdf:type :class-data-product ;
-  dct:identifier "shelf_warmers" ;
-  dct:title "Shelf Warmers" .
+    - name: ShelfWarmersDataProduct
+      type:
+        - class-data-product
+      identifier: "shelf_warmers"
+      title: "Shelf Warmers"
 
-:S3OutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "s3_bucket_shelf_warmers_v1" ;
-  dct:title "S3 Bucket: Shelf Warmers (v1)" .
+    - name: S3OutputPort
+      type:
+        - class-output-port
+      identifier: "s3_bucket_shelf_warmers_v1"
+      title: "S3 Bucket: Shelf Warmers (v1)"

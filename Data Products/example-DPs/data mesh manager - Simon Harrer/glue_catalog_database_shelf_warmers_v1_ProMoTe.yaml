@@ -1,54 +1,63 @@
-@prefix : <https://github.com/Stefan-Driessen/ProMoTe#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
+ontology:
+  name: GlueCatalogDatabaseShelfWarmers
+  base: https://github.com/Stefan-Driessen/ProMoTe#
+  prefixes:
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+    dct: http://purl.org/dc/terms/
+  annotations: []
 
-:GlueCatalogDistribution
-  rdf:type :class-distribution ;
-  dct:identifier "glue_catalog_database_shelf_warmers_v1" ;
-  dct:title "Glue Catalog Database: Shelf Warmers (v1)" ;
-  dct:description "All Shelf Warmers represented as a Glue Catalog table" ;
-  :distribution-property-output-port :GlueCatalogOutputPort ;
-  :property-physical-schema :ShelfWarmersSchema .
+  individuals:
+    - name: GlueCatalogDistribution
+      type:
+        - class-distribution
+      identifier: "glue_catalog_database_shelf_warmers_v1"
+      title: "Glue Catalog Database: Shelf Warmers (v1)"
+      description: "All Shelf Warmers represented as a Glue Catalog table"
+      distribution_property_output_port: GlueCatalogOutputPort
+      property_physical_schema: ShelfWarmersSchema
 
-:ShelfWarmersSchema
-  rdf:type owl:NamedIndividual ;
-  dct:description "AVRO schema for shelf warmers data" ;
-  rdfs:comment """
-  [ {
-    "type" : "record",
-    "name" : "ShelfWarmers",
-    "namespace" : "fulfillment",
-    "fields" : [ {
-      "name" : "available",
-      "type" : "int"
-    }, {
-      "name" : "location",
-      "type" : "string"
-    }, {
-      "name" : "sku",
-      "type" : "string"
-    }, {
-      "name" : "updated_at",
-      "type" : "timestamp-micros"
-    } ]
-  } ]
-  """ .
+    - name: ShelfWarmersSchema
+      type:
+        - owl:NamedIndividual
+      description: "AVRO schema for shelf warmers data"
+      comment: |
+        [ {
+          "type" : "record",
+          "name" : "ShelfWarmers",
+          "namespace" : "fulfillment",
+          "fields" : [ {
+            "name" : "available",
+            "type" : "int"
+          }, {
+            "name" : "location",
+            "type" : "string"
+          }, {
+            "name" : "sku",
+            "type" : "string"
+          }, {
+            "name" : "updated_at",
+            "type" : "timestamp-micros"
+          } ]
+        } ]
 
-:ShelfWarmersDataAsset
-  rdf:type :class-dataset ;
-  dct:identifier "shelf_warmers_dataset" ;
-  dct:title "Shelf Warmers Dataset" ;
-  dct:description "Dataset containing shelf warmers information" ;
-  :dataset-property-logical-schema :ShelfWarmersSchema ;
-  :property-offered-in-data-product :ShelfWarmersDataProduct .
+    - name: ShelfWarmersDataAsset
+      type:
+        - class-dataset
+      identifier: "shelf_warmers_dataset"
+      title: "Shelf Warmers Dataset"
+      description: "Dataset containing shelf warmers information"
+      dataset_property_logical_schema: ShelfWarmersSchema
+      property_offered_in_data_product: ShelfWarmersDataProduct
 
-:ShelfWarmersDataProduct
-  rdf:type :class-data-product ;
-  dct:identifier "shelf_warmers" ;
-  dct:title "Shelf Warmers" .
+    - name: ShelfWarmersDataProduct
+      type:
+        - class-data-product
+      identifier: "shelf_warmers"
+      title: "Shelf Warmers"
 
-:GlueCatalogOutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "glue_catalog_database_shelf_warmers_v1" ;
-  dct:title "Glue Catalog Database: Shelf Warmers (v1)" .
+    - name: GlueCatalogOutputPort
+      type:
+        - class-output-port
+      identifier: "glue_catalog_database_shelf_warmers_v1"
+      title: "Glue Catalog Database: Shelf Warmers (v1)"

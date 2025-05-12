@@ -1,126 +1,140 @@
-@prefix : <https://github.com/Stefan-Driessen/ProMoTe#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix dcat: <http://www.w3.org/ns/dcat#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+ontology:
+  name: MyDataProduct
+  base: https://github.com/Stefan-Driessen/ProMoTe#
+  prefixes:
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+    dct: http://purl.org/dc/terms/
+    dcat: http://www.w3.org/ns/dcat#
+    owl: http://www.w3.org/2002/07/owl#
+  annotations: []
 
-:MyDataProduct
-  rdf:type :class-data-product ;
-  dct:identifier "urn:dmb:dp:my_domain:my_data_product:1" ;
-  dct:title "My Data Product" ;
-  dct:description "this data product is representing the xxx functional entity" ;
-  :property-data-provider :TomSmith ;
-  :property-domain :MyDomain ;
-  :Estimated_Value "Unlock some capability for the organization" ;
-  :data-product-property-output-port :RawS3OutputPort, :ViewImpalaOutputPort ;
-  :pmt:transformationLogic :SparkWorkload .
+  individuals:
+    - name: MyDataProduct
+      type:
+        - class-data-product
+      identifier: "urn:dmb:dp:my_domain:my_data_product:1"
+      title: "My Data Product"
+      description: "this data product is representing the xxx functional entity"
+      property_data_provider: TomSmith
+      property_domain: MyDomain
+      estimated_value: "Unlock some capability for the organization"
+      data_product_property_output_port:
+        - RawS3OutputPort
+        - ViewImpalaOutputPort
+      pmt_transformationLogic: SparkWorkload
 
-:TomSmith
-  rdf:type <http://www.w3.org/ns/prov#Person> ;
-  rdfs:label "Tom Smith" ;
-  rdfs:comment "Email: mailto:distribution_list@corp.com" .
+    - name: TomSmith
+      type:
+        - http://www.w3.org/ns/prov#Person
+      label: "Tom Smith"
+      comment: "Email: mailto:distribution_list@corp.com"
 
-:MyDomain
-  rdf:type :class-domain ;
-  rdfs:label "my_domain" ;
-  :pmt:domainOwner :TomSmith .
+    - name: MyDomain
+      type:
+        - class-domain
+      label: "my_domain"
+      pmt_domainOwner: TomSmith
 
-# Output Ports
-:RawS3OutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "urn:dmb:cmp:my_domain:my_data_product:1:my_raw_s3_port" ;
-  dct:title "My Raw S3 Port" ;
-  dct:description "s3 raw output port" ;
-  :property-exposes-data-product :MyDataProduct ;
-  :property-data-contract :RawS3DataContract ;
-  :endpointURI <https://myurl/development/my_domain/my_data_product/1.0.0/my_raw_s3_port> ;
-  :pmt:consumeInstructions "Access S3 data using the msDataMeshS3 bucket, directory history" .
+    - name: RawS3OutputPort
+      type:
+        - class-output-port
+      identifier: "urn:dmb:cmp:my_domain:my_data_product:1:my_raw_s3_port"
+      title: "My Raw S3 Port"
+      description: "s3 raw output port"
+      property_exposes_data_product: MyDataProduct
+      property_data_contract: RawS3DataContract
+      endpointURI: "https://myurl/development/my_domain/my_data_product/1.0.0/my_raw_s3_port"
+      pmt_consumeInstructions: "Access S3 data using the msDataMeshS3 bucket, directory history"
 
-:ViewImpalaOutputPort
-  rdf:type :class-output-port ;
-  dct:identifier "urn:dmb:cmp:my_domain:my_data_product:1:my_view_impala_port" ;
-  dct:title "My View Impala Port" ;
-  dct:description "impala view output port" ;
-  :property-exposes-data-product :MyDataProduct ;
-  :property-data-contract :ImapalaViewDataContract ;
-  :endpointURI <https://myurl/development/my_domain/my_data_product/1.0.0/my_raw_s3_port> ;
-  :pmt:consumeInstructions "Query Impala using standard SQL commands" .
+    - name: ViewImpalaOutputPort
+      type:
+        - class-output-port
+      identifier: "urn:dmb:cmp:my_domain:my_data_product:1:my_view_impala_port"
+      title: "My View Impala Port"
+      description: "impala view output port"
+      property_exposes_data_product: MyDataProduct
+      property_data_contract: ImapalaViewDataContract
+      endpointURI: "https://myurl/development/my_domain/my_data_product/1.0.0/my_raw_s3_port"
+      pmt_consumeInstructions: "Query Impala using standard SQL commands"
 
-# Data Contracts
-:RawS3DataContract
-  rdf:type :class-data-contract ;
-  dct:identifier "raw_s3_data_contract" ;
-  :appliesToPort :RawS3OutputPort ;
-  :property-service-level-agreement :RawS3SLA ;
-  :pmt:providerPromise "Data is refreshed every 2 hours and the process takes approximately 2 hours to complete" ;
-  :pmt:consumerPromise "Only usable in development environment" .
+    - name: RawS3DataContract
+      type:
+        - class-data-contract
+      identifier: "raw_s3_data_contract"
+      applies_to_port: RawS3OutputPort
+      property_service_level_agreement: RawS3SLA
+      pmt_providerPromise: "Data is refreshed every 2 hours and the process takes approximately 2 hours to complete"
+      pmt_consumerPromise: "Only usable in development environment"
 
-:ImapalaViewDataContract
-  rdf:type :class-data-contract ;
-  dct:identifier "impala_view_data_contract" ;
-  :appliesToPort :ViewImpalaOutputPort ;
-  :property-service-level-agreement :ImpalaViewSLA ;
-  :pmt:providerPromise "Data is refreshed hourly" ;
-  :pmt:consumerPromise "Only usable in development environment" .
+    - name: ImapalaViewDataContract
+      type:
+        - class-data-contract
+      identifier: "impala_view_data_contract"
+      applies_to_port: ViewImpalaOutputPort
+      property_service_level_agreement: ImpalaViewSLA
+      pmt_providerPromise: "Data is refreshed hourly"
+      pmt_consumerPromise: "Only usable in development environment"
 
-:RawS3SLA
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Raw S3 SLA" ;
-  rdfs:comment "intervalOfChange: 1 hours, timeliness: 1 minutes, upTime: 99.9%" .
+    - name: RawS3SLA
+      type:
+        - owl:NamedIndividual
+      label: "Raw S3 SLA"
+      comment: "intervalOfChange: 1 hours, timeliness: 1 minutes, upTime: 99.9%"
 
-:ImpalaViewSLA
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Impala View SLA" ;
-  rdfs:comment "intervalOfChange: 1 hours, timeliness: 1 minutes, upTime: 99.9%" .
+    - name: ImpalaViewSLA
+      type:
+        - owl:NamedIndividual
+      label: "Impala View SLA"
+      comment: "intervalOfChange: 1 hours, timeliness: 1 minutes, upTime: 99.9%"
 
-# Workload and Transformation Logic
-:SparkWorkload
-  rdf:type :TransformationLogic ;
-  dct:identifier "urn:dmb:cmp:my_domain:my_data_product:1:my_spark_workload" ;
-  dct:title "My Spark workload" ;
-  dct:description "spark batch workload running every day at 2AM and 10PM" ;
-  rdfs:comment """
-  className: com.mycompany.MySparkApp
-  driverCores: 1
-  driverMemory: 4g
-  executorCores: 4
-  executorMemory: 4g
-  numExecutors: 3
-  schedule: 0 0 0,22 ? * * *
-  """ .
+    - name: SparkWorkload
+      type:
+        - TransformationLogic
+      identifier: "urn:dmb:cmp:my_domain:my_data_product:1:my_spark_workload"
+      title: "My Spark workload"
+      description: "spark batch workload running every day at 2AM and 10PM"
+      comment: |
+        className: com.mycompany.MySparkApp
+        driverCores: 1
+        driverMemory: 4g
+        executorCores: 4
+        executorMemory: 4g
+        numExecutors: 3
+        schedule: 0 0 0,22 ? * * *
 
-# Datasets and Distributions
-:EmployeeDataset
-  rdf:type :class-dataset ;
-  dct:identifier "employee_dataset" ;
-  dct:title "Employee Dataset" ;
-  dct:description "Dataset containing employee information" ;
-  :property-offered-in-data-product :MyDataProduct ;
-  :dataset-property-logical-schema :EmployeeSchema .
+    - name: EmployeeDataset
+      type:
+        - class-dataset
+      identifier: "employee_dataset"
+      title: "Employee Dataset"
+      description: "Dataset containing employee information"
+      property_offered_in_data_product: MyDataProduct
+      dataset_property_logical_schema: EmployeeSchema
 
-:EmployeeSchema
-  rdf:type owl:NamedIndividual ;
-  rdfs:label "Employee Schema" ;
-  rdfs:comment """Fields:
-    - employeeId: global addressable identifier for an employee (PRIMARY_KEY)
-    - first_name: employee's first name (NOT_NULL, PII)
-    - last_name: employee's last name (NOT_NULL, PII)
-    - birthdate: employee's birthdate (NOT_NULL)
-    - gender: employee's gender (NOT_NULL)
-    - residential_address: employee's residential address (NOT_NULL, PII)
-    - first_hire_date: date of first hire (NOT_NULL)
-    - last_working_date: last day the employee worked
-    - last_update: last record update date
-    - businessTs: business timestamp for time-travelling (NOT_NULL)
-    - writeTs: technical timestamp for time-travelling (NOT_NULL)
-  """ .
+    - name: EmployeeSchema
+      type:
+        - owl:NamedIndividual
+      label: "Employee Schema"
+      comment: |
+        Fields:
+          - employeeId: global addressable identifier for an employee (PRIMARY_KEY)
+          - first_name: employee's first name (NOT_NULL, PII)
+          - last_name: employee's last name (NOT_NULL, PII)
+          - birthdate: employee's birthdate (NOT_NULL)
+          - gender: employee's gender (NOT_NULL)
+          - residential_address: employee's residential address (NOT_NULL, PII)
+          - first_hire_date: date of first hire (NOT_NULL)
+          - last_working_date: last day the employee worked
+          - last_update: last record update date
+          - businessTs: business timestamp for time-travelling (NOT_NULL)
+          - writeTs: technical timestamp for time-travelling (NOT_NULL)
 
-# Control Port and Observability
-:Observability
-  rdf:type :class-control-port ;
-  dct:identifier "urn:dmb:cmp:my_domain:my_data_product:1:my_observability" ;
-  dct:title "My Observability" ;
-  dct:description "observability for my data product" ;
-  :input-port-property-corresponding-data-product :MyDataProduct ;
-  :endpointURI <http://develop/my_domain/my_data_product/1.0.0/obs> .
+    - name: Observability
+      type:
+        - class-control-port
+      identifier: "urn:dmb:cmp:my_domain:my_data_product:1:my_observability"
+      title: "My Observability"
+      description: "observability for my data product"
+      input_port_property_corresponding_data_product: MyDataProduct
+      endpointURI: "http://develop/my_domain/my_data_product/1.0.0/obs"
