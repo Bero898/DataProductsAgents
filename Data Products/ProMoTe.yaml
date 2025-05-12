@@ -1,0 +1,353 @@
+ontology:
+  name: ProMoTe
+  base: https://github.com/Stefan-Driessen/ProMoTe#
+  prefixes:
+    owl: http://www.w3.org/2002/07/owl#
+    rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+    xml: http://www.w3.org/XML/1998/namespace
+    xsd: http://www.w3.org/2001/XMLSchema#
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+  imports:
+    - http://www.w3.org/2004/02/skos/core
+    - http://www.w3.org/ns/dcat
+    - http://www.w3.org/ns/prov-o-20130430
+  annotations:
+    - property: http://purl.org/dc/elements/1.1/description
+      type: AnnotationProperty
+    - property: http://purl.org/dc/terms/description
+      type: AnnotationProperty
+      definition: "A human-readable account of the resource."
+      motivation: "Descriptions make the resource more Understandable. Additionally, descriptions can contribute to Discoverability if they are indexed in a data catalog."
+    - property: http://purl.org/dc/terms/title
+      type: AnnotationProperty
+      definition: "A name given to the item."
+      motivation: "A title contributes to Discoverability, Addressability (if unique), and Understandability."
+      range: rdfs:Literal
+    - property: https://github.com/Stefan-Driessen/ProMoTe#Estimated_Value
+      type: AnnotationProperty
+      comment: "An indication of the value the resource provides for the company."
+      label: "estimated value"
+      motivation: "Explicitly including an estimated value is necessary for establishing that a resource or distribution is Valuable."
+      usageNote:
+        - "Ideally, the estimated value is backed by a quantifier, such as money or manhours saved. Otherwise, a qualitative description of the value provided can be provided."
+        - "In commercial settings estimated value can be used as the price of the resource."
+    - property: https://github.com/Stefan-Driessen/ProMoTe#knowledgeURI
+      type: AnnotationProperty
+      comment: "A link to documentation about the institutional knowledge."
+      label: "knowledge URI"
+      usageNote: "Best practice is to store institutional knowledge in a business glossary or domain ontologies."
+      domain: class-institutional-knowledge
+    - property: https://github.com/Stefan-Driessen/ProMoTe#pmt:consumeInstructions
+      type: AnnotationProperty
+      comment: "Human-readable instructions on how to consume data through this output port."
+      label: "consume instructions"
+      seeAlso: "https://www.w3.org/TR/vocab-dcat-2/#Property:data_service_endpoint_description"
+      motivation: "Consume instructions help with making the data Natively Accessible, Reusable, and, potentially, Interoperable."
+      usageNote: "Consume instructions can serve as the informal counterpart to the pmt:dataContract, which captures the formal promises and expectations of this output port."
+      domain: class-output-port
+    - property: https://github.com/Stefan-Driessen/ProMoTe#pmt:consumerPromise
+      type: AnnotationProperty
+      comment: "A promise required from the data consumer to the pmt:dataProvider that is captured in the data contract."
+      label: "consumer promise"
+      motivation: "Consumer promises contribute to making data products Feedback-Driven and Security."
+      usageNote: "Consumer promises can also be captured in a pmt:SLA, pmt:SLO or in a pmt:policy."
+      domain: class-data-contract
+    - property: https://github.com/Stefan-Driessen/ProMoTe#pmt:motivation
+      type: AnnotationProperty
+    - property: https://github.com/Stefan-Driessen/ProMoTe#pmt:plannedEndDate
+      type: AnnotationProperty
+      comment: "The date by which the use case plans to stop consuming data products."
+      label: "planned end date"
+      motivation: "Planned end dates of use cases are important for establishing Value and achieving Feedback-Driven development."
+      usageNote:
+        - "If there is no foreseeable end date, the planned end date can be indefinite."
+        - "Keeping track of a planned end date helps with data product maintenance and versioning. There is no need to put effort into maintaining a data product if there are no active use cases."
+    - property: https://github.com/Stefan-Driessen/ProMoTe#pmt:providerPromise
+      type: AnnotationProperty
+      comment: "A promise made by the pmt:dataProvider to the data consumer that is captured in the data contract."
+      label: "provider promise"
+      motivation: "Provider promises contribute to Truthfulness & Trustworthiness, Native Accessibility and Security."
+      usageNote: "Provider promises can also be captured in a pmt:SLA, pmt:SLO or in a pmt:policy."
+      domain: class-data-contract
+    - property: https://vocab.org/vann/#usageNote
+      type: AnnotationProperty
+      label: "vann:usageNote"
+
+  object_properties:
+    - name: resource-property-consumes
+      type: ObjectProperty
+      domain:
+        type: Class
+        unionOf:
+          - class-input-port
+          - class-resource
+      range:
+        type: Class
+        unionOf:
+          - class-distribution
+          - class-output-port
+          - class-resource
+      comment: "A resource or output port of a data product which is consumed to create or maintain this resource or input port."
+      label: "consumes"
+      motivation: "In addition to making data products Feedback-Driven, tracking lineage in general contributes to Discoverability, Addressability, Understandability, and Interoperability."
+
+    - name: resource-property-institutional-knowledge
+      type: ObjectProperty
+      domain:
+        type: Class
+        unionOf:
+          - class-distribution
+          - class-resource
+      range: class-institutional-knowledge
+      comment: "Existing terminology within the organisation or domain that relates to a pmt:Resource."
+      label: "institutional knowledge"
+      motivation: "Institutional knowledge contributes to Discoverability, Understandability and Interoperability."
+
+    - name: resource-property-source-system
+      type: ObjectProperty
+      domain:
+        type: Class
+        unionOf:
+          - class-dataset
+          - class-distribution
+      comment: "An IT system that generates or stores data in this resource, such as a specific data warehouse, data lake, or database."
+      label: "source system"
+      motivation: "In addition to making data products Feedback-Driven, tracking lineage in general contributes to Discoverability, Addressability, Understandability, and Interoperability."
+      usageNote: "This property can be used to describe either where a specific data asset or distribution lives or give information on the input port of a data product."
+
+    - name: pmt:accessManagement
+      type: ObjectProperty
+      domain: class-output-port
+      label: "access management"
+      definition: "The management and enforcement of access rights on an output port."
+      motivation: "Access Management contributes to Security, Native Accessibility and Feedback-Driven."
+      usageNote:
+        - "Access Management is usually provided by the organisation as part of a larger IAM framework."
+        - "Access management and enforcement should also be described in the pmt: DataContract associated with the pmt:OutputPort."
+
+    - name: pmt:catalogRecord
+      type: ObjectProperty
+      range: http://www.w3.org/ns/dcat#CatalogRecord
+      label: "catalog record"
+      definition: "The record describing this resource in a data catalog."
+      motivation: "Catalog records contribute to Discoverability, Addressability, Understandability, Interoperability and Value."
+
+    - name: pmt:distribution
+      type: ObjectProperty
+      subPropertyOf: http://www.w3.org/ns/dcat#distribution
+      domain: class-dataset
+      range: class-distribution
+      label: "distribution"
+      definition: "A physical manifestation of (a subset of) the data asset."
+      motivation: "Distributions make data assets Natively Accessible."
+
+    - name: pmt:domainOwner
+      type: ObjectProperty
+      range: http://www.w3.org/ns/prov#Person
+      label: "domain owner"
+      definition: "The person who carries the high-level responsibility for domain, the business processes in it and the data they generate."
+      motivation: "Domain owners help assign responsibility for the different data products, which contributes to Addressability."
+
+    - name: pmt:domainParticipant
+      type: ObjectProperty
+      range: http://www.w3.org/ns/prov#Agent
+      label: "domain participant"
+      definition: "A person who is active within the domain."
+      motivation: "Domain participants can have various relations to the data product and its data. Registering them contributes to Addressability."
+
+    - name: pmt:transformationLogic
+      type: ObjectProperty
+      domain: class-data-product
+      range: TransformationLogic
+      comment: "The logic or code used to transform data coming in from the input ports of the data product to the distributions that are exposed through the output ports."
+      label: "transformation logic"
+      motivation: "Transformation logic is necessary to create distributions that are Natively Accessible and guarantee a certain level of Truthfulness and Trustworthiness and/or Interoperability."
+
+    - name: dct:issued
+      type: ObjectProperty
+      comment: "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."
+      label: "Date Issued"
+      definition: "Date of formal issuance of the resource."
+      motivation: "Adding the date issued contributes to the Understandability of the resource."
+
+    - name: dct:modified
+      type: ObjectProperty
+      comment: "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."
+      label: "Date Modified"
+      definition: "Date on which the resource was changed."
+      motivation: "The date modified contributes to the Understandability, Interoperability, and Trustworthiness & Truthfulness."
+
+  individuals:
+    - name: Gina
+      type:
+        - NamedIndividual
+        - http://www.w3.org/ns/prov#Person
+      description: "Gina is the domain owner of the website domain."
+
+    - name: Kafka
+      type: NamedIndividual
+
+    - name: Kafka_Based_Distributions
+      type:
+        - NamedIndividual
+        - class-distribution
+      format: Kafka_Stream
+      output_port: StreamingOutputPort
+      physical_schema: Kafka_Based_Distributions
+      consumed_by: Use_Case_C
+      source_system: Sales_Domain_Event_Store
+      description: "The complete collection of partitions in the Kafka topic exposing the 'Customer', 'Subscription', and 'Product' data assets. These are used as a basis for the subscription data product."
+      title: "Subscr-Top"
+      comment: "Normally each distribution would be an individual entity with its own metadata entry in a data catalogue. For the example purposes, these have been grouped together."
+      label: "Kafka Topic Distributions"
+
+    - name: Kafka_Distribution_Schemas
+      type: NamedIndividual
+      description: "This is a stub for the physical schemas of the Kafka topic distributions."
+      comment: "Normally, these would be stored in a data catalogue."
+      label: "Kafka Distributions Schemas"
+
+    - name: Kafka_Stream
+      type: NamedIndividual
+      comment: "In most organisations data formats can be standardised."
+      label: "Kafka Stream"
+
+    - name: Marketing_Domain
+      type:
+        - NamedIndividual
+        - class-domain
+      domain_owner: Fred
+      domain_participants:
+        - Charlie
+        - Fred
+      description: "The marketing domain contains all data related to marketing business processes."
+      title: "Marketing Domain"
+      label: "Marketing Domain"
+
+    - name: Marketing_Domain_Glossary
+      type:
+        - NamedIndividual
+        - class-institutional-knowledge
+      relation: Sales_Domain_Knowledge
+      defining_domain: Marketing_Domain
+      description: "The business glossary describes the meaning and origin of data assets in the Marketing Domain."
+      comment: "This institutional knowledge is not fully worked out and only serves as an example to illustrate how RDF can be applied to deduce interoperability between data products."
+      label: "Marketing Domain Glossary"
+      annotations:
+        - source: Marketing_Domain_Glossary
+          property: http://purl.org/dc/terms/relation
+          target: Sales_Domain_Knowledge
+          comment: "There exists a well-described relation between the products in the sales domain business glossary and the campaigns and deals that offer discounts on various products."
+
+    - name: ProductDataAsset
+      type:
+        - NamedIndividual
+        - class-dataset
+      distributions:
+        - Anonymized_SQL-based_Distributions
+        - Complete_SQL-based_Distributions
+        - Kafka_Based_Distributions
+      logical_schema: Figure_4.5
+      domain: Sales_Domain
+      institutional_knowledge: Sales_Domain_Knowledge
+      language: "English"
+      description: "These are the products offered by the company to customers through subscriptions."
+      title: "Product"
+      label: "Product Data Asset"
+
+    - name: SQL
+      type: NamedIndividual
+      comment: "In most organisations data formats can be standardised."
+      label: "SQL Format"
+
+    - name: Sales_CRM_System
+      type: NamedIndividual
+      description: "The Sales CRM operational system is used by the company to facilitate the sales process and generates data on the customers and their subscriptions."
+      title: "Sales CRM System API"
+      label: "Sales CRM System"
+
+    - name: Sales_CRM_System_API
+      type:
+        - NamedIndividual
+        - class-input-port
+      source_system: Sales_CRM_System_API
+      description: "The API that makes data available from the CRM. This is used as the input port for the Subscriptions Data Product."
+      label: "Sales CRM System API"
+
+    - name: Sales_Domain
+      type:
+        - NamedIndividual
+        - class-domain
+      domain_knowledge: Sales_Domain_Knowledge
+      domain_owner: Erica
+      domain_participants:
+        - Alice
+        - Erica
+      description: "The sales domain contains all data related to sales business processes."
+      title: "Sales Domain"
+      label: "Sales Domain"
+
+    - name: Sales_Domain_Data_Warehouse
+      type: NamedIndividual
+      description: "The data warehouse used by the sales domain."
+      title: "Sales Domain Data Warehouse"
+      label: "Sales Domain Data Warehouse"
+
+    - name: Sales_Domain_Data_Warehouse_Access_Management
+      type: NamedIndividual
+      description: "The access management of the data warehouse of the sales domain is role-based, and set-up via company IAM. Full documentation can be found at: https://IAM.company.com."
+      comment: "This is an example stub. Access Management is generally set-up via an external tool."
+      label: "Sales Domain Data Warehouse Access Management"
+
+    - name: Sales_Domain_Data_Warehouse_SLA
+      type: NamedIndividual
+      description: "The SLA that applies to all output ports on the sales domain's data warehouse."
+      comment: "This is an example stub. Normally this would be a fully specified document."
+      label: "Sales Domain Data Warehouse SLA"
+
+    - name: Sales_Domain_Event_Store
+      type: NamedIndividual
+      description: "The event store of the sales domain."
+      title: "Sales Domain Event Store"
+      label: "Sales Domain Event Store"
+
+    - name: Sales_Domain_Event_Store_Access_Management
+      type: NamedIndividual
+      description: "The access management of the data warehouse of the sales domain is topic-based, and set-up via company IAM. Full documentation can be found at: https://IAM.company.com."
+      comment: "This is an example stub. Access Management is generally set-up via an external tool."
+      label: "Sales Domain Event Store Access Management"
+
+    - name: Sales_Domain_Event_Store_SLA
+      type: NamedIndividual
+      description: "The SLA that applies to the output port that relies on the sales domain's event store."
+      comment: "This is an example stub. Normally this would be a fully specified document."
+      label: "Sales Domain Event Store SLA"
+
+    - name: Sales_Domain_Knowledge
+      type:
+        - NamedIndividual
+        - class-institutional-knowledge
+      relation: Marketing_Domain_Glossary
+      description: "The business glossary describes the meaning and origin of the terms and data assets 'Customer', 'Subscription', and 'Product' from the perspective of the Sales Domain."
+      title: "Sales Domain Glossary"
+      label: "Sales Domain Glossary"
+      knowledgeURI: "https://salesdomainglossary.company.com"
+      annotations:
+        - source: Sales_Domain_Knowledge
+          property: http://purl.org/dc/terms/relation
+          target: Marketing_Domain_Glossary
+          comment: "There exists a well-described relation between the products in the sales domain business glossary and the campaigns and deals that offer discounts on various products."
+
+    - name: StreamingOutputPort
+      type:
+        - NamedIndividual
+        - class-output-port
+      endpointURI: https://kafka-topic.url
+      data_contract: Data_Contract_C
+      exposes_data_product: SubscriptionsDataProduct
+      consumed_by: Use_Case_C
+      access_management: Sales_Domain_Event_Store_Access_Management
+      description: "This output port makes available information on customers and subscriptions in near-real-time. Since this information is protected under GDPR, its access is restricted via purpose binding."
+      title: "Subscriptions Streaming Output Port"
+      label: "Streaming Output Port"
+      consume_instructions: "In order to consume data through this output port, contact Alice at alice@email.com. Then read the documentation on this output port at https://documentation-streamoutputport.company.com"
