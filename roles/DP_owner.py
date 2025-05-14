@@ -12,12 +12,14 @@ class DPOwner(Role):
     data_product: str = ""
     opponent_name: str = ""
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", opponent_2_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", successor: str = "Alice2", data_product: str = "", opponent_name: str = "", opponent_successor: str = "", requester: bool = True, **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
-        self.opponent_2_name = opponent_2_name
+        self.opponent_successor = opponent_successor
+        self.successor = successor
+        self.requester = requester #requester goes first, requested (i.e. when False) goes second
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
     
@@ -40,23 +42,65 @@ class DPOwner(Role):
         else:
             # Process the latest message
             latest_msg = self.rc.news[-1]
-            
-            # Check what action to take based on conversation state
-            if "Analyze your data product" in latest_msg.content:
-                # Initial instruction - read data product
+
+            # Check if SimpleDataProductReader has already been executed
+            memories = self.get_memories()
+            has_read_product = any(
+                memory.cause_by == "actions.read_product.SimpleDataProductReader" and memory.sent_from == self.name
+                for memory in memories
+            )
+
+            if not has_read_product:
+                # Ensure SimpleDataProductReader is executed first
                 self.rc.todo = SimpleDataProductReader()
-            
             elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
-                # After a data product is read, assess compatibility
+                # After reading the data product, assess compatibility
                 self.rc.todo = SimpleDataProductComposer()
-            
             elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
-                # After compatibility assessment, identify mismatches
-                self.rc.todo = MismatchIdentifier()
-            
+                if self.requester:
+                    # if the action before me was SimpleDataProductComposer and I'm the requester
+                    # I should perform the MismatchIdentifier action
+                    # After compatibility assessment, identify mismatches
+                    self.rc.todo = MismatchIdentifier()
+                else:
+                    # if the action before me was SimpleDataProductComposer and I'm the requested
+                    # I should perform the SimpleDataProductComposer action
+                    self.rc.todo = SimpleDataProductComposer()
+            elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
+                if self.requester:
+                    # if the action before me was MismatchIdentifier and I'm the requester
+                    # I should perform wait for the opponent to perform an action
+                    logger.debug(f"{self.name}: Waiting for required actions to complete.")
+                    return None
+
+                else:
+                    # if the action before me was MismatchIdentifier and I'm the requested
+                    # I should perform the MismatchIdentifier action
+                    # After mismatch identification, read the data product again
+                    self.rc.todo = MismatchIdentifier()
+
             else:
                 # Default to reading the data product
                 self.rc.todo = SimpleDataProductReader()
+            
+            # Check what action to take based on conversation state
+            # if "Analyze your data product" in latest_msg.content:
+            #     # Initial instruction - read data product
+            #     self.rc.todo = SimpleDataProductReader()
+            
+            # elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
+            #     # After a data product is read, assess compatibility
+            #     self.rc.todo = SimpleDataProductComposer()
+            
+            # elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
+            #     # After compatibility assessment, identify mismatches
+            #     self.rc.todo = MismatchIdentifier()
+            
+            # else:
+            #     # Default to reading the data product
+            #     self.rc.todo = SimpleDataProductReader()
+
+            
         
         # Log the selected action
         logger.info(f"{self.name} selected action: {self.rc.todo.name}")
@@ -76,7 +120,7 @@ class DPOwner(Role):
                 role=self.profile,
                 cause_by="actions.read_product.SimpleDataProductReader",
                 sent_from=self.name,
-                send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                send_to=[self.opponent_name, self.successor, self.opponent_successor]
             )
         
         elif isinstance(todo, SimpleDataProductComposer):
@@ -100,7 +144,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name, self.opponent_2_name]  # Ensure both opponents receive the message
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor, self.name]  # Ensure both opponents receive the message
                 )
             else:
                 msg = Message(
@@ -108,7 +152,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.SimpleDataProductComposer",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor, self.name]
                 )
         
         elif isinstance(todo, MismatchIdentifier):
@@ -128,7 +172,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor]
                 )
             else:
                 msg = Message(
@@ -136,7 +180,7 @@ class DPOwner(Role):
                     role=self.profile,
                     cause_by="actions.analyze_mismatch.MismatchIdentifier",
                     sent_from=self.name,
-                    send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                    send_to=[self.opponent_name, self.successor, self.opponent_successor]
                 )
         
         else:
@@ -145,7 +189,7 @@ class DPOwner(Role):
                 role=self.profile, 
                 cause_by=str(type(todo)),
                 sent_from=self.name,
-                send_to=["Bob", "Alice2", "Bob2"] if self.name == "Alice" else ["Alice", "Alice2", "Bob2"]
+                send_to=[self.opponent_name, self.successor, self.opponent_successor]
             )
         
         self.rc.memory.add(msg)
