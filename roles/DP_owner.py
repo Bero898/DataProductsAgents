@@ -5,7 +5,7 @@ from actions.analyze_mismatch import MismatchIdentifier
 from metagpt.schema import Message
 from metagpt.logs import logger
 from actions.read_product import ContextAwareProductReader
-from actions.assess_compatibility import DiscourseAwareComposer
+from actions.assess_compatibility import ContextAwareProductComposer
 
 
 class DPOwner(Role):
@@ -20,7 +20,7 @@ class DPOwner(Role):
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
-        self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, DiscourseAwareComposer, ContextAwareProductReader, MismatchIdentifier])
+        self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, ContextAwareProductComposer, ContextAwareProductReader, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self.current_round = 1  # Default round
 
@@ -57,7 +57,7 @@ class DPOwner(Role):
     #             if self.current_round > 4:
     #                 # Check if all required inputs are available
     #                 if self._has_required_inputs_for_discourse():
-    #                     self.rc.todo = DiscourseAwareComposer()
+    #                     self.rc.todo = ContextAwareProductComposer()
     #                 else:
     #                     self.rc.todo = SimpleDataProductComposer()
     #             else:
@@ -125,6 +125,8 @@ class DPOwner(Role):
                         own_desc = memory.content
                     elif memory.sent_from == self.opponent_name:
                         opponent_desc = memory.content
+                if own_desc != "" and opponent_desc != "":
+                    break
             
             if own_desc and opponent_desc:
                 result = await todo.run(own_desc, opponent_desc)
@@ -147,15 +149,23 @@ class DPOwner(Role):
         elif isinstance(todo, MismatchIdentifier):
             # Get compatibility assessment
             memories = self.get_memories()
-            assessment = ""
+            assessmentA = ""
+            assessmentB
             
             for memory in memories:
                 if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
-                    assessment = memory.content
+                    assessmentA = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.name:
+                    assessmentA = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.opponent_name:
+                    assessmentB = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.opponent_name:
+                    assessmentB = memory.content
+                if assessmentA != "" and assessmentB != "":
                     break
             
-            if assessment:
-                result = await todo.run(assessment)
+            if assessmentA and assessmentB:
+                result = await todo.run(assessmentA=assessmentA, assessmentB=assessmentB)
                 msg = Message(
                     content=result,
                     role=self.profile,
@@ -182,6 +192,8 @@ class DPOwner(Role):
                     compatibility = memory.content
                 elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.name:
                     mismatches = memory.content
+                if compatibility != "" and mismatches != "":
+                    break
             
             result = await todo.run(self.data_product, compatibility, mismatches)
             msg = Message(
@@ -192,7 +204,7 @@ class DPOwner(Role):
                 send_to=[self.opponent_name]
             )
         
-        elif isinstance(todo, DiscourseAwareComposer):
+        elif isinstance(todo, ContextAwareProductComposer):
             memories = self.get_memories()
             own_desc = ""
             opponent_desc = ""
@@ -220,6 +232,8 @@ class DPOwner(Role):
                         mismatchesA = memory.content
                     elif memory.sent_from == self.opponent_name:
                         mismatchesB = memory.content
+                if own_desc != "" and opponent_desc != "" and compatibilityA != "" and mismatchesA != "" and compatibilityB != "" and mismatchesB != "":
+                    break
 
             # Check if all required inputs are available
             if all([own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB]):
@@ -227,7 +241,7 @@ class DPOwner(Role):
                 msg = Message(
                     content=result,
                     role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                    cause_by="actions.assess_compatibility.ContextAwareProductComposer",
                     sent_from=self.name,
                     send_to=[self.opponent_name]
                 )
@@ -251,7 +265,7 @@ class DPOwner(Role):
                 msg = Message(
                     content=f"Waiting for complete context: missing {', '.join(missing_inputs)}.",
                     role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                    cause_by="actions.assess_compatibility.ContextAwareProductComposer",
                     sent_from=self.name,
                     send_to=[self.opponent_name]
                 )
