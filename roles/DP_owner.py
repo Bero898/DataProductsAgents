@@ -122,6 +122,8 @@ class DPOwner(Role):
                         own_desc = memory.content
                     elif memory.sent_from == self.opponent_name:
                         opponent_desc = memory.content
+                if own_desc != "" and opponent_desc != "":
+                    break   
             
             if own_desc and opponent_desc:
                 result = await todo.run(own_desc, opponent_desc)

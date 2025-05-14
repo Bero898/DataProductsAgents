@@ -107,6 +107,8 @@ class ContextDPOwner(Role):
                     compatibility = memory.content
                 elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.predecessor:
                     mismatches = memory.content
+                if compatibility != "" and mismatches != "":
+                    break
 
             result = await todo.run(self.data_product, compatibility, mismatches)
             msg = Message(
@@ -144,6 +146,8 @@ class ContextDPOwner(Role):
                         mismatchesA = memory.content
                     elif memory.sent_from == self.opponent_name or memory.sent_from == self.opponent_predecessor:
                         mismatchesB = memory.content
+                if own_desc != "" and opponent_desc != "" and compatibilityA != "" and mismatchesA != "" and compatibilityB != "" and mismatchesB != "":
+                    break
 
             # Check if all required inputs are available
             if all([own_desc, opponent_desc, compatibilityA, mismatchesA, compatibilityB, mismatchesB]):
