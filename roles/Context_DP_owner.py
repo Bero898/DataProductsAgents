@@ -1,6 +1,6 @@
 from metagpt.roles.role import Role
 from actions.context_read import ContextAwareProductReader
-from actions.context_compatibility import DiscourseAwareComposer
+from actions.context_compatibility import ContextAwareProductComposer
 from actions.analyze_mismatch import MismatchIdentifier
 from metagpt.schema import Message
 from metagpt.logs import logger
@@ -25,8 +25,8 @@ class ContextDPOwner(Role):
         self.opponent_predecessor = opponent_predecessor
         self.broker = broker
         self.requester = requester #requester goes first, requested (i.e. when False) goes second
-        self.set_actions([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
-        self._watch([ContextAwareProductReader, DiscourseAwareComposer, MismatchIdentifier])
+        self.set_actions([ContextAwareProductReader, ContextAwareProductComposer, MismatchIdentifier])
+        self._watch([ContextAwareProductReader, ContextAwareProductComposer, MismatchIdentifier])
     
     async def _observe(self) -> int:
         await super()._observe()
@@ -59,17 +59,17 @@ class ContextDPOwner(Role):
                 self.rc.todo = ContextAwareProductReader()
             elif latest_msg.cause_by == "actions.read_product.ContextAwareProductReader" or latest_msg.cause_by == "actions.perform_broker_analysis.PerformBrokerAnalysis":
                 # After reading the context, assess compatibility
-                self.rc.todo = DiscourseAwareComposer()
-            elif latest_msg.cause_by == "actions.assess_compatibility.DiscourseAwareComposer":
+                self.rc.todo = ContextAwareProductComposer()
+            elif latest_msg.cause_by == "actions.assess_compatibility.ContextAwareProductComposer":
                 if self.requester:
-                    # if the action before me was DiscourseAwareComposer and I'm the requester
+                    # if the action before me was ContextAwareProductComposer and I'm the requester
                     # I should perform the MismatchIdentifier action
                     # After compatibility assessment, identify mismatches
                     self.rc.todo = MismatchIdentifier()
                 else:
-                    # if the action before me was DiscourseAwareComposer and I'm the requester
-                    # I should perform the DiscourseAwareComposer action
-                    self.rc.todo = DiscourseAwareComposer()
+                    # if the action before me was ContextAwareProductComposer and I'm the requester
+                    # I should perform the ContextAwareProductComposer action
+                    self.rc.todo = ContextAwareProductComposer()
             elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
                 if self.requester:
                     logger.debug(f"{self.name}: Waiting for required actions to complete.")
@@ -115,7 +115,7 @@ class ContextDPOwner(Role):
                 send_to=[self.opponent_name, self.broker]
             )
         
-        elif isinstance(todo, DiscourseAwareComposer):
+        elif isinstance(todo, ContextAwareProductComposer):
             memories = self.get_memories()
             own_desc = ""
             opponent_desc = ""
@@ -131,7 +131,7 @@ class ContextDPOwner(Role):
                         own_desc = memory.content
                     elif memory.sent_from == self.opponent_name:
                         opponent_desc = memory.content
-                elif memory.cause_by == "actions.assess_compatibility.DiscourseAwareComposer" or memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
+                elif memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" or memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
                     logger.debug(f"{self.name} - {memory.cause_by} - {memory.sent_from} - {memory.content}")
                     if memory.sent_from == self.name or memory.sent_from == self.predecessor:
                         compatibilityA = memory.content
@@ -149,7 +149,7 @@ class ContextDPOwner(Role):
                 msg = Message(
                     content=result,
                     role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                    cause_by="actions.assess_compatibility.ContextAwareProductComposer",
                     sent_from=self.name,
                     send_to=[self.opponent_name]
                 )
@@ -172,7 +172,7 @@ class ContextDPOwner(Role):
                 msg = Message(
                     content=f"Waiting for complete context: missing {', '.join(missing_inputs)}.",
                     role=self.profile,
-                    cause_by="actions.assess_compatibility.DiscourseAwareComposer",
+                    cause_by="actions.assess_compatibility.ContextAwareProductComposer",
                     sent_from=self.name,
                     send_to=[self.opponent_name]
                 )
@@ -184,7 +184,7 @@ class ContextDPOwner(Role):
             assessment = ""
             
             for memory in memories:
-                if memory.cause_by == "actions.assess_compatibility.DiscourseAwareComposer" and memory.sent_from == self.name:
+                if memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.name:
                     assessment = memory.content
                     break
             
