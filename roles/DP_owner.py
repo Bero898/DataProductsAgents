@@ -10,7 +10,10 @@ class DPOwner(Role):
     name: str = "Alice"
     profile: str = "Data Product Owner"
     data_product: str = ""
+    requester: bool = True
     opponent_name: str = ""
+    successor: str = ""
+    opponent_predecessor: str = ""
 
     def __init__(self, name: str = "Alice", successor: str = "Alice2", data_product: str = "", opponent_name: str = "", opponent_successor: str = "", requester: bool = True, **kwargs):
         super().__init__(name=name, **kwargs)
@@ -158,15 +161,19 @@ class DPOwner(Role):
         elif isinstance(todo, MismatchIdentifier):
             # Get compatibility assessment
             memories = self.get_memories()
-            assessment = ""
+            assessmentA = ""
+            assessmentB = ""
             
             for memory in memories:
                 if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.name:
-                    assessment = memory.content
+                    assessmentA = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.opponent_name:
+                    assessmentB = memory.content
+                if assessmentA != "" and assessmentB != "":   
                     break
             
-            if assessment:
-                result = await todo.run(assessment)
+            if assessmentA and assessmentB:
+                result = await todo.run(assessmentA = assessmentA, assessmentB=assessmentB)
                 msg = Message(
                     content=result,
                     role=self.profile,

@@ -1,6 +1,6 @@
 from metagpt.actions import Action
 
-class DiscourseAwareComposer(Action):
+class ContextAwareProductComposer(Action):
     PROMPT_TEMPLATE: str = """
     Here are the descriptions of two data products. These descriptions contain information specific to 
     each product. Consider negotiable and non-negotiable factors like data formats, schemas, compatibility constraints, etc.
