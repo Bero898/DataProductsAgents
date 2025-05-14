@@ -120,6 +120,10 @@ class DPOwner(Role):
                     assessmentA = memory.content
                 elif memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.opponent_name:
                     assessmentB = memory.content
+                if memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.name:
+                    assessmentA = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.opponent_name:
+                    assessmentB = memory.content
                 elif memory.cause_by == "actions.perform_broker_analysis.PerformBrokerAnalysis" and memory.sent_from == self.broker:
                     assessmentC = memory.content
                 if assessmentA != "" and assessmentB !="" and assessmentC != "":
