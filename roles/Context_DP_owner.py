@@ -64,9 +64,12 @@ class ContextDPOwner(Role):
             if not has_read_context:
                 # Ensure ContextAwareProductReader is executed first
                 self.rc.todo = ContextAwareProductReader()
-            elif latest_msg.cause_by == "actions.read_product.ContextAwareProductReader" or latest_msg.cause_by == "actions.perform_broker_analysis.PerformBrokerAnalysis":
-                # After reading the context, assess compatibility
-                self.rc.todo = ContextAwareProductComposer()
+            elif latest_msg.cause_by == "actions.read_product.ContextAwareProductReader" :
+                if self.requester:
+                    self.rc.todo = ContextAwareProductComposer()
+                else:
+                    self.rc.todo = ContextAwareProductReader()
+            
             elif latest_msg.cause_by == "actions.assess_compatibility.ContextAwareProductComposer":
                 if self.requester:
                     # if the action before me was ContextAwareProductComposer and I'm the requester
@@ -79,8 +82,7 @@ class ContextDPOwner(Role):
                     self.rc.todo = ContextAwareProductComposer()
             elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
                 if self.requester:
-                    logger.debug(f"{self.name}: Waiting for required actions to complete.")
-                    return None
+                    self.rc.todo = ContextAwareProductReader()
                 else:
                     # if the action before me was MismatchIdentifier and I'm the requested
                     # I should perform the MismatchIdentifier action

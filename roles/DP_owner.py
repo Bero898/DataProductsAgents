@@ -57,8 +57,16 @@ class DPOwner(Role):
                 # Ensure SimpleDataProductReader is executed first
                 self.rc.todo = SimpleDataProductReader()
             elif latest_msg.cause_by == "actions.read_product.SimpleDataProductReader":
-                # After reading the data product, assess compatibility
-                self.rc.todo = SimpleDataProductComposer()
+                if self.requester:
+                    # if the action before me was SimpleDataProductReader and I'm the requester
+                    # I should perform the SimpleDataProductComposer action
+                    # After reading the data product, assess compatibility
+                    self.rc.todo = SimpleDataProductComposer()
+                else:
+                    # if the action before me was SimpleDataProductReader and I'm the requested
+                    # I should perform the SimpleDataProductReader action
+                    # After reading the data product, assess compatibility
+                    self.rc.todo = SimpleDataProductReader()
             elif latest_msg.cause_by == "actions.assess_compatibility.SimpleDataProductComposer":
                 if self.requester:
                     # if the action before me was SimpleDataProductComposer and I'm the requester
@@ -71,10 +79,9 @@ class DPOwner(Role):
                     self.rc.todo = SimpleDataProductComposer()
             elif latest_msg.cause_by == "actions.analyze_mismatch.MismatchIdentifier":
                 if self.requester:
-                    # if the action before me was MismatchIdentifier and I'm the requester
-                    # I should perform wait for the opponent to perform an action
-                    logger.debug(f"{self.name}: Waiting for required actions to complete.")
-                    return None
+                    # if the latest action is mismatchidentifier (means that my opponent did it)
+                    # I must do the SimpleDataProductComposer action
+                    self.rc.todo = SimpleDataProductReader()
 
                 else:
                     # if the action before me was MismatchIdentifier and I'm the requested
