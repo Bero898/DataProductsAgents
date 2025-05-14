@@ -103,6 +103,8 @@ class ContextDPOwner(Role):
             for memory in memories:
                 if memory.cause_by == "actions.assess_compatibility.SimpleDataProductComposer" and memory.sent_from == self.predecessor:
                     compatibility = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.name:
+                    compatibility = memory.content
                 elif memory.cause_by == "actions.analyze_mismatch.MismatchIdentifier" and memory.sent_from == self.predecessor:
                     mismatches = memory.content
 
@@ -151,7 +153,7 @@ class ContextDPOwner(Role):
                     role=self.profile,
                     cause_by="actions.assess_compatibility.ContextAwareProductComposer",
                     sent_from=self.name,
-                    send_to=[self.opponent_name]
+                    send_to=[self.opponent_name, self.name]
                 )
             else:
                 missing_inputs = []
@@ -170,7 +172,7 @@ class ContextDPOwner(Role):
                 logger.warning(f"{self.name} is waiting for complete context: missing {', '.join(missing_inputs)}.")
 
                 msg = Message(
-                    content=f"Waiting for complete context: missing {', '.join(missing_inputs)}.",
+                    content=f"Waiting for complete context: missing {', '.join(missing_inputs)}. {self.predecessor}",
                     role=self.profile,
                     cause_by="actions.assess_compatibility.ContextAwareProductComposer",
                     sent_from=self.name,

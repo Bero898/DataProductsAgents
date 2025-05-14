@@ -28,7 +28,7 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     dp2 = load_data_product(dp2_path)
 
     alice = DPOwner(name="Alice", successor="Alice2", data_product=dp1, opponent_name="Bob", opponent_successor="Bob2", broker = "Connor", requester=True)
-    bob = DPOwner(name="Bob",successor="Alice2", data_product=dp2, opponent_name="Alice", opponent_successor="Alice2", broker = "Connor", requester=False)
+    bob = DPOwner(name="Bob",successor="Bob2", data_product=dp2, opponent_name="Alice", opponent_successor="Alice2", broker = "Connor", requester=False)
 
     alice2 = ContextDPOwner(name="Alice2", predecessor= "Alice", opponent_predecessor="Bob", data_product=dp1, opponent_name="Bob2", broker="Connor", requester=True)
     bob2 = ContextDPOwner(name="Bob2", predecessor= "Bob", opponent_predecessor= "Alice", data_product=dp2, opponent_name="Alice2", broker="Connor", requester=False)
