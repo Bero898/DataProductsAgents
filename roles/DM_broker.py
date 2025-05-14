@@ -133,7 +133,7 @@ class DMBroker(Role):
                     role=self.profile,
                     cause_by="actions.perform_broker_analysis.PerformBrokerAnalysis",
                     sent_from=self.name,
-                    send_to=[self.ownerA, self.ownerB]
+                    send_to=[self.ownerA, self.ownerB, self.ownerA_2, self.ownerB_2]
                 )
             else:
                 logger.warning(f"{self.name} is waiting for product descriptions.")

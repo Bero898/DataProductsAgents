@@ -183,15 +183,21 @@ class ContextDPOwner(Role):
         elif isinstance(todo, MismatchIdentifier):
             # Get compatibility assessment
             memories = self.get_memories()
-            assessment = ""
-            
+            assessmentA = ""
+            assessmentB = ""
+            assessmentC = ""            
             for memory in memories:
                 if memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.name:
                     assessment = memory.content
+                elif memory.cause_by == "actions.assess_compatibility.ContextAwareProductComposer" and memory.sent_from == self.opponent_name:
+                    assessmentB = memory.content
+                elif memory.cause_by == "actions.perform_broker_analysis.PerformBrokerAnalysis" and memory.sent_from == self.broker:
+                    assessmentC = memory.content
+                if assessmentA != "" and assessmentB !="" and assessmentC != "":
                     break
             
             if assessment:
-                result = await todo.run(assessment)
+                result = await todo.run(assessmentA=assessmentA, assessmentB=assessmentB, assessmentC=assessmentC)
                 msg = Message(
                     content=result,
                     role=self.profile,
