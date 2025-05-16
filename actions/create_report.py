@@ -6,24 +6,33 @@ class CreateCompatibilityReport(Action):
     that have been identified by two data product owners who are attempting to compose their data products.
     Additionally, you will be provided with the current state of the compatibility report (if it exists).
     Your task is to create or update the report based on the provided mismatches and the existing report content.
-    The report should include the following:
+    The report should have the following structure:
 
+  ** Mismatches **
     - A summary of the mismatches identified by both data product owners.
+  
+  ** Compatibility Analysis **
     - An analysis of the compatibility of the two data products based on the mismatches (considering
       if the mismatches are negotiable or not).
+
+  ** Recommendations **
     - Recommendations for resolving the mismatches, if applicable.
+
+  ** Conclusion **
     - A conclusion on the overall compatibility of the two data products. If there remain any non-negotiable mismatches,
       state that the data products are not compatible. If there are only negotiable mismatches, 
       state that the data products are compatible.
 
-    Existing report content (if any):
-    {existing_report}
+  Below is the information required to create the report
+      
+  Existing report content (if any):
+  {existing_report}
 
-    Mismatches identified by data product owner A:
-    {mismatchA}
+  Mismatches identified by data product owner A:
+  {mismatchA}
 
-    Mismatches identified by data product owner B:
-    {mismatchB}
+  Mismatches identified by data product owner B:
+  {mismatchB}
     """
 
     name: str = "CreateCompatibilityReport"
