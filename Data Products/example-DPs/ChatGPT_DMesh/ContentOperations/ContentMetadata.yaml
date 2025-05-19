@@ -1,0 +1,69 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP6"
+  dct:title: "Content Metadata"
+  dct:description: "Descriptive metadata about all content available on the platform, including genres, ratings, actors, and licensing info. Enables enrichment of viewing data and recommendation systems."
+  pmt:domain: ContentOps_Domain
+  pmt:dataProvider: Lisa
+  pmt:resourceProvider: Lisa
+  pmt:domainOwner: Lisa
+  pmt:domainParticipant:
+    - Lisa
+    - Omar
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2024-05-01
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - Content
+    - Metadata
+    - Enrichment
+  pmt:institutionalKnowledge: https://contentops.company.com/glossary
+  pmt:estimatedValue: "Improves recommendation quality and enables better content tagging and analytics."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP6
+
+  pmt:dataAsset:
+    - identifier: ContentCatalogAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Content Metadata Asset"
+      dct:description: "Master list of all published media assets with descriptive attributes."
+      dct:language: "en"
+      pmt:domain: ContentOps_Domain
+      pmt:institutionalKnowledge: https://contentops.company.com/glossary
+      pmt:logicalSchema: "https://schemas.company.com/logical/content-v1.json"
+      dcat:distribution:
+        - identifier: Content_Metadata_SQL_Dist
+          rdf_type: pmt:Distribution
+          dct:title: "Content Metadata Table"
+          dct:description: "SQL export of all content descriptors."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/content-sql-v1.json"
+          pmt:sourceSystem: Content_Curation_DB
+          pmt:correspondingOutputPort: Content_Metadata_OutputPort
+
+  pmt:outputPort:
+    - identifier: Content_Metadata_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Content Metadata SQL Access"
+      dct:description: "Queryable metadata about published shows, movies, and episodes."
+      pmt:endpointURI: "https://sql.company.com/tables/content_metadata"
+      pmt:consumeInstructions: "Request access via ContentOps team. Query guide available in data documentation hub."
+      pmt:accessManagement: https://IAM.company.com/content-access
+      pmt:exposesDataProduct: DP6
+      pmt:exposesDistribution: Content_Metadata_SQL_Dist
+      pmt:dataContract:
+        identifier: ContentMetadata_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Metadata refreshed nightly. Schema versioned and published quarterly."
+        pmt:consumerPromise: "Must credit content providers and not republish data externally."
+        pmt:appliesToPort: Content_Metadata_OutputPort
+
+  pmt:transformationLogic: "Metadata collected from CMS, joined with licensing system data, cleaned and published nightly."
+  pmt:controlPort:
+    - identifier: Content_Metadata_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Governance on genre taxonomies and licensing tags."
+      pmt:correspondingDataProduct: DP6
+      pmt:managedPolicy:
+        - "https://policies.company.com/content-taxonomy"
+  pmt:enforcementLogic: "Schema version checks and taxonomy tag validators in SQL pipelines."
