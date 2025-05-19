@@ -23,9 +23,12 @@ def load_data_product(file_path):
             return ""
 
 
-async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3):
+async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3,save_path: str = ""):
     dp1 = load_data_product(dp1_path)
     dp2 = load_data_product(dp2_path)
+
+    save_path_broker = f"{save_path}/Broker.txt"
+   
 
     alice = DPOwner(name="Alice", successor="Alice2", data_product=dp1, opponent_name="Bob", opponent_successor="Bob2", broker = "Connor", requester=True)
     bob = DPOwner(name="Bob",successor="Bob2", data_product=dp2, opponent_name="Alice", opponent_successor="Alice2", broker = "Connor", requester=False)
@@ -33,7 +36,7 @@ async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, 
     alice2 = ContextDPOwner(name="Alice2", predecessor= "Alice", opponent_predecessor="Bob", data_product=dp1, opponent_name="Bob2", broker="Connor", requester=True)
     bob2 = ContextDPOwner(name="Bob2", predecessor= "Bob", opponent_predecessor= "Alice", data_product=dp2, opponent_name="Alice2", broker="Connor", requester=False)
 
-    connor = DMBroker(name="Connor", ownerA="Alice", ownerB="Bob", ownerA_2="Alice2", ownerB_2="Bob2")
+    connor = DMBroker(name="Connor", ownerA="Alice", ownerB="Bob", ownerA_2="Alice2", ownerB_2="Bob2", report_file=save_path_broker)
 
     round_3_agents = [alice, bob, connor]  # Use these agents for the first 3 rounds
     round_n_agents = [alice2, bob2, connor]  # Use these agents for the rest of the rounds

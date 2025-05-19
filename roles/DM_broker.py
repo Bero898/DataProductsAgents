@@ -14,12 +14,13 @@ class DMBroker(Role):
     ownerB_2: str = ""  # Owner of the second data product after the first round
     report_file: str = "compatibility_report.txt"  # File to store the report
 
-    def __init__(self, name: str = "Connor", ownerA: str = "", ownerB: str = "", ownerA_2: str = "", ownerB_2: str = "", **kwargs):
+    def __init__(self, name: str = "Connor", ownerA: str = "", ownerB: str = "", ownerA_2: str = "", ownerB_2: str = "", report_file: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.ownerA = ownerA
         self.ownerB = ownerB
         self.ownerA_2 = ownerA_2
         self.ownerB_2 = ownerB_2
+        self.report_file = report_file
         self.set_actions([PerformBrokerAnalysis, CreateCompatibilityReport])
         self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
 

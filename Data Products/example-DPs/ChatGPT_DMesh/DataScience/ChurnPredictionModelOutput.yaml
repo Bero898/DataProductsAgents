@@ -1,0 +1,91 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP5"
+  dct:title: "Churn Prediction Model Output"
+  dct:description: "Scored churn probabilities for active customers based on profile, behavior, and subscription data. Used for retention targeting."
+  pmt:domain: DataScience_Domain
+  pmt:dataProvider: Ravi
+  pmt:resourceProvider: Ravi
+  pmt:domainOwner: Ravi
+  pmt:domainParticipant:
+    - Ravi
+    - Aisha
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2024-01-05
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - ML
+    - Churn
+    - RiskScore
+  pmt:institutionalKnowledge: https://ml-models.company.com/churn-model
+  pmt:estimatedValue: "12% churn reduction attributed to targeted retention strategies informed by this model."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP5
+  pmt:consumes:
+    - DP1
+    - DP2
+    - DP3
+
+  pmt:dataAsset:
+    - identifier: ChurnScoreAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Customer Churn Scores"
+      dct:description: "Model output including churn probability, confidence score, and contributing features."
+      dct:language: "en"
+      pmt:domain: DataScience_Domain
+      pmt:institutionalKnowledge: https://ml-models.company.com/churn-model
+      pmt:logicalSchema: "https://schemas.company.com/logical/churn-scores-v1.json"
+      dcat:distribution:
+        - identifier: Churn_Scores_SQL_Dist
+          rdf_type: pmt:Distribution
+          dct:title: "Churn Score SQL Table"
+          dct:description: "Weekly scores by customer_id. Includes model version metadata."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/churn-sql-v1.json"
+          pmt:sourceSystem: ML_FeatureStore
+          pmt:correspondingOutputPort: Churn_Score_OutputPort
+
+  pmt:inputPort:
+    - identifier: ChurnInput_Customer
+      rdf_type: pmt:InputPort
+      dct:description: "Uses customer demographics and contact info."
+      pmt:sourceSystem: Sales_CRM_System
+      pmt:consumes: [DP1]
+    - identifier: ChurnInput_Viewing
+      rdf_type: pmt:InputPort
+      dct:description: "Streaming history used to model behavioral churn indicators."
+      pmt:sourceSystem: StreamingService_Logs
+      pmt:consumes: [DP2]
+    - identifier: ChurnInput_Subscription
+      rdf_type: pmt:InputPort
+      dct:description: "Incorporates subscription tier and renewal status."
+      pmt:sourceSystem: Subscription_Billing_System
+      pmt:consumes: [DP3]
+
+  pmt:outputPort:
+    - identifier: Churn_Score_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Churn Score Output"
+      dct:description: "Model score data available via SQL endpoint."
+      pmt:endpointURI: "https://sql.company.com/tables/churn_scores"
+      pmt:consumeInstructions: "Request access via ML Registry. Documented scoring logic in internal Confluence."
+      pmt:accessManagement: https://IAM.company.com/ml-scores
+      pmt:exposesDataProduct: DP5
+      pmt:exposesDistribution: Churn_Scores_SQL_Dist
+      pmt:dataContract:
+        identifier: ChurnScore_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Model retrained weekly; AUC > 0.85 minimum guarantee."
+        pmt:consumerPromise: "Model results must not be used without human oversight in customer contact."
+        pmt:appliesToPort: Churn_Score_OutputPort
+
+  pmt:transformationLogic: "LightGBM model pipeline in Airflow using features from profile, usage, and subscription. Versioned in MLflow."
+  pmt:controlPort:
+    - identifier: Churn_Model_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Governance of model metadata, fairness checks, and audit logs."
+      pmt:correspondingDataProduct: DP5
+      pmt:managedPolicy:
+        - "https://policies.company.com/model-fairness"
+        - "https://policies.company.com/model-audit"
+  pmt:enforcementLogic: "Automated model testing via Airflow with rollback on drift detection and fairness threshold breaches."

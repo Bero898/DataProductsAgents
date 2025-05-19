@@ -1,0 +1,78 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP1"
+  dct:title: "Customer Profile"
+  dct:description: "Cleaned and standardized customer records sourced from the Sales CRM system. Used as a master reference for downstream analytics, segmentation, and support workflows."
+  pmt:domain: Sales_Domain
+  pmt:dataProvider: Alice
+  pmt:resourceProvider: Alice
+  pmt:domainOwner: Erica
+  pmt:domainParticipant:
+    - Alice
+    - Erica
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2023-09-15
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - CRM
+    - Customer
+    - MasterData
+  pmt:institutionalKnowledge: Sales_Domain_Knowledge
+  pmt:estimatedValue: "Serves as golden customer record. Enables 20+ hours/week of manual effort savings in downstream teams."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP1
+
+  pmt:dataAsset:
+    - identifier: CustomerDataAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Customer Master Data"
+      dct:description: "Logical representation of customer information held in the CRM system."
+      dct:language: "en"
+      pmt:domain: Sales_Domain
+      pmt:institutionalKnowledge: Sales_Domain_Knowledge
+      pmt:logicalSchema: "https://schemas.company.com/logical/customer-v1.json"
+      dcat:distribution:
+        - identifier: Customer_SQL_Distribution
+          rdf_type: pmt:Distribution
+          dct:title: "Customer SQL Export"
+          dct:description: "Structured tabular export of customer records in SQL format."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/customer-sql-v1.json"
+          pmt:sourceSystem: Sales_CRM_System
+          pmt:correspondingOutputPort: Customer_SQL_OutputPort
+
+  pmt:inputPort:
+    - identifier: CRM_Input_Port
+      rdf_type: pmt:InputPort
+      dct:description: "Input from operational CRM system."
+      pmt:sourceSystem: Sales_CRM_System
+      pmt:correspondingDataProduct: DP1
+
+  pmt:outputPort:
+    - identifier: Customer_SQL_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Customer Profile SQL API"
+      dct:description: "Exposes the structured SQL export of customer master records."
+      pmt:endpointURI: "https://data.company.com/customer-profile"
+      pmt:consumeInstructions: "Access via IAM at https://iam.company.com. Full usage doc at https://docs.company.com/customer-profile"
+      pmt:accessManagement: Sales_Domain_Data_Warehouse_Access_Management
+      pmt:exposesDataProduct: DP1
+      pmt:exposesDistribution: Customer_SQL_Distribution
+      pmt:dataContract:
+        identifier: CustomerProfile_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Updated daily at 02:00 UTC. Includes GDPR-filtered attributes."
+        pmt:consumerPromise: "Consumers must not persist raw PII and comply with GDPR policy."
+        pmt:SLA: Sales_Domain_Data_Warehouse_SLA
+        pmt:appliesToPort: Customer_SQL_OutputPort
+
+  pmt:transformationLogic: "Airflow DAG running Spark jobs. Logic includes PII filtering, email validation, deduplication."
+  pmt:controlPort:
+    - identifier: CustomerProfile_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Control mechanisms to enforce GDPR tagging and lineage logging."
+      pmt:correspondingDataProduct: DP1
+      pmt:managedPolicy:
+        - "https://policies.company.com/gdpr-tagging"
+        - "https://policies.company.com/lineage-tracking"
+  pmt:enforcementLogic: "Dagster pipeline validates tagging completeness and blocks publishing if incomplete."
