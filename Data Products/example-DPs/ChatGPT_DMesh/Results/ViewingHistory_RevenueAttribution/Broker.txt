@@ -1,0 +1,35 @@
+**Compatibility Report**
+
+**Mismatches**
+
+The following mismatches have been identified by both data product owners:
+
+* Schema: Different schemas, but can be addressed through data transformation and mapping.
+* Distribution: Different distribution methods (Kafka-based vs. derived table refreshed weekly).
+* Purpose: Different purposes, but can still be used together if the goals of the consuming applications align.
+* Structure: Different structures, but can be addressed through data transformation and mapping.
+* Input/Output Ports: Different configurations, but can be handled through data integration and processing.
+* Control Ports: Different policies (fiscal year alignment and aggregation standards vs. managed policy).
+* Transformation Logic: Different transformation logic (combining subscription billing with GL entries and marketing sources vs. Flink-based stream processing).
+* Enforcement Logic: Different enforcement logic (checking in DBT to ensure fiscal mapping and partner source compliance vs. managed policy).
+
+**Compatibility Analysis**
+
+Based on the identified mismatches, it is clear that the two data products are not directly compatible. However, the mismatches are negotiable, and with the suggested solutions, the data products can be made compatible.
+
+**Recommendations**
+
+To resolve the mismatches, the following recommendations are suggested:
+
+1. Develop data transformation logic to map the schemas of the two data products.
+2. Integrate the data products using data integration tools and techniques, such as ETL or data virtualization.
+4. Create a common data model to bridge the differences in data assets, distributions, and input/output ports.
+5. Develop a common policy framework to integrate the control ports and enforcement logic.
+6. Perform additional processing and analysis to combine the data from the two products, taking into account their different distributions and update frequencies.
+7. Establish a common data governance framework to ensure data quality, security, and compliance.
+8. Adapt the output port of Data Product A to consume the weekly refreshed table from Data Product B's distribution, and update the transformation logic to accommodate the new data source.
+9. Update the catalog record of Data Product A to reflect the new data source, including the dependency on Data Product B, and ensure that the control port of Data Product A is aligned with the managed policy of Data Product B.
+
+**Conclusion**
+
+Based on the analysis, the two data products are not directly compatible due to the identified mismatches. However, with the suggested solutions, the data products can be made compatible, enabling the integration of revenue attribution and viewing history data to support finance, strategic planning, and customer analytics use cases.

@@ -1,0 +1,33 @@
+**Mismatches**
+
+A summary of the mismatches identified by both data product owners:
+
+1. **Domain:** Data Product A belongs to the CustomerSupport_Domain, while Data Product B belongs to the Finance Domain.
+2. **Purpose:** Data Product A is used for sentiment analysis and service improvement, while Data Product B is used for revenue attribution and investor reporting.
+3. **Schema:** The schema structures differ between Data Product A and Data Product B.
+4. **Transformation Logic:** The transformation logic differs between the two products. Data Product A uses an ETL process with categorization, redaction, and linking with CRM IDs, while Data Product B uses SQL to combine subscription billing with GL entries and marketing sources.
+5. **Ports and Enforcement Logic:** The control ports and enforcement logic differ between the two data products. Data Product A has a control port that enforces policy on redaction and tagging of sensitive language, while Data Product B has a control port that enforces policy on fiscal year alignment and aggregation standards.
+
+**Compatibility Analysis**
+
+An analysis of the compatibility of the two data products based on the mismatches (considering if the mismatches are negotiable or not):
+
+The mismatches identified are primarily related to differences in domain, purpose, schema, transformation logic, and control ports and enforcement logic. While these mismatches may seem significant, they can be addressed through alignment and adaptation of the respective data products. The suggested solutions provided by both data product owners indicate that the mismatches are negotiable, and the data products can be made compatible.
+
+**Recommendations**
+
+Recommendations for resolving the mismatches, if applicable:
+
+1. **Domain Alignment:** Establish a common domain or create a bridge between the CustomerSupport_Domain and the Finance Domain to facilitate integration.
+2. **Purpose Alignment:** Identify common goals or purposes that can be achieved by integrating Data Product A and Data Product B.
+3. **Transformation Logic Alignment:** Adapt the transformation logic of Data Product A to incorporate the revenue attribution data from Data Product B, and vice versa.
+4. **Ports and Enforcement Logic Alignment:** Update the control ports and enforcement logic of both data products to accommodate the new data relationships and ensure compliance with policies.
+5. **Data Integration:** Integrate the data assets, distributions, and output ports of both data products to create a unified view.
+6. **Governance Model:** Establish a governance model to oversee the integrated data product, including data quality, security, and access controls.
+7. **Cataloging and Institutional Knowledge:** Update the catalog record and institutional knowledge base for both data products to reflect the new dependencies and integration.
+
+**Conclusion**
+
+A conclusion on the overall compatibility of the two data products:
+
+Based on the analysis, the mismatches identified are negotiable, and the data products can be made compatible. By implementing the suggested solutions and aligning the domains, purposes, schema, transformation logic, and control ports and enforcement logic, the organizations can leverage the strengths of both data products and create a more comprehensive and valuable data asset. Therefore, the data products are compatible.

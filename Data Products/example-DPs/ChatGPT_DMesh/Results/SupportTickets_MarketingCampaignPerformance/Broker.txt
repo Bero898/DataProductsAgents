@@ -1,0 +1,30 @@
+**Mismatches**
+
+A summary of the mismatches identified by both data product owners:
+
+1. **Schema structure**: The schema structures of Data Product A and Data Product B differ, with Data Product A having a logical schema and Data Product B having a structured and categorized schema.
+2. **Domain**: The domains of the two data products differ, with Data Product A belonging to the "CustomerSupport_Domain" and Data Product B belonging to the "Marketing_Domain".
+3. **Provider**: The providers of the two data products differ, with Data Product A being provided by "Janelle" and Data Product B being provided by "Fred".
+4. **Purpose**: The purposes of the two data products differ, with Data Product A being designed for sentiment analysis and service improvement, and Data Product B being designed for marketing campaign performance evaluation.
+5. **Transformation Logic**: The transformation logic of the two data products differs, with Data Product A involving categorization, redaction, and linking with CRM IDs, and Data Product B involving ad log extracts, Google Ads, and Meta API ingest.
+
+**Compatibility Analysis**
+
+Based on the identified mismatches, the compatibility of the two data products is uncertain. However, most of the mismatches are negotiable, and with proper alignment, coordination, and adaptation, the data products can be made compatible.
+
+**Recommendations**
+
+To resolve the mismatches and make the data products compatible**, the following actions are suggested:
+
+1. **Establish a common data model**: Develop a common data model that can accommodate the different schema structures and domains of the two data products.
+2. **Coordinate with providers**: Coordinate with the providers (Janelle and Fred) to ensure compatibility and coordination.
+3. **Adapt transformation logic**: Adapt the transformation logic to accommodate both data products, ensuring that the integrated data product meets the required standards and quality expectations.
+4. **Develop a data governance policy**: Develop a data governance policy that addresses the differences in institutional knowledge, policies, and regulations between the two domains.
+6. **Develop a data integration pipeline**: Develop a data integration pipeline to bridge the differences in domain, provider, and transformation logic.
+7. **Update institutional knowledge**: Update the institutional knowledge associated with both data products to reflect the new dependencies and relationships between them.
+8. **Update catalog records**: Update the catalog records of both data products to reflect the new relationships and dependencies between them.
+9. **Update data lineage**: Update the data lineage of both data products to reflect the new dependencies and transformation logic involved in the integration.
+
+**Conclusion**
+
+Based on the analysis, the two data products are compatible, but only if the identified mismatches are addressed and the recommended actions are taken. If the mismatches are not addressed, the data products will not be compatible.

@@ -1,0 +1,35 @@
+**Compatibility Report**
+
+**Mismatches**
+
+* Data Formats: Incompatible formats between snapshot tables and LightGBM model pipeline
+* Schemas: Different schemas, with one product having a defined schema and the other not specifying one
+* Governance: Different governance models, with one product managing access governance, audit logs, and policy validation, and the other governing model metadata, fairness checks, and audit logs
+* Data Contracts: Incompatible data contracts, with one product having provider and consumer promises and the other guaranteeing a minimum AUC of 0.85 and requiring human oversight in customer contact
+* Technology: Different technologies used, with one product using Spark ETL pipelines and the other using a LightGBM model pipeline
+* Input/Output Ports: Incompatible input/output ports, requiring adaptation to facilitate integration
+* Control Ports: Different control ports, requiring alignment to govern access, metadata management, and audit logging
+* Data Assets: Incompatible data assets, requiring integration to enable data exchange and processing
+
+**Compatibility Analysis**
+
+The mismatches identified are a mix of negotiable and non-negotiable issues. The differences in data formats, schemas, governance models, and technology may require more significant changes to the data products. However, with integration and alignment efforts, the products can be made compatible.
+
+**Recommendations**
+
+* Data Format Transformation: Develop a data transformation process to convert the snapshot tables into a format compatible with the LightGBM model pipeline
+* Schema Mapping: Map the schema of one product to align with the schema of the other product, or vice versa, to ensure compatibility of the data structures
+* Data Contract Reconciliation: Reconcile the data contracts to ensure that the promises, SLA, and governance models are compatible and aligned
+* Governance Alignment: Align the governance models to ensure consistency in access control, metadata management, and audit logging
+* Technology Integration: Integrate the LightGBM model pipeline with the Spark ETL pipelines, or use a common technology stack
+* Data Asset Integration: Integrate the data assets to enable data exchange and processing between the products
+* Input/Output Port Adaptation: Adapt the input/output ports of both data products to facilitate integration
+* Control Port Alignment: Align the control ports of both data products to govern access, audit logs, and policy validation
+* Data Quality and Validation Checks: Implement data quality and validation checks to ensure the accuracy of the subscription data
+* Automated Testing and Rollback: Implement automated testing and rollback mechanisms to ensure the quality and fairness of the integrated data
+* Revisions to Ownership and Domain: Revise the ownership and domain of one product to reflect the new dependency on the other product
+* Revisions to Control Ports and Policy Validation: Revise the control ports and policy validation of one product to manage access governance, audit logs, and policy validation for the integrated subscription data
+
+**Conclusion**
+
+The two data products are not currently compatible due to the non-negotiable mismatches in data contracts, technology, and governance models. However, with significant integration and alignment efforts, the products can be made. It is recommended that the data product owners work together to address the mismatches and implement the suggested solutions to enable the integration of the two data products.

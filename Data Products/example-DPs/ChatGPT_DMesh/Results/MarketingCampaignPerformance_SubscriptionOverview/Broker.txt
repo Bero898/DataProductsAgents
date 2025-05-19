@@ -1,0 +1,35 @@
+**Compatibility Report**
+
+**Mismatches**
+
+The following mismatches have been identified by both data product owners:
+
+1. **Data formats:** Incompatible data formats between Data Product A (Python dictionary and structured data format, e.g., CSV, JSON)) and Data Product B (structured data format, e.g., CSV, JSON, and Python dictionary).
+2. **Schemas:** Different schemas between Data Product A (logical schema distributed through a SQL table and schema for aggregated statistics) and Data Product B (schema defined at 'https://schemas.company.com/logical/subscription-v1.json' and schema for aggregated statistics).
+3. **Data domains:** Different domains between Data Product A (Marketing_Domain and Sales_Domain) and Data Product B (Marketing_Domain and Sales_Domain).
+4. **Transformation Logic:** Different transformation logics between Data Product A (ad log extracts, Google Ads and Meta API ingest, and merging into a table, and Spark ETL pipelines) and Data Product B (ad log extracts, Google Ads and Meta API ingest, and merging into a table, and Spark ETL pipelines).
+5. **Control Ports:** Different control ports between Data Product A (policy checks for campaign ID validity and naming consistency, and managing access governance audit logs and policy validation for billing exposure) and Data Product B (policy checks for campaign ID validity and naming consistency, and managing access governance audit logs and policy validation for billing exposure).
+
+**Compatibility Analysis**
+
+After analyzing the mismatches, it is clear that there are significant differences between the two data products. However, most of the mismatches are negotiable, and can be resolved through data format conversion, schema reconciliation, domain integration, port adaptation, and transformation logic adaptation.
+
+**Recommendations**
+
+To resolve the mismatches, the following recommendations are made:
+
+1. **Data format conversion:** Convert Data Product A's Python dictionary to a structured data format compatible with Data Product B.
+2. **Schema reconciliation:** Reconcile the differences between Data Product A's logical schema and Data Product B's schema.
+3. **Domain integration:** Integrate the "Marketing_Domain" and "Sales_Domain" to enable data sharing and collaboration.
+4. **Port adaptation:** Adapt the Input/Output Ports, Transformation Logic, and Control Ports to work together seamlessly.
+5. **Data Format Standardization:** Establish a common data format that can accommodate the requirements of both data products.
+6. **Schema Harmonization:** Develop a unified schema that can incorporate the logical schemas of both data products.
+7. **Domain Alignment:** Ensure that the business requirements of the Sales_Domain and Marketing_Domain are aligned, and the data integration serves a common goal.
+8. **Transformation Logic Adaptation:** Modify the transformation logic of both data products to accommodate the integration requirements.
+9. **Cataloging:** Update the catalog record for Data Product B to reflect its new dependencies on Data Product A, including the subscription data asset and its logical schema.
+10. **Governance and Security:** Update the institutional knowledge and governance policies associated with Data Product A to account for the new dependencies on Data Product B. Ensure that the access revocation workflows in IAM and policy checks in Data Product A's control port are updated to account for the new data being accessed from Data Product B.
+11. **Data Lineage:** Update the data lineage of Data Product A to reflect the new dependencies on Data Product B.
+
+**Conclusion**
+
+Based on the analysis, the two data products are compatible, but require significant effort to resolve the mismatches. By implementing the suggested solutions, it is possible to integrate Data Product A and Data Product B, enabling more effective data sharing and collaboration between the marketing and sales domains.

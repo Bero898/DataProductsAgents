@@ -1,0 +1,46 @@
+**Compatibility Report**
+
+**Mismatches**
+
+The following mismatches have been identified by both data product owners:
+
+1. **Domain differences**: Data Product A belongs to the Finance_Domain, while Data Product B (Marketing Campaign Performance) belongs to the Marketing_Domain.
+2. **Schema differences**: Data Product A has a table showing attributed revenue, while Data Product B has aggregated statistics grouped by campaign ID.
+3. **Control port differences**: Data Product A enforces fiscal year alignment and aggregation standards, while Data Product B checks campaign ID validity and naming consistency.
+4. **Knowledge and governance differences**: The institutional knowledge and governance policies differ between Data Product A and Data Product B.
+5. **Data assets differences**: Data Product A has a data asset called "Revenue Attribution Data," while Data Product B has aggregated statistics.
+6. **Input port differences**: Data Product A consumes data from another data product 'DP3,' while Data Product B receives clickstream and attribution data from ad platforms.
+7. **Output port differences**: Data Product A provides aggregated revenue attribution data, and Data Product B exposes normalized campaign metrics.
+8. **Transformation logic differences**: Data Product A combines subscription billing with GL entries and marketing sources, while Data Product B involves ad log extracts, Google Ads and Meta API ingest.
+
+**Compatibility Analysis**
+
+The identified mismatches are significant, but most of them are negotiable. The differences in schema, control ports, domain, data assets, input/output ports, and transformation logic can be resolved through data transformation, input port modification, control port alignment, schema integration, and transformation logic modification. However, the differences in knowledge and governance may require more effort to align the institutional knowledge and governance policies.
+
+**Recommendations**
+
+1. **Data transformation**: Transform the data assets and output ports to accommodate the different data formats and structures.
+2. **Input port modification**: Modify the input ports to accommodate the different data sources and processing requirements.
+3. **Control port alignment**: Align the control ports to enforce common policies and standards.
+4. **Transformation logic modification**: Modify the transformation logic to accommodate the different data sources and processing requirements.
+5. **Domain alignment**: Align the domains (Marketing_Domain and Finance_Domain) by establishing a common understanding of the data products and their purposes.
+6. **Schema integration**: Integrate the schemas by transforming or adapting the data assets, input/output ports, and control ports to facilitate seamless integration.
+7. **Governance alignment**: Align the governance policies and institutional knowledge to ensure consistency and compliance.
+8. **Data asset integration**: Integrate the data assets by transforming or aggregating the data assets to make them compatible.
+10. **Output port modification**: Modify the output ports to accommodate the different data formats and structures.
+
+**Additional Recommendations**
+
+1. **Syntax updates**: Update the syntax of Data Product A's transformation logic to accommodate the aggregated statistics from Data Product B.
+2. **Semantic relationship updates**: Update the semantic relationships between the revenue attribution data and campaign performance data.
+3. **Cataloging updates**: Update the catalog records of both data products, including changes to their descriptions, keywords, and relationships.
+4. **Data domain updates**: Update the governance, policies, and institutional knowledge associated with each domain.
+5. **Control port updates**: Update the control ports of both data products, particularly in regards to policy enforcement.
+6. **Data contract updates**: Update the data contracts between data products and their consumers, as well as between dataproductA and its consumers.
+7. **Transformation logic updates**: Update the transformation logic of both data products to accommodate new complexities.
+8. **Input and output port updates**: Update the input ports of dataproductA and dataproductB, as well as their output ports.
+9. **Governance and policy updates**: Update the governance and policies associated with both data products, particularly in regards to fiscal mapping, partner source compliance, and campaign ID validity.
+
+**Conclusion**
+
+The two data products are compatible, but they require significant effort to resolve the mismatches. The data product owners must work together to implement the suggested solutions, transform the data assets, modify the input/output ports, align the control ports, and integrate the schemas. If all the mismatches are resolved, the data products can be integrated, enabling the finance and marketing teams to leverage the strengths of both data products and make more informed decisions.
