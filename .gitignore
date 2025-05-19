@@ -1,4 +1,5 @@
 /.mgpt-lib
 /workspace
 /metagpt
-
+/.deepeval
+/G-eval_tests/.env
