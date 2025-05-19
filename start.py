@@ -22,15 +22,18 @@ def load_data_product(file_path):
             return ""
 
 
-async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3):
+async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3, save_path: str = ""):
     dp1 = load_data_product(dp1_path)
     dp2 = load_data_product(dp2_path)
 
-    alice = DPOwner(name="Alice", successor= "Alice2", data_product=dp1, opponent_name="Bob", opponent_successor="Bob2", requester = True)
-    bob = DPOwner(name="Bob", successor= "Bob2", data_product=dp1, opponent_name="Alice", opponent_successor="Alice2", requester = False)
+    save_path_alice = f"{save_path}/Alice.txt"
+    save_path_bob = f"{save_path}/Bob.txt"
+
+    alice = DPOwner(name="Alice", successor= "Alice2", data_product=dp1, opponent_name="Bob", opponent_successor="Bob2", requester = True, report_file=save_path_alice)
+    bob = DPOwner(name="Bob", successor= "Bob2", data_product=dp2, opponent_name="Alice", opponent_successor="Alice2", requester = False, report_file=save_path_bob)
     #name: str = "Alice", successor: str = "Alice2", data_product: str = "", opponent_name: str = "", opponent_successor: str = "", requester: bool = True
-    alice2 = ContextDPOwner(name="Alice2", predecessor = "Alice", data_product=dp1, opponent_name="Bob2", opponent_predecessor = "Bob", requester = True)
-    bob2 = ContextDPOwner(name="Bob2", predecessor = "Bob", data_product=dp1, opponent_name="Alice2", opponent_predecessor = "Alice", requester = False)
+    alice2 = ContextDPOwner(name="Alice2", predecessor = "Alice", data_product=dp1, opponent_name="Bob2", opponent_predecessor = "Bob", requester = True, report_file=save_path_alice)
+    bob2 = ContextDPOwner(name="Bob2", predecessor = "Bob", data_product=dp2, opponent_name="Alice2", opponent_predecessor = "Alice", requester = False, report_file=save_path_bob)
     
     round_3_agents = [alice, bob] #use these agents for the first 3 rounds
 

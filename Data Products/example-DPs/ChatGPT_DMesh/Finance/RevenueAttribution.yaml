@@ -1,0 +1,81 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP8"
+  dct:title: "Revenue Attribution"
+  dct:description: "Breakdown of revenue sources tied to subscription tiers, campaigns, and upsell events. Used by finance and strategic planning teams."
+  pmt:domain: Finance_Domain
+  pmt:dataProvider: Nikhil
+  pmt:resourceProvider: Nikhil
+  pmt:domainOwner: Nikhil
+  pmt:domainParticipant:
+    - Nikhil
+    - Fiona
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2024-05-01
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - Revenue
+    - Attribution
+    - Finance
+  pmt:institutionalKnowledge: https://finance.company.com/glossary
+  pmt:estimatedValue: "Used for investor reporting and budget allocation; aligns spend to actual subscriber revenue."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP8
+  pmt:consumes:
+    - DP3
+
+  pmt:dataAsset:
+    - identifier: RevenueBreakdownAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Revenue Attribution Data"
+      dct:description: "Table showing attributed revenue by product tier and event source."
+      dct:language: "en"
+      pmt:domain: Finance_Domain
+      pmt:institutionalKnowledge: https://finance.company.com/glossary
+      pmt:logicalSchema: "https://schemas.company.com/logical/revenue-attribution-v1.json"
+      dcat:distribution:
+        - identifier: Revenue_SQL_Dist
+          rdf_type: pmt:Distribution
+          dct:title: "Revenue Attribution SQL"
+          dct:description: "Derived table refreshed weekly from billing and finance systems."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/revenue-sql-v1.json"
+          pmt:sourceSystem: Finance_Ledger_System
+          pmt:correspondingOutputPort: Revenue_Attribution_OutputPort
+
+  pmt:inputPort:
+    - identifier: Subscription_Attribution_Input
+      rdf_type: pmt:InputPort
+      dct:description: "Uses subscription data to associate customer value with product plans."
+      pmt:sourceSystem: Subscription_Billing_System
+      pmt:consumes:
+        - DP3
+      pmt:correspondingDataProduct: DP8
+
+  pmt:outputPort:
+    - identifier: Revenue_Attribution_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Revenue Attribution SQL"
+      dct:description: "Provides aggregated revenue attribution data across sources."
+      pmt:endpointURI: "https://sql.company.com/tables/revenue_attribution"
+      pmt:consumeInstructions: "Access requires Finance approval. Link usage to quarterly planning docs."
+      pmt:accessManagement: https://IAM.company.com/finance-access
+      pmt:exposesDataProduct: DP8
+      pmt:exposesDistribution: Revenue_SQL_Dist
+      pmt:dataContract:
+        identifier: RevenueAttribution_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Weekly update with audit log; reconciliation guarantees in place."
+        pmt:consumerPromise: "Only accessible for financial reporting or approved use cases."
+        pmt:appliesToPort: Revenue_Attribution_OutputPort
+
+  pmt:transformationLogic: "SQL model combining subscription billing with GL entries and marketing sources."
+  pmt:controlPort:
+    - identifier: Revenue_Attribution_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Policy enforcement on fiscal year alignment and aggregation standards."
+      pmt:correspondingDataProduct: DP8
+      pmt:managedPolicy:
+        - "https://policies.company.com/revenue-audit"
+        - "https://policies.company.com/fiscal-alignment"
+  pmt:enforcementLogic: "Checks in DBT to ensure fiscal mapping and partner source compliance."

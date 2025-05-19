@@ -1,0 +1,78 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP2"
+  dct:title: "Viewing History"
+  dct:description: "Real-time stream of content consumption events tied to customer interactions. Enables behavioral analytics, personalization, and churn prediction."
+  pmt:domain: Customer_Domain
+  pmt:dataProvider: Bob
+  pmt:resourceProvider: Bob
+  pmt:domainOwner: Bob
+  pmt:domainParticipant:
+    - Bob
+    - Clara
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2023-10-05
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - Streaming
+    - WatchEvents
+    - Analytics
+  pmt:institutionalKnowledge: Customer_Domain_Glossary
+  pmt:estimatedValue: "Feeds downstream ML models and personalization features; used by 3 use cases with ~15% engagement lift."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP2
+
+  pmt:dataAsset:
+    - identifier: ViewingEventDataAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Viewing Events"
+      dct:description: "Conceptual representation of events generated when users interact with video content."
+      dct:language: "en"
+      pmt:domain: Customer_Domain
+      pmt:institutionalKnowledge: Customer_Domain_Glossary
+      pmt:logicalSchema: "https://schemas.company.com/logical/viewing-events-v1.json"
+      dcat:distribution:
+        - identifier: ViewingHistory_Kafka_Stream
+          rdf_type: pmt:Distribution
+          dct:title: "Viewing History Kafka Stream"
+          dct:description: "Kafka-based distribution of real-time customer viewing events."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/viewing-kafka-v1.json"
+          pmt:sourceSystem: StreamingService_Logs
+          pmt:correspondingOutputPort: Viewing_Kafka_OutputPort
+
+  pmt:inputPort:
+    - identifier: StreamLogs_Input
+      rdf_type: pmt:InputPort
+      dct:description: "Consumes logs from internal content player systems."
+      pmt:sourceSystem: StreamingService_Logs
+      pmt:correspondingDataProduct: DP2
+
+  pmt:outputPort:
+    - identifier: Viewing_Kafka_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Viewing Events Kafka Topic"
+      dct:description: "Kafka topic exposing customer viewing event stream."
+      pmt:endpointURI: "https://kafka.company.com/topics/viewing-events"
+      pmt:consumeInstructions: "Request topic access via data access registry. Topic key = customer_id."
+      pmt:accessManagement: https://IAM.company.com/kafka-policy
+      pmt:exposesDataProduct: DP2
+      pmt:exposesDistribution: ViewingHistory_Kafka_Stream
+      pmt:dataContract:
+        identifier: ViewingEvents_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "<200ms latency from ingestion to stream. Schema changes versioned and backward compatible."
+        pmt:consumerPromise: "Subscribe with application name and purpose. Consumers must comply with usage policy."
+        pmt:SLA: https://sla.company.com/viewing-sla
+        pmt:appliesToPort: Viewing_Kafka_OutputPort
+
+  pmt:transformationLogic: "Flink-based stream processing: enrichment with content_id, schema evolution tracking, and deduplication."
+  pmt:controlPort:
+    - identifier: ViewingHistory_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Stream data governance enforcement (schema registry + field-level masking)"
+      pmt:correspondingDataProduct: DP2
+      pmt:managedPolicy:
+        - "https://policies.company.com/kafka-schema-enforcement"
+        - "https://policies.company.com/pseudonymization"
+  pmt:enforcementLogic: "Stream contracts validated via Confluent schema registry. Runtime assertions deployed in Flink jobs."

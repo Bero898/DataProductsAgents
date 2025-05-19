@@ -1,0 +1,69 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP7"
+  dct:title: "Support Tickets"
+  dct:description: "Structured and categorized customer support tickets from helpdesk systems. Useful for sentiment analysis, escalation detection, and service improvement."
+  pmt:domain: CustomerSupport_Domain
+  pmt:dataProvider: Janelle
+  pmt:resourceProvider: Janelle
+  pmt:domainOwner: Janelle
+  pmt:domainParticipant:
+    - Janelle
+    - Hugo
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2024-05-01
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - Support
+    - Tickets
+    - Issues
+  pmt:institutionalKnowledge: https://support.company.com/glossary
+  pmt:estimatedValue: "Improves customer service insights and escalations by connecting tickets with customer context."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP7
+
+  pmt:dataAsset:
+    - identifier: TicketAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Customer Support Tickets"
+      dct:description: "Captured ticket content, status, resolution notes, and timestamps."
+      dct:language: "en"
+      pmt:domain: CustomerSupport_Domain
+      pmt:institutionalKnowledge: https://support.company.com/glossary
+      pmt:logicalSchema: "https://schemas.company.com/logical/tickets-v1.json"
+      dcat:distribution:
+        - identifier: Ticket_SQL_Distribution
+          rdf_type: pmt:Distribution
+          dct:title: "Support Ticket Export"
+          dct:description: "Daily snapshot of resolved and open support tickets."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/tickets-sql-v1.json"
+          pmt:sourceSystem: SupportCRM_System
+          pmt:correspondingOutputPort: Support_Ticket_OutputPort
+
+  pmt:outputPort:
+    - identifier: Support_Ticket_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Support Ticket SQL"
+      dct:description: "Exported ticket table with customer_id linkage."
+      pmt:endpointURI: "https://sql.company.com/tables/support_tickets"
+      pmt:consumeInstructions: "Request access via helpdesk-data admin. Tag support data in usage reports."
+      pmt:accessManagement: https://IAM.company.com/support-policy
+      pmt:exposesDataProduct: DP7
+      pmt:exposesDistribution: Ticket_SQL_Distribution
+      pmt:dataContract:
+        identifier: SupportTickets_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Refreshed every 12 hours. Sanitized for PII."
+        pmt:consumerPromise: "Must not be used to trigger direct outbound communication."
+        pmt:appliesToPort: Support_Ticket_OutputPort
+
+  pmt:transformationLogic: "ETL process runs hourly: categorization, redaction, and linking with CRM IDs."
+  pmt:controlPort:
+    - identifier: SupportTicket_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Enforces policy on redaction and tagging of sensitive language."
+      pmt:correspondingDataProduct: DP7
+      pmt:managedPolicy:
+        - "https://policies.company.com/redaction-policy"
+  pmt:enforcementLogic: "Regex-based redaction scripts + classification QA check before publishing."

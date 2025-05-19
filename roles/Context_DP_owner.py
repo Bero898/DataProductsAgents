@@ -14,8 +14,10 @@ class ContextDPOwner(Role):
     opponent_name: str = ""
     predecessor: str = ""
     opponent_predecessor: str = ""
+    report_file: str = "compatibility_report.txt"  # File to store the report
 
-    def __init__(self, name: str = "Alice", predecessor: str = "Alice", opponent_predecessor: str = "Bob", data_product: str = "", opponent_name: str = "", requester: bool = True, **kwargs):
+
+    def __init__(self, name: str = "Alice", predecessor: str = "Alice", opponent_predecessor: str = "Bob", data_product: str = "", opponent_name: str = "", requester: bool = True, report_file: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
@@ -23,6 +25,7 @@ class ContextDPOwner(Role):
         self.predecessor = predecessor
         self.opponent_predecessor = opponent_predecessor
         self.requester = requester #requester goes first, requested (i.e. when False) goes second
+        self.report_file = report_file
         self.set_actions([ContextAwareProductReader, ContextAwareProductComposer, MismatchIdentifier])
         self._watch([ContextAwareProductReader, ContextAwareProductComposer, MismatchIdentifier])
     
@@ -269,6 +272,10 @@ class ContextDPOwner(Role):
             
             if assessmentA and assessmentB:
                 result = await todo.run(assessmentA = assessmentA, assessmentB = assessmentB)
+                
+                with open(self.report_file, "w") as file: 
+                    file.write(result)
+
                 msg = Message(
                     content=result,
                     role=self.profile,

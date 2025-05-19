@@ -14,14 +14,16 @@ class DPOwner(Role):
     opponent_name: str = ""
     successor: str = ""
     opponent_predecessor: str = ""
+    report_file: str = "compatibility_report.txt"  # File to store the report
 
-    def __init__(self, name: str = "Alice", successor: str = "Alice2", data_product: str = "", opponent_name: str = "", opponent_successor: str = "", requester: bool = True, **kwargs):
+    def __init__(self, name: str = "Alice", successor: str = "Alice2", data_product: str = "", opponent_name: str = "", opponent_successor: str = "", requester: bool = True, report_file: str = "" ,   **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
         self.opponent_name = opponent_name
         self.opponent_successor = opponent_successor
         self.successor = successor
+        self.report_file = report_file
         self.requester = requester #requester goes first, requested (i.e. when False) goes second
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
@@ -181,6 +183,10 @@ class DPOwner(Role):
             
             if assessmentA and assessmentB:
                 result = await todo.run(assessmentA = assessmentA, assessmentB=assessmentB)
+                
+                with open(self.report_file, "w") as file: 
+                    file.write(result)
+
                 msg = Message(
                     content=result,
                     role=self.profile,
