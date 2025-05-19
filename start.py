@@ -22,13 +22,16 @@ def load_data_product(file_path):
             return ""
 
 
-async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3):
+async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3, save_path: str = ""):
+    
     dp1 = load_data_product(dp1_path)
     dp2 = load_data_product(dp2_path)
 
+    save_path_broker = f"{save_path}/Broker.txt"
+
     alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob", broker = "Connor")
     bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice", broker = "Connor")
-    broker = DMBroker(name= "Connor", ownerA="Alice", ownerB="Bob")
+    broker = DMBroker(name= "Connor", ownerA="Alice", ownerB="Bob", report_file=save_path_broker)
 
 
     employees = [alice, bob, broker]

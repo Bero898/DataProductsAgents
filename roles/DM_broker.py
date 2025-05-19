@@ -16,7 +16,7 @@ class DMBroker(Role):
     ownerB: str = ""  # Owner of the second data product
     report_file: str = "compatibility_report.txt"  # File to store the report
 
-    def __init__(self, name: str = "Connor", ownerA: str = "", ownerB: str = "", **kwargs):
+    def __init__(self, name: str = "Connor", ownerA: str = "", ownerB: str = "", report_file: str= "" ,**kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.ownerA = ownerA
@@ -25,6 +25,7 @@ class DMBroker(Role):
         self._watch([PerformBrokerAnalysis, CreateCompatibilityReport])
         self.current_round = 1  # Default round
         self.goal = "First create a broker analysis when you have the descriptions of the two data products (provided by "+ self.ownerA +" and "+ self.ownerB +"). Then you should create a compatibility report when you have the mismatches of the two data products(provided by "+ self.ownerA +" and "+ self.ownerB +")."
+        self.report_file = report_file
 
     async def _act(self) -> Message:
         logger.info(f"{self._setting}: to do {self.rc.todo}({self.rc.todo.name})")
