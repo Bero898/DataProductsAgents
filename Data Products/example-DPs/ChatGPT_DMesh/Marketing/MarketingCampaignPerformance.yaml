@@ -1,0 +1,76 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP4"
+  dct:title: "Marketing Campaign Performance"
+  dct:description: "Evaluates effectiveness of campaigns based on impressions, clicks, and conversion. Used by marketing to optimize budget allocation."
+  pmt:domain: Marketing_Domain
+  pmt:dataProvider: Fred
+  pmt:resourceProvider: Fred
+  pmt:domainOwner: Fred
+  pmt:domainParticipant:
+    - Fred
+    - Dana
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2023-11-01
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - Campaign
+    - Performance
+    - Attribution
+  pmt:institutionalKnowledge: Marketing_Domain_Glossary
+  pmt:estimatedValue: "Helps reallocate 15–20% of ad spend more effectively across channels."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP4
+
+  pmt:dataAsset:
+    - identifier: CampaignPerformanceAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Campaign Metrics"
+      dct:description: "Aggregated statistics including impressions, clicks, conversions, grouped by campaign ID."
+      dct:language: "en"
+      pmt:domain: Marketing_Domain
+      pmt:institutionalKnowledge: Marketing_Domain_Glossary
+      pmt:logicalSchema: "https://schemas.company.com/logical/campaign-v1.json"
+      dcat:distribution:
+        - identifier: Campaign_SQL_Dist
+          rdf_type: pmt:Distribution
+          dct:title: "Campaign Performance SQL Table"
+          dct:description: "Daily updated campaign metrics table from ad platforms."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/campaign-sql-v1.json"
+          pmt:sourceSystem: AdCampaignsManager
+          pmt:correspondingOutputPort: Campaign_SQL_OutputPort
+
+  pmt:inputPort:
+    - identifier: AdPlatformLogs_Input
+      rdf_type: pmt:InputPort
+      dct:description: "Clickstream and attribution data from ad platforms."
+      pmt:sourceSystem: AdCampaignsManager
+      pmt:correspondingDataProduct: DP4
+
+  pmt:outputPort:
+    - identifier: Campaign_SQL_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Marketing Campaign Metrics SQL"
+      dct:description: "Exposes normalized campaign metrics through SQL for dashboarding."
+      pmt:endpointURI: "https://sql.company.com/tables/campaign_performance"
+      pmt:consumeInstructions: "Access through marketing data catalog. Login required."
+      pmt:accessManagement: https://IAM.company.com/marketing-policy
+      pmt:exposesDataProduct: DP4
+      pmt:exposesDistribution: Campaign_SQL_Dist
+      pmt:dataContract:
+        identifier: MarketingCampaign_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Metrics refreshed daily by 03:00 UTC. Campaign taxonomy is consistent."
+        pmt:consumerPromise: "Consumers must not blend campaign metrics with 3rd-party attribution."
+        pmt:appliesToPort: Campaign_SQL_OutputPort
+
+  pmt:transformationLogic: "Ad log extracts, Google Ads and Meta API ingest, normalized and merged into table."
+  pmt:controlPort:
+    - identifier: MarketingCampaign_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Policy checks for campaign ID validity and naming consistency."
+      pmt:correspondingDataProduct: DP4
+      pmt:managedPolicy:
+        - "https://policies.company.com/campaign-governance"
+  pmt:enforcementLogic: "SQL views validate schema structure and field mappings nightly."

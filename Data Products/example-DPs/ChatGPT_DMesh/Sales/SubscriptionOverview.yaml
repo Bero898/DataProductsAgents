@@ -1,0 +1,82 @@
+data_product:
+  rdf_type: pmt:DataProduct
+  dct:identifier: "DP3"
+  dct:title: "Subscription Overview"
+  dct:description: "Comprehensive snapshot of each customer's subscription lifecycle, status, and plan metadata. Used across sales, analytics, and billing reconciliation."
+  pmt:domain: Sales_Domain
+  pmt:dataProvider: Tom
+  pmt:resourceProvider: Tom
+  pmt:domainOwner: Erica
+  pmt:domainParticipant:
+    - Erica
+    - Tom
+  dct:language: "en"
+  pmt:type: pmt:DataProduct
+  dct:issued: 2023-10-20
+  dct:modified: 2024-05-01
+  dcat:keyword:
+    - Subscription
+    - Billing
+    - Customer
+  pmt:institutionalKnowledge: Sales_Domain_Knowledge
+  pmt:estimatedValue: "Reduces subscription lookup delays; used in 4 sales dashboards. Value estimate: 100+ hours saved/month."
+  pmt:catalogRecord: https://catalog.company.com/resources/DP3
+  pmt:consumes:
+    - DP1
+
+  pmt:dataAsset:
+    - identifier: SubscriptionDataAsset
+      rdf_type: pmt:DataAsset
+      dct:title: "Customer Subscriptions"
+      dct:description: "Details the subscription period, plan type, renewal status, and associated billing account."
+      dct:language: "en"
+      pmt:domain: Sales_Domain
+      pmt:institutionalKnowledge: Sales_Domain_Knowledge
+      pmt:logicalSchema: "https://schemas.company.com/logical/subscription-v1.json"
+      dcat:distribution:
+        - identifier: Subscription_SQL_Dist
+          rdf_type: pmt:Distribution
+          dct:title: "Subscription SQL Distribution"
+          dct:description: "Snapshot table updated daily from transactional sources."
+          pmt:resourceType: pmt:Distribution
+          pmt:physicalSchema: "https://schemas.company.com/physical/subscription-sql-v1.json"
+          pmt:sourceSystem: Subscription_Billing_System
+          pmt:correspondingOutputPort: Subscription_SQL_OutputPort
+
+  pmt:inputPort:
+    - identifier: CRM_Subscription_Join_Input
+      rdf_type: pmt:InputPort
+      dct:description: "Joins customer profile with active subscription data."
+      pmt:sourceSystem: Sales_CRM_System
+      pmt:consumes:
+        - DP1
+      pmt:correspondingDataProduct: DP3
+
+  pmt:outputPort:
+    - identifier: Subscription_SQL_OutputPort
+      rdf_type: pmt:OutputPort
+      dct:title: "Subscription SQL Output"
+      dct:description: "Accessible table for BI tools and other consumers."
+      pmt:endpointURI: "https://sql.company.com/tables/subscription"
+      pmt:consumeInstructions: "Access via data marketplace; must sign billing data agreement."
+      pmt:accessManagement: Sales_Domain_Data_Warehouse_Access_Management
+      pmt:exposesDataProduct: DP3
+      pmt:exposesDistribution: Subscription_SQL_Dist
+      pmt:dataContract:
+        identifier: Subscription_DataContract
+        rdf_type: pmt:DataContract
+        pmt:providerPromise: "Synced nightly from billing + CRM."
+        pmt:consumerPromise: "Consumers must not expose billing identifiers externally."
+        pmt:SLA: Sales_Domain_Data_Warehouse_SLA
+        pmt:appliesToPort: Subscription_SQL_OutputPort
+
+  pmt:transformationLogic: "Spark ETL pipelines performing joins, status mappings, and partitioning on region/date."
+  pmt:controlPort:
+    - identifier: SubscriptionOverview_ControlPort
+      rdf_type: pmt:ControlPort
+      dct:description: "Access governance audit logs and policy validation for billing exposure."
+      pmt:correspondingDataProduct: DP3
+      pmt:managedPolicy:
+        - "https://policies.company.com/billing-exposure"
+        - "https://policies.company.com/data-lifecycle"
+  pmt:enforcementLogic: "Access revocation workflows in IAM and policy checks in ingestion pipelines."
