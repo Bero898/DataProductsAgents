@@ -1,0 +1,41 @@
+**Mismatches**
+
+A summary of the mismatches identified by both data product owners:
+
+* Non-negotiable factors:
+	+ Incompatible data formats (SQL vs. Kafka-based distribution)
+	+ Different schemas (hierarchical vs. complex structure)
+	+ Distribution modes (batch processing vs. real-time streaming)
+* Negotiable factors:
+	+ Differences in language (both English)
+	+ Ownership and domain (different domains, but can be bridged)
+	+ Transformation logic (different technologies, but can be adapted or replaced)
+
+**Compatibility Analysis**
+
+Based on the identified mismatches, the data products are not compatible in their current state. However, the negotiable factors provide opportunities for resolution. The non-negotiable factors require significant effort to resolve, but the negotiable factors can be bridged with collaboration and adaptation.
+
+**Recommendations**
+
+To resolve the mismatches, the following recommendations are suggested:
+
+1. **Data Format Conversion:** Develop a data transformation layer to convert Data Product B's Kafka-based distribution to a format compatible with Data Product A's SQL format.
+2. **Schema Integration:** Create a unified schema that can accommodate both data products' processing modes (real-time streaming and batch processing).
+3. **Transformation Logic Adaptation:** Adapt or replace the transformation logics to accommodate the integrated data product.
+4. **Data Virtualization or Federation:** Use data virtualization or federation to provide a unified view of the data without physically integrating the data products.
+5. **Involve Data Product Owners:** Engage Erica and Alice, the data product owners, to discuss requirements, feasibility, and business benefits of integration.
+6. **Business Benefits Assessment:** Assess the business benefits of integrating the data products and weigh them against the technical challenges.
+7. **Clear Plan Development:** Develop a clear plan for data transformation, integration, or virtualization to ensure seamless integration.
+8. **Domain and Ownership Collaboration:** Facilitate collaboration between the Sales Domain and Customer Domain to ensure seamless integration of the Viewing History data product into the Customer Profile data product.
+9. **Update Catalog Records and Data Contracts:** Update the catalog records and data contracts to reflect the new dependencies and promises related to the handling of Viewing History data.
+10. **Control and Governance Updates:** Update the control port and managed policy to enforce GDPR compliance, lineage logging policies, and access management instructions.
+11. **Lineage and Provenance Updates:** Update the lineage logging policies and provenance to track the origin and processing of the Viewing History data.
+12. **Data Integration and Mapping:** Develop a data integration and mapping strategy to bridge the domains and ensure proper data integration.
+13. **Syntax, Semantics, and Cataloging:** Update the syntax, semantics, and cataloging of the Customer Profile data product to reflect the new dependencies on the Viewing History data product.
+14. **Security and Access Management:** Update the access management instructions and consume instruction to ensure secure access to the Customer Profile data product.
+15. **Data Virtualization or Federation:** Implement data virtualization or federation to provide a unified view of the data without physically integrating the data products.
+16. **Schema Standardization:** Standardize the schemas of both data products to ensure compatibility and ease of integration.
+
+**Conclusion**
+
+The data products are not compatible in their current state due to non-negotiable mismatches. However, with the suggested recommendations, it is possible to integrate Data Product A and Data Product B, enabling the creation of a more comprehensive and powerful data product. The integration will require significant effort, but the business benefits of integration outweigh the technical challenges.
