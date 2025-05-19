@@ -14,8 +14,9 @@ class DPOwner(Role):
     profile: str = "Data Product Owner"
     data_product: str = ""
     opponent_name: str = ""
+    report_file: str = "compatibility_report.txt"  # File to store the report
 
-    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", **kwargs):
+    def __init__(self, name: str = "Alice", data_product: str = "", opponent_name: str = "", report_file: str = "", **kwargs):
         super().__init__(name=name, **kwargs)
         self.name = name
         self.data_product = data_product
@@ -23,6 +24,7 @@ class DPOwner(Role):
         self.set_actions([SimpleDataProductReader, SimpleDataProductComposer, ContextAwareProductComposer, ContextAwareProductReader, MismatchIdentifier])
         self._watch([SimpleDataProductReader, SimpleDataProductComposer, MismatchIdentifier])
         self.current_round = 1  # Default round
+        self.report_file = report_file
 
     
     async def _observe(self) -> int:
@@ -166,6 +168,10 @@ class DPOwner(Role):
             
             if assessmentA and assessmentB:
                 result = await todo.run(assessmentA=assessmentA, assessmentB=assessmentB)
+                # save result to file
+                with open(self.report_file, "w") as file:
+                    file.write(result)
+
                 msg = Message(
                     content=result,
                     role=self.profile,

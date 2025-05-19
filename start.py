@@ -21,12 +21,15 @@ def load_data_product(file_path):
             return ""
 
 
-async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3):
+async def compatibility_assessment(dp1_path, dp2_path, investment: float = 3.0, n_round: int = 3, save_path: str = ""):
     dp1 = load_data_product(dp1_path)
     dp2 = load_data_product(dp2_path)
 
-    alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob")
-    bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice")
+    save_path_alice = f"{save_path}/Alice.txt"
+    save_path_bob = f"{save_path}/Bob.txt"
+
+    alice = DPOwner(name="Alice", data_product=dp1, opponent_name="Bob", report_file = save_path_alice)
+    bob = DPOwner(name="Bob", data_product=dp2, opponent_name="Alice", report_file= save_path_bob)
 
     employees = [alice, bob]
     
