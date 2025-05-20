@@ -1,0 +1,22 @@
+**Mismatches**
+
+- Incompatible data formats: Data Product A uses a snapshot table, while Data Product B uses a LightGBM model pipeline in Airflow.
+- Different schemas: Data Product A has a logical schema defined at 'https://schemas.company.com/logical/subscription-v1.json', while Data Product B doesn't specify a schema.
+- Incompatible data contracts: Data Product A has a data contract that defines provider and consumer promises, while Data Product B has a data contract that guarantees a minimum AUC of 0.85 and requires human oversight in customer contact.
+- Different governance models: Data Product A has a control port governing access, audit logs, and policy validation, while Data Product B has a control port governing model metadata, fairness checks, and audit logs.
+
+**Compatibility Analysis**
+
+The mismatches identified are a mix of negotiable and non-negotiable factors. The non-negotiable factors, such as incompatible data formats, different schemas, incompatible data contracts, and different governance models, would require significant transformations and reconciliations to integrate the two data products. However, the negotiable factors, such as input/output ports and control ports, offer opportunities for adaptation and integration.
+
+**Recommendations**
+
+1. **Data format transformation**: Transform the data formats of Data Product A and Data Product B to a common format, such as CSV or JSON, to facilitate data exchange.
+2. **Schema alignment**: Align the schemas of Data Product A and Data Product B to ensure compatibility, either by mapping the schema of one product to the other or by defining a common schema.
+3. **Data contract reconciliation**: Reconcile the data contracts of Data Product A and Data Product B to ensure compatibility, either by modifying the contracts or by defining a new contract that meets the requirements of both products.
+4. **Governance alignment**: Align the governance models of Data Product A and Data Product B to ensure consistency in access control, metadata management, and audit logging.
+5. **Technology integration**: Integrate the technologies used by Data Product A (snapshot table) and Data Product B (LightGBM model pipeline in Airflow) to facilitate integration and data exchange.
+
+**Conclusion**
+
+The overall compatibility of the two data products is LOW due to the non-negotiable mismatches can be resolved with significant development and testing efforts. If the non-negotiable mismatches are resolved, the data products are not compatible. However, if the negotiable mismatches are resolved, the data products are compatible.
