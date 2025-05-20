@@ -1,0 +1,23 @@
+**Compatibility Report**
+
+**Mismatches**
+Since there are no mismatches identified by data product owner A, this section will only include the mismatches identified by data product owner B:
+
+* (Please provide the mismatches identified by data product owner B)
+
+**Compatibility Analysis**
+Based on the provided mismatches, an analysis of the compatibility of the two data products will be conducted. If the mismatches are negotiable, it means that the data products can be made compatible with some adjustments. If the mismatches are non-negotiable, it means that the data products are not compatible.
+
+(Please provide the mismatches to proceed with the compatibility analysis)
+
+**Recommendations**
+Based on the analysis, recommendations for resolving the mismatches will be provided. If the mismatches are negotiable, recommendations will be given to resolve them. If the mismatches are non-negotiable, no recommendations will be provided.
+
+(Please provide the mismatches to proceed with the recommendations)
+
+**Conclusion**
+Based on the analysis and recommendations, a conclusion on the overall compatibility of the two data products will be stated. If there are non-negotiable mismatches, the data products will be stated as not compatible. If there are only negotiable mismatches, the conclusion will state that the data products are compatible.
+
+(Please provide the mismatches to proceed with the conclusion)
+
+Please provide the mismatches identified by data product owner B to proceed with the report.
