@@ -1,4 +1,4 @@
-ContentMetadata_CustomerProfile
+dContentMetadata_CustomerProfile
 ContentMetadata_ViewingHistory
 ContentMetadata_SupportTickets
 ContentMetadata_ChurnPredictionModelOutput
