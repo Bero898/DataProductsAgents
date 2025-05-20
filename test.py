@@ -25,11 +25,17 @@ async def main():
         name1 = get_product_name(dp1)
         name2 = get_product_name(dp2)
         save_path = f"./Data Products/example-DPs/ChatGPT_DMesh/Results/{name1}_{name2}"
+        # Check if this pair has already been processed (e.g., Broker.txt exists)
+        broker_file = os.path.join(save_path, "Broker.txt")
+        if os.path.exists(broker_file):
+            print(f"Skipping pair {idx}/{len(pairs)} ({name1}, {name2}) - already processed.")
+            continue
         os.makedirs(save_path, exist_ok=True)
         print(f"\n=== Testing pair {idx}/{len(pairs)} ===\n{dp1}\n{dp2}\nResults will be saved to: {save_path}\n")
-        await compatibility_assessment(dp1, dp2, investment=3.0, n_round=10, save_path=save_path)
+        await compatibility_assessment(dp1, dp2, investment=3.0, n_round=3, save_path=save_path)
         print("Waiting 5 seconds before next pair...\n")
-        time.sleep(5)
+        await asyncio.sleep(5)  # Sleep for 5 seconds between pairs
+    print("All pairs processed!")  # <-- Add this line
 
 if __name__ == "__main__":
     asyncio.run(main())
