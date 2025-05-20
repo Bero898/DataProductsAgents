@@ -1,0 +1,2 @@
+ContentMetadata_CustomerProfile
+ContentMetadata_ViewingHistory
