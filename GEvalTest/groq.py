@@ -11,7 +11,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-def ask_groq(
+def groqcall(
     message: str,
     system_prompt: str = "Please answer in English only",
     temperature: float = 0.6,
@@ -38,7 +38,7 @@ def ask_groq(
 
 # Example usage:
 if __name__ == "__main__":
-    reply = ask_groq(
+    reply = groqcall(
         "How was your day?",
         temperature=0.7,
         max_completion_tokens=1000,

@@ -1,7 +1,7 @@
 import os
 from pydantic import BaseModel
 from deepeval.models import DeepEvalBaseLLM
-from groq import ask_groq  # Adjust import if needed
+from GEvalTest.groq import groqcall  # Adjust import if needed
 
 class GroqDeepSeekLLM(DeepEvalBaseLLM):
     def __init__(self):
@@ -25,7 +25,7 @@ class GroqDeepSeekLLM(DeepEvalBaseLLM):
             "Output ONLY the JSON object, nothing else. If you include anything else, "
             "your answer will be considered invalid."
         )
-        response = ask_groq(
+        response = groqcall(
             message=prompt,
             system_prompt=system_prompt,
             temperature=0.0,

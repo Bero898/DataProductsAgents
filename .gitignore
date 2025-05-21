@@ -2,4 +2,4 @@
 /workspace
 /metagpt
 /.deepeval
-/G-eval_tests/.env
+/GEvalTest/.env
