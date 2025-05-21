@@ -9,7 +9,7 @@ from deepeval import evaluate
 from GEvalTest.ask_groq import GroqDeepSeekLLM
 
 GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
-MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh"
+MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh/Results"
 OUTPUT_FILENAMES = ["Alice.txt", "Bob.txt"]
 RESULTS_DIR = "./GEvalTest/results"
 COMPLETED_LOG = "./GEvalTest/completed_g_eval.txt"
@@ -122,6 +122,8 @@ def main():
         dir_name = f"{dp1_name}_{dp2_name}"
         alt_dir_name = f"{dp2_name}_{dp1_name}"
         output_dir = os.path.join(MODEL_OUTPUT_DIR, dir_name)
+        print(f"Checking for model output dir: {output_dir}")
+        print(f"Checking for alt model output dir: {alt_dir_name}")
         if not os.path.exists(output_dir):
             output_dir = os.path.join(MODEL_OUTPUT_DIR, alt_dir_name)
             if not os.path.exists(output_dir):
