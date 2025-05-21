@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output correctly identifies non-negotiable mismatches, and provides detailed recommendations, but contradicts expected output's conclusion of compatibility."
+}

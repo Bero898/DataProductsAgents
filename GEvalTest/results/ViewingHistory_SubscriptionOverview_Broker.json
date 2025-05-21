@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output provides more detailed mismatches and recommendations, but lacks domain mismatch and dependency information, and has different categorization of mismatches."
+}

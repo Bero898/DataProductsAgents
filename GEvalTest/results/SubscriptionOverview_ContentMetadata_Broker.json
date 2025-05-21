@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "Actual Output omits 'Privacy Level' and 'No declared dependency' mismatches, and does not mention 'identifier alignment or joinable schema' in recommendations."
+}
