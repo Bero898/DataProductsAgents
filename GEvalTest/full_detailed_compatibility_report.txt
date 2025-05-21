@@ -85,7 +85,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Customer Profile (DP1) ↔ Content Metadata (DP6)
+### Compatibility Report: CustomerProfile (DP1) ↔ ContentMetadata (DP6)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs ContentOps_Domain.
@@ -110,7 +110,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Customer Profile (DP1) ↔ Support Tickets (DP7)
+### Compatibility Report: CustomerProfile (DP1) ↔ SupportTickets (DP7)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs CustomerSupport_Domain.
@@ -132,7 +132,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Customer Profile (DP1) ↔ Revenue Attribution (DP8)
+### Compatibility Report: CustomerProfile (DP1) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs Finance_Domain.
@@ -157,7 +157,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Viewing History (DP2) ↔ Subscription Overview (DP3)
+### Compatibility Report: ViewingHistory (DP2) ↔ SubscriptionOverview (DP3)
 
 **Mismatches**
 * Data Format: Viewing History uses Kafka while Subscription Overview uses SQL.
@@ -182,7 +182,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Viewing History (DP2) ↔ Marketing Campaign Performance (DP4)
+### Compatibility Report: ViewingHistory (DP2) ↔ MarketingCampaignPerformance (DP4)
 
 **Mismatches**
 * Data Format: Viewing History uses Kafka while Marketing Campaign Performance uses SQL.
@@ -210,7 +210,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Viewing History (DP2) ↔ Churn Prediction Model Output (DP5)
+### Compatibility Report: ViewingHistory (DP2) ↔ ChurnPredictionModelOutput (DP5)
 
 **Mismatches**
 * Data Format: Viewing History uses Kafka while Churn Prediction Model Output uses SQL.
@@ -232,7 +232,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Viewing History (DP2) ↔ Content Metadata (DP6)
+### Compatibility Report: ViewingHistory (DP2) ↔ ContentMetadata (DP6)
 
 **Mismatches**
 * Data Format: Viewing History uses Kafka while Content Metadata uses SQL.
@@ -260,7 +260,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Viewing History (DP2) ↔ Support Tickets (DP7)
+### Compatibility Report: ViewingHistory (DP2) ↔ SupportTickets (DP7)
 
 **Mismatches**
 * Data Format: Viewing History uses Kafka while Support Tickets uses SQL.
@@ -285,7 +285,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Viewing History (DP2) ↔ Revenue Attribution (DP8)
+### Compatibility Report: ViewingHistory (DP2) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Data Format: Viewing History uses Kafka while Revenue Attribution uses SQL.
@@ -313,7 +313,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Subscription Overview (DP3) ↔ Marketing Campaign Performance (DP4)
+### Compatibility Report: SubscriptionOverview (DP3) ↔ MarketingCampaignPerformance (DP4)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs Marketing_Domain.
@@ -338,7 +338,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Subscription Overview (DP3) ↔ Churn Prediction Model Output (DP5)
+### Compatibility Report: SubscriptionOverview (DP3) ↔ ChurnPredictionModelOutput (DP5)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs DataScience_Domain.
@@ -357,7 +357,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Subscription Overview (DP3) ↔ Content Metadata (DP6)
+### Compatibility Report: SubscriptionOverview (DP3) ↔ ContentMetadata (DP6)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs ContentOps_Domain.
@@ -382,7 +382,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Subscription Overview (DP3) ↔ Support Tickets (DP7)
+### Compatibility Report: SubscriptionOverview (DP3) ↔ SupportTickets (DP7)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs CustomerSupport_Domain.
@@ -404,7 +404,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Subscription Overview (DP3) ↔ Revenue Attribution (DP8)
+### Compatibility Report: SubscriptionOverview (DP3) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs Finance_Domain.
@@ -426,7 +426,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Churn Prediction Model Output (DP5)
+### Compatibility Report: MarketingCampaignPerformance (DP4) ↔ ChurnPredictionModelOutput (DP5)
 
 **Mismatches**
 * Domain Mismatch: Marketing_Domain vs DataScience_Domain.
@@ -451,7 +451,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Content Metadata (DP6)
+### Compatibility Report: MarketingCampaignPerformance (DP4) ↔ ContentMetadata (DP6)
 
 **Mismatches**
 * Domain Mismatch: Marketing_Domain vs ContentOps_Domain.
@@ -473,7 +473,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Support Tickets (DP7)
+### Compatibility Report: MarketingCampaignPerformance (DP4) ↔ SupportTickets (DP7)
 
 **Mismatches**
 * Domain Mismatch: Marketing_Domain vs CustomerSupport_Domain.
@@ -498,7 +498,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Revenue Attribution (DP8)
+### Compatibility Report: MarketingCampaignPerformance (DP4) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Domain Mismatch: Marketing_Domain vs Finance_Domain.
@@ -520,7 +520,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Churn Prediction Model Output (DP5) ↔ Content Metadata (DP6)
+### Compatibility Report: ChurnPredictionModelOutput (DP5) ↔ ContentMetadata (DP6)
 
 **Mismatches**
 * Domain Mismatch: DataScience_Domain vs ContentOps_Domain.
@@ -545,7 +545,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Churn Prediction Model Output (DP5) ↔ Support Tickets (DP7)
+### Compatibility Report: ChurnPredictionModelOutput (DP5) ↔ SupportTickets (DP7)
 
 **Mismatches**
 * Domain Mismatch: DataScience_Domain vs CustomerSupport_Domain.
@@ -567,7 +567,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Churn Prediction Model Output (DP5) ↔ Revenue Attribution (DP8)
+### Compatibility Report: ChurnPredictionModelOutput (DP5) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Domain Mismatch: DataScience_Domain vs Finance_Domain.
@@ -592,7 +592,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Content Metadata (DP6) ↔ Support Tickets (DP7)
+### Compatibility Report: ContentMetadata (DP6) ↔ SupportTickets (DP7)
 
 **Mismatches**
 * Domain Mismatch: ContentOps_Domain vs CustomerSupport_Domain.
@@ -617,7 +617,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Content Metadata (DP6) ↔ Revenue Attribution (DP8)
+### Compatibility Report: ContentMetadata (DP6) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Domain Mismatch: ContentOps_Domain vs Finance_Domain.
@@ -639,7 +639,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Support Tickets (DP7) ↔ Revenue Attribution (DP8)
+### Compatibility Report: SupportTickets (DP7) ↔ RevenueAttribution (DP8)
 
 **Mismatches**
 * Domain Mismatch: CustomerSupport_Domain vs Finance_Domain.
