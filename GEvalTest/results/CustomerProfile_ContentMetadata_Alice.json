@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The actual output omits key mismatches like domain mismatch and privacy levels, which are critical in the expected output."
+}

@@ -1,0 +1,4 @@
+{
+  "score": 0.4,
+  "reason": "The Actual Output omits key details like Domain Mismatch and lacks declared dependencies, differing from the Expected Output."
+}

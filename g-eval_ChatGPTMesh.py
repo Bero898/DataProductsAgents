@@ -136,7 +136,7 @@ def main():
         input_prompt = f"DP1 YAML:\n{input1}\n\nDP2 YAML:\n{input2}"
 
         for output_file in OUTPUT_FILENAMES:
-            pair_key = f"{dp1_name}_{dp2_name}|{output_file.replace('.txt','')}"
+            pair_key = f"{dp1_name}_{dp2_name}_{output_file.replace('.txt','')}"
             if pair_key in completed:
                 print(f"Skipping already completed: {pair_key}")
                 continue
@@ -155,8 +155,8 @@ def main():
             result = robust_evaluate(test_case, correctness_metric)
             save_result(pair_key, result)
             save_completed(pair_key)
-            print(f"Saved result for {pair_key}. Sleeping 5 seconds...\n")
-            time.sleep(5)
+            print(f"Saved result for {pair_key}. Sleeping 30 seconds...\n")
+            time.sleep(30)
 
     print("All outputs processed!")
 

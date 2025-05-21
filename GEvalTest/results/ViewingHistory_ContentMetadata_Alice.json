@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The Actual Output omits key details like Domain Mismatch and Privacy Level, which are present in the Expected Output, leading to a different conclusion about compatibility."
+}
