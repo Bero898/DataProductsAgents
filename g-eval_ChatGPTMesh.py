@@ -5,14 +5,14 @@ import json
 
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
-from ask_groq import GroqDeepSeekLLM
 from deepeval import evaluate
+from GEvalTest.ask_groq import GroqDeepSeekLLM
 
-GROUND_TRUTH_PATH = "./G-eval_tests/full_detailed_compatibility_report.txt"
+GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
 MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh"
 OUTPUT_FILENAMES = ["Alice.txt", "Bob.txt"]
-RESULTS_DIR = "./G-eval_tests/results"
-COMPLETED_LOG = "./G-eval_tests/completed_g_eval.txt"
+RESULTS_DIR = "./GEvalTest/results"
+COMPLETED_LOG = "./GEvalTest/completed_g_eval.txt"
 
 # Map data file path to (DP name, DP number)
 data_products = [
@@ -109,7 +109,9 @@ def main():
         ]
         gt_body = None
         for title in possible_titles:
+            print(f"Checking for ground truth: {title}")
             if title in ground_truth:
+                print(f"Found ground truth for {title}")
                 gt_body = ground_truth[title]
                 break
         if not gt_body:

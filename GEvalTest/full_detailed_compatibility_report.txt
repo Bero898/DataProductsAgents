@@ -1,5 +1,5 @@
 
-### Compatibility Report: Customer Profile (DP1) ↔ Viewing History (DP2)
+### Compatibility Report: CustomerProfile (DP1) ↔ ViewingHistory (DP2)
 
 **Mismatches**
 * Data Format: Customer Profile uses SQL while Viewing History uses Kafka.
@@ -24,7 +24,7 @@ These data products are not compatible due to non-negotiable mismatches.
 ====================================================================================================
 
 
-### Compatibility Report: Customer Profile (DP1) ↔ Subscription Overview (DP3)
+### Compatibility Report: CustomerProfile (DP1) ↔ SubscriptionOverview (DP3)
 
 **Mismatches**
 None identified.
@@ -41,7 +41,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Customer Profile (DP1) ↔ Marketing Campaign Performance (DP4)
+### Compatibility Report: CustomerProfile(DP1) ↔ MarketingCampaignPerformance (DP4)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs Marketing_Domain.
@@ -66,7 +66,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: Customer Profile (DP1) ↔ Churn Prediction Model Output (DP5)
+### Compatibility Report: CustomerProfile (DP1) ↔ ChurnPredictionModelOutput (DP5)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs DataScience_Domain.
