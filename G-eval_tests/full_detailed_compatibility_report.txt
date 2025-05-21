@@ -1,0 +1,665 @@
+
+### Compatibility Report: Customer Profile (DP1) ↔ Viewing History (DP2)
+
+**Mismatches**
+* Data Format: Customer Profile uses SQL while Viewing History uses Kafka.
+* Domain Mismatch: Sales_Domain vs Customer_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Customer Profile (DP1) ↔ Subscription Overview (DP3)
+
+**Mismatches**
+None identified.
+
+**Compatibility Analysis**
+Purposes differ, but might be aligned if downstream objectives overlap.
+
+**Recommendations**
+* Explore combining outputs under unified use case or downstream consumer.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Customer Profile (DP1) ↔ Marketing Campaign Performance (DP4)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs Marketing_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Customer Profile (DP1) ↔ Churn Prediction Model Output (DP5)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs DataScience_Domain.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Customer Profile (DP1) ↔ Content Metadata (DP6)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs ContentOps_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Customer Profile (DP1) ↔ Support Tickets (DP7)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs CustomerSupport_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Customer Profile (DP1) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs Finance_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Viewing History (DP2) ↔ Subscription Overview (DP3)
+
+**Mismatches**
+* Data Format: Viewing History uses Kafka while Subscription Overview uses SQL.
+* Domain Mismatch: Customer_Domain vs Sales_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Viewing History (DP2) ↔ Marketing Campaign Performance (DP4)
+
+**Mismatches**
+* Data Format: Viewing History uses Kafka while Marketing Campaign Performance uses SQL.
+* Domain Mismatch: Customer_Domain vs Marketing_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Viewing History (DP2) ↔ Churn Prediction Model Output (DP5)
+
+**Mismatches**
+* Data Format: Viewing History uses Kafka while Churn Prediction Model Output uses SQL.
+* Domain Mismatch: Customer_Domain vs DataScience_Domain.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Viewing History (DP2) ↔ Content Metadata (DP6)
+
+**Mismatches**
+* Data Format: Viewing History uses Kafka while Content Metadata uses SQL.
+* Domain Mismatch: Customer_Domain vs ContentOps_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Viewing History (DP2) ↔ Support Tickets (DP7)
+
+**Mismatches**
+* Data Format: Viewing History uses Kafka while Support Tickets uses SQL.
+* Domain Mismatch: Customer_Domain vs CustomerSupport_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Viewing History (DP2) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Data Format: Viewing History uses Kafka while Revenue Attribution uses SQL.
+* Domain Mismatch: Customer_Domain vs Finance_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Port incompatibility is non-negotiable without stream-to-batch or batch-to-stream transformation.
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Introduce conversion service or dual-format output.
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are not compatible due to non-negotiable mismatches.
+
+====================================================================================================
+
+
+### Compatibility Report: Subscription Overview (DP3) ↔ Marketing Campaign Performance (DP4)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs Marketing_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Subscription Overview (DP3) ↔ Churn Prediction Model Output (DP5)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs DataScience_Domain.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Subscription Overview (DP3) ↔ Content Metadata (DP6)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs ContentOps_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Subscription Overview (DP3) ↔ Support Tickets (DP7)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs CustomerSupport_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Subscription Overview (DP3) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Domain Mismatch: Sales_Domain vs Finance_Domain.
+* Privacy Level: One product contains PII, the other does not.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Churn Prediction Model Output (DP5)
+
+**Mismatches**
+* Domain Mismatch: Marketing_Domain vs DataScience_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Content Metadata (DP6)
+
+**Mismatches**
+* Domain Mismatch: Marketing_Domain vs ContentOps_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Support Tickets (DP7)
+
+**Mismatches**
+* Domain Mismatch: Marketing_Domain vs CustomerSupport_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Marketing Campaign Performance (DP4) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Domain Mismatch: Marketing_Domain vs Finance_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Churn Prediction Model Output (DP5) ↔ Content Metadata (DP6)
+
+**Mismatches**
+* Domain Mismatch: DataScience_Domain vs ContentOps_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Churn Prediction Model Output (DP5) ↔ Support Tickets (DP7)
+
+**Mismatches**
+* Domain Mismatch: DataScience_Domain vs CustomerSupport_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Churn Prediction Model Output (DP5) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Domain Mismatch: DataScience_Domain vs Finance_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Content Metadata (DP6) ↔ Support Tickets (DP7)
+
+**Mismatches**
+* Domain Mismatch: ContentOps_Domain vs CustomerSupport_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Content Metadata (DP6) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Domain Mismatch: ContentOps_Domain vs Finance_Domain.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
+
+### Compatibility Report: Support Tickets (DP7) ↔ Revenue Attribution (DP8)
+
+**Mismatches**
+* Domain Mismatch: CustomerSupport_Domain vs Finance_Domain.
+* Privacy Level: One product contains PII, the other does not.
+* No declared dependency between data products.
+
+**Compatibility Analysis**
+Domain mismatch is negotiable if access and governance policies are established.
+Privacy policies must be enforced explicitly to ensure lawful integration.
+Purposes differ, but might be aligned if downstream objectives overlap.
+This is a negotiable mismatch if identifier alignment or joinable schema exists.
+
+**Recommendations**
+* Register shared access agreements or federated governance model.
+* Apply tokenization or purpose-based access control.
+* Explore combining outputs under unified use case or downstream consumer.
+* Perform lineage check or semantic mapping before composition.
+
+**Conclusion**
+These data products are compatible.
+
+====================================================================================================
+
