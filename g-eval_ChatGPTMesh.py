@@ -10,7 +10,7 @@ from GEvalTest.ask_groq import GroqDeepSeekLLM
 
 GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
 MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh/Results"
-OUTPUT_FILENAMES = ["Alice.txt", "Bob.txt"]
+OUTPUT_FILENAMES = ["Broker.txt"]
 RESULTS_DIR = "./GEvalTest/results"
 COMPLETED_LOG = "./GEvalTest/completed_g_eval.txt"
 
