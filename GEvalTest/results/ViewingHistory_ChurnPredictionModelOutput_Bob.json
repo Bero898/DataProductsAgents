@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output correctly identifies non-negotiable mismatches, and provides detailed recommendations, but omits specific domain mismatch and purposes differing information from expected output."
+}

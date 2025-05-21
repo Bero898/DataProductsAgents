@@ -1,0 +1,4 @@
+{
+  "score": null,
+  "reason": "Evaluation failed: Model did not return valid JSON: {\n    \"score\": 6,\n    \"reason\": \"Actual Output omits dependency declaration and has vague language in compatibility analysis, contradicting Expected Output's clear dependency declaration and specific negotiable mismatches.\""
+}

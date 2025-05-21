@@ -1,0 +1,4 @@
+{
+  "score": null,
+  "reason": "Evaluation failed: Model did not return valid JSON: {\n    \"score\": 8,\n    \"reason\": \"Actual output omits 'Privacy Level' and 'No declared dependency' mismatches, and does not mention 'identifier alignment or joinable schema' in compatibility analysis.\""
+}

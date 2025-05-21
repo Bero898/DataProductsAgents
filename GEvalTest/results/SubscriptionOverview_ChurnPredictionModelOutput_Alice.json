@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "Actual output omits domain mismatch and provides unnecessary details on data formats, schemas, and governance models, whereas expected output focuses on domain and purposes."
+}

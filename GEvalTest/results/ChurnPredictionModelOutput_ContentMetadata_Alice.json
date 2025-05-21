@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "Actual Output omits 'Domain Mismatch' and 'Privacy Level' details, and contradicts Expected Output's conclusion."
+}

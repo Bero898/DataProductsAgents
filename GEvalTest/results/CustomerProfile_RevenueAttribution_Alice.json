@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output omits domain mismatch and privacy level, and does not mention identifier alignment or joinable schema, but provides detailed recommendations and compatibility analysis."
+}

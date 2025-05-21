@@ -1,0 +1,4 @@
+{
+  "score": null,
+  "reason": "Evaluation failed: Model did not return valid JSON: {\n    \"score\": 2,\n    \"reason\": \"Actual Output identifies mismatches and provides detailed recommendations, whereas Expected Output does not identify any mismatches and has a more general conclusion.\""
+}

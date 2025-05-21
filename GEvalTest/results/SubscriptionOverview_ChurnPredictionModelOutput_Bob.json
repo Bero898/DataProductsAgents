@@ -1,0 +1,4 @@
+{
+  "score": null,
+  "reason": "Evaluation failed: Model did not return valid JSON: {\n    \"score\": 2,\n    \"reason\": \"Actual output omits domain mismatch and provides incompatible governance models, whereas expected output considers domain mismatch negotiable and recommends shared access agreements.\""
+}

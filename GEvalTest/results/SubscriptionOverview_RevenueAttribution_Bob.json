@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "Actual output omits domain mismatch and privacy level, and provides mismatch details not present in expected output."
+}
