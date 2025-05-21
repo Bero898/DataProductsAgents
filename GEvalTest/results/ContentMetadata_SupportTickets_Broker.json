@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The actual output omits key points from the expected output, such as domain mismatch, privacy levels, and dependency declarations, while focusing on data formats, schemas, and governance instead."
+}

@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The actual output omits critical details from the expected output, such as domain mismatch and privacy level differences, which are essential for compatibility assessment."
+}

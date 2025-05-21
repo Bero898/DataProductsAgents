@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The Actual Output omits key mismatches like Privacy Level and Domain Mismatch, and does not address non-negotiable issues as outlined in the Expected Output."
+}
