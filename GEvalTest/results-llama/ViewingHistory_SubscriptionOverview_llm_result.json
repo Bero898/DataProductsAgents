@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output omits 'no declared dependency between data products' and incorrectly states that data products are compatible, contradicting expected output."
+}

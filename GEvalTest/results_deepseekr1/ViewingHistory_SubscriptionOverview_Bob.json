@@ -1,4 +1,0 @@
-{
-  "score": 0.9,
-  "reason": "The actual output aligns well with the expected output, providing detailed mismatches, compatibility analysis, and recommendations. It includes specific examples like Kafka vs SQL and domain mismatches, similar to the expected output. The structure and content are closely matched, with only minor differences in conciseness."
-}

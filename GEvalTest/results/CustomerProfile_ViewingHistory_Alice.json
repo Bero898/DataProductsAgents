@@ -1,4 +1,0 @@
-{
-  "score": 0.8,
-  "reason": "Actual output omits 'Domain Mismatch' and 'No declared dependency between data products' from 'Mismatches', and provides more detailed recommendations, but still follows the evaluation steps."
-}

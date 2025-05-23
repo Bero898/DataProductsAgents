@@ -1,4 +1,0 @@
-{
-  "score": 0.2,
-  "reason": "The Actual Output identifies multiple mismatches and provides detailed recommendations, which directly contradicts the Expected Output's assertion that no mismatches were found and that the data products are compatible."
-}

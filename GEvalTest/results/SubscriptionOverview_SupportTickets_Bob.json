@@ -1,4 +1,0 @@
-{
-  "score": 0.2,
-  "reason": "Actual output omits domain mismatch and dependency, and provides overly detailed ETL processes and enforcement logic."
-}

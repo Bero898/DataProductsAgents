@@ -1,4 +1,0 @@
-{
-  "score": null,
-  "reason": "Evaluation failed: Model did not return valid JSON: {\n    \"score\": 6,\n    \"reason\": \"Actual output omits 'Domain Mismatch' and 'No declared dependency between data products', and provides vague language in 'Compatibility Analysis' and 'Recommendations'.\""
-}

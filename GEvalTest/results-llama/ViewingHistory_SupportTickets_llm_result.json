@@ -1,0 +1,4 @@
+{
+  "score": null,
+  "reason": "Evaluation failed: Model did not return valid JSON: {\n    \"score\": 8,\n    \"reason\": \"Actual output correctly identified non-negotiable mismatches in distribution and control ports, but omitted detail on domain mismatch and dependency between data products.\""
+}

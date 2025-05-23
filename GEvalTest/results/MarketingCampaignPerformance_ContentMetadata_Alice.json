@@ -1,4 +1,0 @@
-{
-  "score": 0.6,
-  "reason": "Actual output omits 'No declared dependency between data products' and 'identifier alignment or joinable schema exists' from expected output, and provides more detailed recommendations."
-}

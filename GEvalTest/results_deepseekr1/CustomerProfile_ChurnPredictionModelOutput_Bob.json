@@ -1,4 +1,0 @@
-{
-  "score": 0.8,
-  "reason": "Actual Output includes the correct domain mismatch but adds extra mismatches like schema structure and governance not present in Expected Output."
-}

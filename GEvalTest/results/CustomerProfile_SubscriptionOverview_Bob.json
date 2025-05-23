@@ -1,4 +1,0 @@
-{
-  "score": 0.2,
-  "reason": "Actual output lists multiple mismatches and provides detailed recommendations, whereas expected output finds no mismatches and suggests a unified use case."
-}

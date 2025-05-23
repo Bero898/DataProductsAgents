@@ -1,4 +1,0 @@
-{
-  "score": 0.2,
-  "reason": "The actual output omits specific domain mismatches and declared dependency details from the expected output, leading to contradictions."
-}

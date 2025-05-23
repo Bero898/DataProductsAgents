@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output correctly identifies mismatches, but omits detail on privacy level and declared dependency, and uses vague language in compatibility analysis."
+}

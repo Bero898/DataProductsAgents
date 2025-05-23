@@ -1,0 +1,4 @@
+{
+  "score": 0.8,
+  "reason": "Actual output omits 'Domain Mismatch', 'Privacy Level', and 'No declared dependency between data products' from Expected Output, and provides vague language in 'Compatibility Analysis' and 'Recommendations'."
+}
