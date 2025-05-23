@@ -1,0 +1,4 @@
+{
+  "score": 0.4,
+  "reason": "The Actual Output omits key details like privacy level mismatch and declared dependency, which are present in the Expected Output."
+}

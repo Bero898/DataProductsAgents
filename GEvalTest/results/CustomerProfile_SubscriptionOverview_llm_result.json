@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The Actual Output identifies multiple mismatches and concludes partial incompatibility, directly contradicting the Expected Output's assertion of no mismatches and full compatibility. The Expected Output omits detailed mismatch analysis and provides vague recommendations."
+}

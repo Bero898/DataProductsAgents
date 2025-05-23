@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The actual output omits key points like Privacy Level and declared dependencies mentioned in the expected output, despite being detailed elsewhere."
+}

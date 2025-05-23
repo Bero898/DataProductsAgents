@@ -1,0 +1,4 @@
+{
+  "score": 0.2,
+  "reason": "The Actual Output contradicts the Expected Output by concluding incompatibility, while the Expected Output states compatibility. The Actual Output includes many specific mismatches not mentioned in the Expected Output."
+}
