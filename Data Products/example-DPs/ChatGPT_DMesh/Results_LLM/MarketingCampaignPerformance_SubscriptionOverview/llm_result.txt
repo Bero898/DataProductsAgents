@@ -1,0 +1,65 @@
+**Mismatches**
+
+After analyzing the two data products, I have identified the following mismatches:
+
+1. **Domain**: The domains of the two data products match. One is from the Marketing_Domain, and the other is from the Sales_Domain.
+2. **Data Provider**: The data providers are different, with one being the provider for DP4 and Tom being the provider for DP3.
+3. **Resource Provider**: The resource providers are different, with one being Fred for DP4 and Tom for DP3.
+4. **Domain Owner**: The domain owners are different, with one being Fred for DP4 and Erica for DP3.
+5. **Domain Participants**: The domain participants are different, with one including Fred and Dana for DP4 and Erica and Tom for DP3. **Language**: The languages are the same, with both being "en".
+6. **Type**: The types are the same, with both being pmt:DataProduct.
+7. **Issued and Modified Dates**: The issued and modified dates are different, with DP4 being issued on 2023-11-01 and modified on 2024-05-01, and DP3 being issued on 2023-10-20 and modified on 2024-05-01.
+8. **Keywords**: The keywords are different, with DP4 having "Campaign", "Performance", and "Attribution", and DP3 having "Subscription", "Billing", and "Customer".
+9. **Institutional Knowledge**: The institutional knowledge is different, with DP4 having Marketing_Domain_Glossary and DP3 having Sales_Domain_Knowledge.
+10. **Estimated Value**: The estimated values are different, with DP4 helping to reallocate 15-20% of ad spend more effectively across channels, and DP3 reducing subscription lookup delays and saving 100+ hours/month.
+11. **Catalog Record**: The catalog records are different, with DP4 having https://catalog.company.com/resources/DP4 and DP3 having https://catalog.company.com/resources/DP3.
+12. **Data Asset**: The data assets are different, with DP4 having CampaignPerformanceAsset and DP3 having SubscriptionDataAsset.
+13. **Logical Schema**: The logical schemas are different, with DP4 having https://schemas.company.com/logical/campaign-v1.json and DP3 having https://schemas.company.com/logical/subscription-v1.json.
+14. **Distribution**: The distributions are different, with DP4 having Campaign_SQL_Dist and DP3 having Subscription_SQL_Dist.
+15. **Input Port**: The input ports are different, with DP4 having AdPlatformLogs_Input and DP3 having CRM_Subscription_Join_Input.
+16. **Output Port**: The output ports are different, with DP4 having Campaign_SQL_OutputPort and DP3 having Subscription_SQL_OutputPort.
+17. **Transformation Logic**: The transformation logics are different, with DP4 having Ad log extracts, Google Ads and Meta API ingest, normalized and merged into table, and DP3 having Spark ETL pipelines performing joins, status mappings, and partitioning on region/date.
+18. **Control Port**: The control ports are different, with DP4 having MarketingCampaign_ControlPort and DP3 having SubscriptionOverview_ControlPort.
+20. **Enforcement Logic**: The enforcement logics are different, with DP4 having SQL views validate schema structure and field mappings nightly and DP3 having Access revocation workflows in IAM and policy checks in ingestion pipelines.
+
+**Compatibility Analysis**
+
+Based on the mismatches identified, the following are negotiable:
+
+* Domain
+* Data Provider
+* Resource Provider
+* Domain Owner
+* Domain Participants
+* Estimated Value
+* Catalog Record
+* Data Asset
+* Logical Schema
+* Distribution
+* Input Port
+* Output Port
+* Transformation Logic
+* Control Port
+* Enforcement Logic
+
+The following are non-negotiable:
+
+* Language
+* Type
+* Issued and Modified Dates
+* Keywords
+* Institutional Knowledge
+
+**Recommendations**
+
+To resolve the mismatches, it is recommended to:
+* Standardize the domain, data providers, resource providers, and domain owners across the two data products.
+* Align the estimated values and catalog records to ensure consistency.
+* Harmonize the data assets, logical schemas, and distribution to ensure compatibility.
+* Standardize the input and output ports to ensure consistency.
+* Align the transformation logic and control ports to ensure consistency.
+* Harmonize the enforcement logic to ensure consistency.
+
+**Conclusion**
+
+Based on the analysis, there are both negotiable and non-negotiable mismatches between the two data products. While some mismatches can be resolved through standardization and harmonization, others may require more significant changes to ensure compatibility. Therefore, the data products are not fully compatible, and further work is required to address the non-negotiable mismatches.

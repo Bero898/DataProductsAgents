@@ -1,0 +1,39 @@
+**Mismatches**
+
+After analyzing the two data products, the following mismatches were identified:
+
+1. **Domain**: The domains of the two data products are different (DataScience_Domain and Marketing_Domain).
+2. **dataProvider**: The data providers are different (Ravi and Fred).
+3. **resourceProvider**: The resource providers are different (Ravi and Fred).
+4. **domainOwner**: The domain owners are different (Ravi and Fred).
+5. **domainParticipant**: The domain participants are different (Ravi, Aisha, Fred, and Dana).
+6. **institutionalKnowledge**: The institutional knowledge is different (https://ml-models.company.com/churn-model and Marketing_Domain_Glossary).
+7. **estimatedValue**: The estimated values are different ("12% churn reduction attributed to targeted retention strategies informed by this model" and "Helps reallocate 15–20% of ad spend more effectively across channels").
+8. **logicalSchema**: The logical schemas are different (https://schemas.company.com/logical/churn-scores-v1.json and https://schemas.company.com/logical/campaign-v1.json).
+9. **physicalSchema**: The physical schemas are different (https://schemas.company.com/physical/churn-sql-v1.json and https://schemas.company.com/physical/campaign-sql-v1.json).
+10. **transformationLogic**: The transformation logics are different (LightGBM model pipeline in Airflow using features from profile, usage, and subscription and Ad log extracts, Google Ads and Meta API ingest, normalized and merged into table).
+11. **controlPort**: The control ports are different (Churn_Model_ControlPort and MarketingCampaign_ControlPort).
+12. **enforcementLogic**: The enforcement logics are different (Automated model testing via Airflow with rollback on drift detection and fairness threshold breaches and SQL views validate schema structure and field mappings nightly).
+
+**Compatibility Analysis**
+
+The mismatches identified are a mix of negotiable and non-negotiable factors. The non-negotiable factors include the differences in domain, data provider, resource provider, domain owner, and institutional knowledge. These factors are critical to the data products' definitions and cannot be easily reconciled.
+
+On the other hand, the differences in estimated value, logical schema, transformation logic, control port, and enforcement logic are negotiable factors. These factors can be reconciled through discussions and agreements between the data product owners.
+
+**Recommendations**
+
+To resolve the mismatches, the following recommendations are made:
+
+1. **Domain Alignment**: Align the domains of the two data products to ensure consistency.
+2. **DataProvider Agreement**: Agree on a common data provider and resource provider for the data products.
+3. **Domain Owner Alignment**: Align the domain owners and participants for the data products.
+4. **Institutional Knowledge Alignment**: Align the institutional knowledge for the data products.
+5. **Schema Alignment**: Align the logical and physical schemas for the data products.
+6. **Transformation Logic Alignment**: Align the transformation logics for the data products.
+7. **Control Port Alignment**: Align the control ports for the data products.
+8. **Enforcement Logic Alignment**: Align the enforcement logics for the data products.
+
+**Conclusion**
+
+Based on the analysis, the two data products are not compatible due to the non-negotiable mismatches in domain, data provider, resource provider, domain owner, and institutional knowledge. However, with agreements and alignments on the negotiable factors, the data products can be made compatible.

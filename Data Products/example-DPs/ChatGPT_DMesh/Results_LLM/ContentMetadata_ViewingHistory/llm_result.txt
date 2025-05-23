@@ -1,0 +1,37 @@
+**Mismatches**
+
+After analyzing the two data products, I have identified the following mismatches:
+
+1. **Data formats**: The data formats used in the two data products are different. Data Product 1 (DP6) uses SQL exports, while Data Product 2 (DP2) uses Kafka streams.
+2. **Schemas**: The logical and physical schemas used in DP6 and DP2 are different. DP6 uses `https://schemas.company.com/logical/content-v1.json` and `https://schemas.company.com/physical/content-sql-v1.json`, while DP2 uses `https://schemas.company.com/logical/viewing-events-v1.json` and `https://schemas.company.com/physical/viewing-kafka-v1.json`.
+3. **Data providers**: The data providers for DP6 and DP2 are different. DP6 is provided by Lisa, while DP2 is provided by Bob.
+4. **Domains**: The domains for DP6 and DP2` are different. DP6 belongs to the ContentOps_Domain, while DP2 belongs to the Customer_Domain.
+6. **Transformation logic**: The transformation logic used in DP6 is different from the transformation logic used in DP2. DP6 uses metadata collected from CMS, joined with licensing system data, cleaned, and published nightly, whereas DP2 uses Flink-based stream processing for enrichment, schema evolution tracking, and deduplication.
+7. **Control ports**: The control ports used in DP6 and DP2 are different. DP6 uses governance on genre taxonomies and licensing tags, while DP2 uses stream data governance enforcement (schema registry + field-level masking).
+
+**Compatibility Analysis**
+
+Based on the mismatches identified, I have analyzed the compatibility of the two data products. The mismatches can be categorized into negotiable and non-negotiable factors.
+
+Negotiable factors:
+
+* Data formats: The data formats used in DP6 and DP2 can be negotiated to ensure compatibility. For example, DP6 can provide data in a format compatible with DP2's Kafka streams.
+* Schemas: The schemas used in DP6 and DP2 can be negotiated to ensure compatibility. For example, DP6 can use the same logical and physical schemas as DP2.
+* Data providers: The data providers for DP6 and DP2 can be negotiated to ensure compatibility. For example, Lisa and Bob can collaborate to provide data in a format.
+
+Non-negotiable factors:
+
+* Domains: The domains for DP6 and DP2 are different and cannot be negotiated. DP6 belongs to the ContentOps_Domain, while DP2 belongs to the Customer_Domain.
+* Transformation logic: The transformation logic used in DP6 and DP2 is different and cannot be negotiated. DP6 uses metadata collected from CMS, joined with licensing system data, cleaned, and published nightly, whereas DP2 uses Flink-based stream processing for enrichment, schema evolution tracking, and deduplication.
+* Control ports: The control ports used in DP6 and DP2 are different and cannot be negotiated. DP6 uses governance on genre taxonomies and licensing tags, while DP2 uses stream data governance enforcement (schema registry + field-level masking).
+
+**Recommendations**
+
+Based on the compatibility analysis, I recommend the following:
+
+* Negotiable factors: The data formats, schemas used in DP6 and DP2 should be negotiated to ensure compatibility.
+* Non-negotiable factors: The domains, transformation logic, and control ports used in DP6 and DP2 cannot be negotiated and should be respected.
+
+**Conclusion**
+
+Based on the analysis, I conclude that the two data products are not compatible due to the non-negotiable mismatches in domains, transformation logic, and control ports. However, the negotiable mismatches in data formats, schemas, and data providers can be resolved through negotiation and collaboration between the data providers.
