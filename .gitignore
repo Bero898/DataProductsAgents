@@ -3,3 +3,4 @@
 /metagpt
 /.deepeval
 /GEvalTest/.env
+/.bleu
