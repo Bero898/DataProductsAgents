@@ -3,3 +3,5 @@
 /metagpt
 /G-eval_tests/.env
 /.deepeval
+/.bleu
+/GEvalTest/.env
