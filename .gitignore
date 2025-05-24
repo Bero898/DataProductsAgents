@@ -4,3 +4,4 @@
 /G-eval_tests/.env
 /GEvalTest/.env
 /.deepeval
+/.bleu
