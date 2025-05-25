@@ -2,6 +2,8 @@ import os
 import json
 from collections import defaultdict
 
+# this code works because there are no missing pairs. The code for ReAct agents are different due to this.
+
 # Map product names to numbers
 product_numbers = {
     "CustomerProfile": 1,
