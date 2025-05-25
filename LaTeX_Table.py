@@ -19,8 +19,8 @@ base_dir = "./GEvalTest"
 dirs = {
     "BLEU": "bleu_results",
     "BERTScore": "bertscore_results",
-    "G-eval Deepseek": "results-deepseek",
-    "G-eval LLaMa3": "results-llama3",
+    "G-eval Deepseek": "results_deepseek",
+    "G-eval LLaMa3": "results-llama",
 }
 
 # Gather all unique file names
