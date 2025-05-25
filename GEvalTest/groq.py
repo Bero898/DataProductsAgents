@@ -25,7 +25,7 @@ def groqcall(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": message}
         ],
-        "model": "llama3-70b-8192", #deepseek-r1-distill-llama-70b
+        "model": "deepseek-r1-distill-llama-70b", #llama3-70b-8192
         "temperature": temperature,
         "max_completion_tokens": max_completion_tokens,
         "top_p": top_p,
