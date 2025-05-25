@@ -3,6 +3,7 @@ import itertools
 import time
 import json
 import nltk
+import string
 
 GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
 MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh/Results_LLM"
@@ -36,6 +37,25 @@ def parse_ground_truth(filepath):
         report_dict[title] = body
     return report_dict
 
+def preprocess_bleu(text):
+    # Lowercase and tokenize
+    tokens = nltk.word_tokenize(text.lower())
+    cleaned = []
+    for token in tokens:
+        # Remove '*' tokens
+        if token == "*":
+            continue
+        # Remove leading/trailing '**' (markdown bold)
+        token = token.strip("*")
+        # Remove punctuation tokens
+        if all(char in string.punctuation for char in token):
+            continue
+        # Remove empty tokens
+        if not token:
+            continue
+        cleaned.append(token)
+    return cleaned
+
 def load_yaml(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
@@ -61,8 +81,9 @@ def save_result(pair_key, result):
 
 def safe_bleu(reference, hypothesis):
     # Tokenize by whitespace for simplicity
-    ref_tokens = reference.split()
-    hyp_tokens = hypothesis.split()
+    ref_tokens = preprocess_bleu(reference)
+    hyp_tokens = preprocess_bleu(hypothesis)
+    print(hyp_tokens)
     n = min(4, len(ref_tokens), len(hyp_tokens))
     if n == 0:
         return 0.0
@@ -120,8 +141,6 @@ def main():
             }
             save_result(pair_key, result)
             save_completed(pair_key)
-            print(f"Saved BLEU result for {pair_key}. Sleeping 5 seconds...\n")
-            time.sleep(5)
 
     print("All outputs processed!")
 
