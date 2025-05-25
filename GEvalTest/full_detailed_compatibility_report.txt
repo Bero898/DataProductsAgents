@@ -41,7 +41,7 @@ These data products are compatible.
 ====================================================================================================
 
 
-### Compatibility Report: CustomerProfile(DP1) ↔ MarketingCampaignPerformance (DP4)
+### Compatibility Report: CustomerProfile (DP1) ↔ MarketingCampaignPerformance (DP4)
 
 **Mismatches**
 * Domain Mismatch: Sales_Domain vs Marketing_Domain.
