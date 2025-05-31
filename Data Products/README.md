@@ -2,6 +2,9 @@
 
 This directory contains modified examples from different data product specifications and implementations. The following sources have been used and modified based on ProMoTe.owl provided by [ProMoTe]{https://github.com/Stefan-Driessen/ProMoTe/blob/main/ProMoTe.owl}:
 
+## ChatGPT_DMesh
+Synthetic data mesh created using ChatGPT. The conversation can be found in the following [link]{https://chatgpt.com/share/6831df22-5a70-800e-8105-a2b4862730dc}
+
 ## Data Contract Playground - Pflooky
 Original files from [data-contract-playground]{https://github.com/data-catering/data-contract-playground/tree/main} have been modified to include ProMoTe specifications:
 - `data-contract-specification_ProMoTe.yaml`

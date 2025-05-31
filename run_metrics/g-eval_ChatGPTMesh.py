@@ -8,22 +8,23 @@ from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 from deepeval import evaluate
 from GEvalTest.ask_groq import GroqDeepSeekLLM
 
-GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
-MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh/Results"
-OUTPUT_FILENAMES = ["Broker.txt"]
-RESULTS_DIR = "./GEvalTest/results"
-COMPLETED_LOG = "./GEvalTest/completed_g_eval.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Map data file path to (DP name, DP number)
+GROUND_TRUTH_PATH = os.path.join(BASE_DIR, "../GEvalTest/full_detailed_compatibility_report.txt")
+MODEL_OUTPUT_DIR = os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Results")
+OUTPUT_FILENAMES = ["Broker.txt"]
+RESULTS_DIR = os.path.join(BASE_DIR, "../GEvalTest/results")
+COMPLETED_LOG = os.path.join(BASE_DIR, "../GEvalTest/completed_g_eval.txt")
+
 data_products = [
-    ("CustomerProfile", 1, "./Data Products/example-DPs/ChatGPT_DMesh/Customer/CustomerProfile.yaml"),
-    ("ViewingHistory", 2, "./Data Products/example-DPs/ChatGPT_DMesh/Customer/ViewingHistory.yaml"),
-    ("SubscriptionOverview", 3, "./Data Products/example-DPs/ChatGPT_DMesh/Sales/SubscriptionOverview.yaml"),
-    ("MarketingCampaignPerformance", 4, "./Data Products/example-DPs/ChatGPT_DMesh/Marketing/MarketingCampaignPerformance.yaml"),
-    ("ChurnPredictionModelOutput", 5, "./Data Products/example-DPs/ChatGPT_DMesh/DataScience/ChurnPredictionModelOutput.yaml"),
-    ("ContentMetadata", 6, "./Data Products/example-DPs/ChatGPT_DMesh/ContentOperations/ContentMetadata.yaml"),
-    ("SupportTickets", 7, "./Data Products/example-DPs/ChatGPT_DMesh/CustomerSupport/SupportTickets.yaml"),
-    ("RevenueAttribution", 8, "./Data Products/example-DPs/ChatGPT_DMesh/Finance/RevenueAttribution.yaml"),
+    ("CustomerProfile", 1, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Customer/CustomerProfile.yaml")),
+    ("ViewingHistory", 2, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Customer/ViewingHistory.yaml")),
+    ("SubscriptionOverview", 3, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Sales/SubscriptionOverview.yaml")),
+    ("MarketingCampaignPerformance", 4, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Marketing/MarketingCampaignPerformance.yaml")),
+    ("ChurnPredictionModelOutput", 5, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/DataScience/ChurnPredictionModelOutput.yaml")),
+    ("ContentMetadata", 6, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/ContentOperations/ContentMetadata.yaml")),
+    ("SupportTickets", 7, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/CustomerSupport/SupportTickets.yaml")),
+    ("RevenueAttribution", 8, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Finance/RevenueAttribution.yaml")),
 ]
 
 def parse_ground_truth(filepath):
