@@ -117,6 +117,8 @@ python start.py --dp1_path=PATH_TO_DATA_PRODUCT_1 --dp2_path=PATH_TO_DATA_PRODUC
 - Each environment is isolated; activate the appropriate environment before running the corresponding scripts.
 - Results and logs are stored in the `GEvalTest/`, `logs/`, and `Data Products/example-DPs/ChatGPT_DMesh/Results/` directories.
 - For more details on data product specifications, see [Data Products/README.md](Data%20Products/README.md).
+- The file [`GEvalTest/full_detailed_compatibility_report.txt`](GEvalTest/full_detailed_compatibility_report.txt) contains the synthetic data compatibility reports produced by ChatGPT. These reports summarize the compatibility analysis, mismatches, recommendations, and conclusions for each pair of example data products in the synthetic data mesh.
+
 
 ---
 
