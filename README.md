@@ -15,7 +15,7 @@ This workspace contains code and data for evaluating compatibility assessments b
 
 Example data products can be found in the [`Data Products`](Data%20Products/README.md) directory. The [`example-DPs/ChatGPT_DMesh`](Data%20Products/example-DPs/ChatGPT_DMesh) subdirectory provides the synthetic data mesh used for testing with [`test.py`](test.py).
 
-NOTE: Additionally [`example-DPs/ChatGPT_DMesh`](Data%20Products/example-DPs/ChatGPT_DMesh) has a folder Results, this contains the results obtained from running test.py (that is the compatibility reports). If test.py is not working consider deleting this folder as it will reset the compatibility reports
+NOTE: Additionally [`example-DPs/ChatGPT_DMesh`](Data%20Products/example-DPs/ChatGPT_DMesh) has a folder Results, this contains the results obtained from running test.py (that is the compatibility reports). If test.py is not working consider deleting this folder as it will reset the compatibility reports. Similarly if the metrics are not running consider deleting their corresponding folder in [`GEvalTest/ChatGPT_DMesh`](Data%20Products/GEvalTest)
 
 ## Environment Setup
 
