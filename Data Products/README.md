@@ -5,6 +5,14 @@ This directory contains modified examples from different data product specificat
 ## ChatGPT_DMesh
 Synthetic data mesh created using ChatGPT. The conversation can be found in the following [link]{https://chatgpt.com/share/6831df22-5a70-800e-8105-a2b4862730dc}
 
+
+
+### Compatibility Reports
+
+The file [`GEvalTest/full_detailed_compatibility_report.txt`](GEvalTest/full_detailed_compatibility_report.txt) contains the synthetic data compatibility reports produced by ChatGPT. These reports summarize the compatibility analysis, mismatches, recommendations, and conclusions for each pair of example data products in the synthetic data mesh.
+
+
+
 ## Data Contract Playground - Pflooky
 Original files from [data-contract-playground]{https://github.com/data-catering/data-contract-playground/tree/main} have been modified to include ProMoTe specifications:
 - `data-contract-specification_ProMoTe.yaml`
