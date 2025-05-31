@@ -5,3 +5,5 @@
 /.deepeval
 /.bleu
 /GEvalTest/.env
+/.bleu
+/.BERTScore
