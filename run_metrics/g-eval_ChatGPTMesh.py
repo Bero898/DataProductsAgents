@@ -8,11 +8,13 @@ from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 from deepeval import evaluate
 from GEvalTest.ask_groq import GroqDeepSeekLLM
 
-GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
-MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh/Results"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+GROUND_TRUTH_PATH = os.path.join(BASE_DIR, "../GEvalTest/full_detailed_compatibility_report.txt")
+MODEL_OUTPUT_DIR = os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Results")
 OUTPUT_FILENAMES = ["Alice.txt", "Bob.txt"]
-RESULTS_DIR = "./GEvalTest/results"
-COMPLETED_LOG = "./GEvalTest/completed_g_eval.txt"
+RESULTS_DIR = os.path.join(BASE_DIR, "../GEvalTest/results")
+COMPLETED_LOG = os.path.join(BASE_DIR, "../GEvalTest/completed_g_eval.txt")
 
 # Map data file path to (DP name, DP number)
 data_products = [
