@@ -2,24 +2,25 @@ import os
 import itertools
 import time
 import json
-import nltk
-import string
+from bert_score import score
 
-GROUND_TRUTH_PATH = "./GEvalTest/full_detailed_compatibility_report.txt"
-MODEL_OUTPUT_DIR = "./Data Products/example-DPs/ChatGPT_DMesh/Results_LLM"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+GROUND_TRUTH_PATH = os.path.join(BASE_DIR, "../GEvalTest/full_detailed_compatibility_report.txt")
+MODEL_OUTPUT_DIR = os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Results_LLM")
 OUTPUT_FILENAMES = ["llm_result.txt"]
-RESULTS_DIR = "./GEvalTest/bleu_results"
-COMPLETED_LOG = "./GEvalTest/completed_bleu_eval.txt"
+RESULTS_DIR = os.path.join(BASE_DIR, "../GEvalTest/bertscore_results")
+COMPLETED_LOG = os.path.join(BASE_DIR, "../GEvalTest/completed_bertscore_eval.txt")
 
 data_products = [
-    ("CustomerProfile", 1, "./Data Products/example-DPs/ChatGPT_DMesh/Customer/CustomerProfile.yaml"),
-    ("ViewingHistory", 2, "./Data Products/example-DPs/ChatGPT_DMesh/Customer/ViewingHistory.yaml"),
-    ("SubscriptionOverview", 3, "./Data Products/example-DPs/ChatGPT_DMesh/Sales/SubscriptionOverview.yaml"),
-    ("MarketingCampaignPerformance", 4, "./Data Products/example-DPs/ChatGPT_DMesh/Marketing/MarketingCampaignPerformance.yaml"),
-    ("ChurnPredictionModelOutput", 5, "./Data Products/example-DPs/ChatGPT_DMesh/DataScience/ChurnPredictionModelOutput.yaml"),
-    ("ContentMetadata", 6, "./Data Products/example-DPs/ChatGPT_DMesh/ContentOperations/ContentMetadata.yaml"),
-    ("SupportTickets", 7, "./Data Products/example-DPs/ChatGPT_DMesh/CustomerSupport/SupportTickets.yaml"),
-    ("RevenueAttribution", 8, "./Data Products/example-DPs/ChatGPT_DMesh/Finance/RevenueAttribution.yaml"),
+    ("CustomerProfile", 1, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Customer/CustomerProfile.yaml")),
+    ("ViewingHistory", 2, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Customer/ViewingHistory.yaml")),
+    ("SubscriptionOverview", 3, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Sales/SubscriptionOverview.yaml")),
+    ("MarketingCampaignPerformance", 4, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Marketing/MarketingCampaignPerformance.yaml")),
+    ("ChurnPredictionModelOutput", 5, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/DataScience/ChurnPredictionModelOutput.yaml")),
+    ("ContentMetadata", 6, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/ContentOperations/ContentMetadata.yaml")),
+    ("SupportTickets", 7, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/CustomerSupport/SupportTickets.yaml")),
+    ("RevenueAttribution", 8, os.path.join(BASE_DIR, "../Data Products/example-DPs/ChatGPT_DMesh/Finance/RevenueAttribution.yaml")),
 ]
 
 def parse_ground_truth(filepath):
@@ -36,25 +37,6 @@ def parse_ground_truth(filepath):
         body = "\n".join(lines[1:]).strip()
         report_dict[title] = body
     return report_dict
-
-def preprocess_bleu(text):
-    # Lowercase and tokenize
-    tokens = nltk.word_tokenize(text.lower())
-    cleaned = []
-    for token in tokens:
-        # Remove '*' tokens
-        if token == "*":
-            continue
-        # Remove leading/trailing '**' (markdown bold)
-        token = token.strip("*")
-        # Remove punctuation tokens
-        if all(char in string.punctuation for char in token):
-            continue
-        # Remove empty tokens
-        if not token:
-            continue
-        cleaned.append(token)
-    return cleaned
 
 def load_yaml(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -79,20 +61,23 @@ def save_result(pair_key, result):
     with open(result_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
 
-def safe_bleu(reference, hypothesis):
-    # Tokenize by whitespace for simplicity
-    ref_tokens = preprocess_bleu(reference)
-    hyp_tokens = preprocess_bleu(hypothesis)
-    print(hyp_tokens)
-    n = min(4, len(ref_tokens), len(hyp_tokens))
-    if n == 0:
-        return 0.0
-    weights = tuple([1.0/n]*n)
+def safe_bertscore(reference, hypothesis):
+    # Both should be strings
     try:
-        score = nltk.translate.bleu_score.sentence_bleu([ref_tokens], hyp_tokens, weights=weights)
-    except ZeroDivisionError:
-        score = 0.0
-    return score
+        P, R, F1 = score([hypothesis], [reference], lang="en", verbose=False)
+        return {
+            "bertscore_precision": P[0].item(),
+            "bertscore_recall": R[0].item(),
+            "bertscore_f1": F1[0].item()
+        }
+    except Exception as e:
+        print(f"BERTScore error: {e}")
+        return {
+            "bertscore_precision": None,
+            "bertscore_recall": None,
+            "bertscore_f1": None,
+            "error": str(e)
+        }
 
 def main():
     ground_truth = parse_ground_truth(GROUND_TRUTH_PATH)
@@ -135,11 +120,8 @@ def main():
                 continue
             with open(output_path, "r", encoding="utf-8") as f:
                 model_output = f.read()
-            bleu_score = safe_bleu(gt_body, model_output)
-            result = {
-                "bleu_score": bleu_score
-            }
-            save_result(pair_key, result)
+            bertscore_result = safe_bertscore(gt_body, model_output)
+            save_result(pair_key, bertscore_result)
             save_completed(pair_key)
 
     print("All outputs processed!")

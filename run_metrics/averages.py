@@ -15,7 +15,9 @@ product_numbers = {
 }
 
 # Directories for each metric
-base_dir = "./GEvalTest"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+base_dir = os.path.join(BASE_DIR, "../GEvalTest")
 dirs = {
     "BLEU": "bleu_results",
     "BERTScore": "bertscore_results",
